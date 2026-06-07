@@ -13,7 +13,7 @@ const LIST_TYPES = [
 ]
 
 export default function TasksPage() {
-  const { user, household } = useAuth()
+  const { user, profile, household } = useAuth()
   const supabase = createClient()
   const [lists, setLists] = useState<TaskList[]>([])
   const [selected, setSelected] = useState<TaskList | null>(null)
@@ -43,7 +43,7 @@ export default function TasksPage() {
     const t = LIST_TYPES.find(x => x.type === newListType)!
     const { data } = await supabase.from('task_lists').insert({
       household_id: household!.id, name: newListName.trim(),
-      type: newListType, icon: '•', color: t.color, created_by: user!.id,
+      type: newListType, icon: '•', color: t.color, created_by: profile!.id,
     }).select().single()
     if (data) { setLists(prev => [...prev, data]); setSelected(data); setShowNewList(false); setNewListName('') }
   }
@@ -52,7 +52,7 @@ export default function TasksPage() {
     if (!newItemText.trim() || !selected) return
     const { data } = await supabase.from('task_items').insert({
       list_id: selected.id, title: newItemText.trim(), completed: false,
-      created_by: user!.id, sort_order: items.length,
+      created_by: profile!.id, sort_order: items.length,
     }).select().single()
     if (data) { setItems(prev => [...prev, data]); setNewItemText('') }
   }
@@ -60,7 +60,7 @@ export default function TasksPage() {
   async function toggleItem(id: string, current: boolean) {
     const update = current
       ? { completed: false, completed_by: null, completed_at: null }
-      : { completed: true, completed_by: user!.id, completed_at: new Date().toISOString() }
+      : { completed: true, completed_by: profile!.id, completed_at: new Date().toISOString() }
     await supabase.from('task_items').update(update).eq('id', id)
     setItems(prev => prev.map(i => i.id === id ? { ...i, ...update } : i))
   }

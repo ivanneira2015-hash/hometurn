@@ -28,17 +28,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const supabase = createClient()
 
   async function loadProfile(u: User): Promise<Profile | null> {
-    const { data } = await supabase.from('profiles').select('*').eq('id', u.id).single()
-    if (data) return data
-    // Profile not yet created — create it
-    const { data: created } = await supabase.from('profiles').upsert({
+    // Always upsert to guarantee profile exists (handles trigger failures)
+    const { data, error } = await supabase.from('profiles').upsert({
       id: u.id,
-      email: u.email!,
-      name: u.user_metadata?.full_name ?? u.email!.split('@')[0],
+      email: u.email ?? `${u.id}@unknown.com`,
+      name: u.user_metadata?.full_name ?? u.user_metadata?.name ?? u.email?.split('@')[0] ?? 'Usuario',
       avatar_url: u.user_metadata?.avatar_url ?? null,
       color: '#6366f1',
-    }, { onConflict: 'id' }).select().single()
-    return created
+    }, { onConflict: 'id', ignoreDuplicates: true }).select().single()
+
+    if (data) return data
+
+    // ignoreDuplicates returns no data if row existed — fetch it
+    const { data: existing } = await supabase.from('profiles').select('*').eq('id', u.id).single()
+    return existing
   }
 
   async function loadHousehold(userId: string) {

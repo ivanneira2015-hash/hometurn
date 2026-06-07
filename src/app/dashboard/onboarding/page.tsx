@@ -16,10 +16,23 @@ export default function OnboardingPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
+  async function ensureProfile() {
+    if (!user) return
+    await supabase.from('profiles').upsert({
+      id: user.id,
+      email: user.email ?? `${user.id}@unknown.com`,
+      name: user.user_metadata?.full_name ?? user.email?.split('@')[0] ?? 'Usuario',
+      avatar_url: user.user_metadata?.avatar_url ?? null,
+      color: '#6366f1',
+    }, { onConflict: 'id', ignoreDuplicates: true })
+  }
+
   async function createHousehold() {
     if (!householdName.trim() || !user) return
     setLoading(true)
     setError('')
+
+    await ensureProfile()
 
     const { data: hh, error: errHH } = await supabase
       .from('households')
@@ -50,6 +63,8 @@ export default function OnboardingPage() {
     if (!inviteCode.trim() || !user) return
     setLoading(true)
     setError('')
+
+    await ensureProfile()
 
     const { data: hh, error: errHH } = await supabase
       .from('households')

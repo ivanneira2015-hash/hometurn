@@ -39,7 +39,7 @@ export default function ProfilePage() {
     const { data: hh } = await supabase.from('households').select('id')
       .eq('invite_code', inviteCode.trim().toUpperCase()).single()
     if (!hh) { setJoinError('Código no válido'); setJoining(false); return }
-    const { error } = await supabase.from('household_members').insert({ household_id: hh.id, profile_id: user!.id, role: 'member' })
+    const { error } = await supabase.from('household_members').insert({ household_id: hh.id, profile_id: profile!.id, role: 'member' })
     if (error) { setJoinError('Ya sos miembro o hubo un error'); setJoining(false); return }
     window.location.reload()
   }
@@ -49,7 +49,7 @@ export default function ProfilePage() {
     if (!name?.trim()) return
     const { data: hh } = await supabase.from('households').insert({ name: name.trim() }).select().single()
     if (hh) {
-      await supabase.from('household_members').insert({ household_id: hh.id, profile_id: user!.id, role: 'admin' })
+      await supabase.from('household_members').insert({ household_id: hh.id, profile_id: profile!.id, role: 'admin' })
       window.location.reload()
     }
   }
