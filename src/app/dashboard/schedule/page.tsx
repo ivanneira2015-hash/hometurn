@@ -5,9 +5,10 @@ import { useAuth } from '@/contexts/AuthContext'
 import { createClient } from '@/lib/supabase/client'
 import { WeeklyAssignment, ChoreDefinition, Profile } from '@/lib/types'
 import { getWeekStart, ORDERED_DAYS, DAY_LABELS, isRestrictedDay, getTodayDayOfWeek } from '@/lib/dates'
-import { Plus, ChevronLeft, ChevronRight, Settings, Check } from 'lucide-react'
+import { Plus, ChevronLeft, ChevronRight, Settings, Check, LayoutTemplate, RefreshCw } from 'lucide-react'
 import ManageChoresModal from '@/components/ManageChoresModal'
 import AssignChoreModal from '@/components/AssignChoreModal'
+import TemplatesModal from '@/components/TemplatesModal'
 
 const MEMBER_COLORS = ['#6366f1','#10b981','#f97316','#3b82f6','#ec4899']
 const MEMBER_LIGHT  = ['#eef2ff','#d1fae5','#fff7ed','#eff6ff','#fce7f3']
@@ -20,6 +21,8 @@ export default function SchedulePage() {
   const [chores, setChores] = useState<ChoreDefinition[]>([])
   const [loading, setLoading] = useState(true)
   const [showManage, setShowManage] = useState(false)
+  const [showTemplates, setShowTemplates] = useState(false)
+  const [rotating, setRotating] = useState(false)
   const [assignTarget, setAssignTarget] = useState<{ day: string; member: Profile } | null>(null)
 
   const isCurrentWeek = weekStart === getWeekStart()
@@ -68,18 +71,77 @@ export default function SchedulePage() {
     return assignments.filter(a => a.day_of_week === day && a.profile_id === memberId)
   }
 
+  async function rotateWeek() {
+    if (members.length < 2) return
+    setRotating(true)
+    // Get previous week's assignments
+    const prevWeekDate = new Date(weekStart + 'T12:00:00')
+    prevWeekDate.setDate(prevWeekDate.getDate() - 7)
+    const prevWeek = prevWeekDate.toISOString().split('T')[0]
+
+    const { data: prevAssignments } = await supabase
+      .from('weekly_assignments').select('*')
+      .eq('household_id', household!.id).eq('week_start', prevWeek)
+
+    if (!prevAssignments || prevAssignments.length === 0) {
+      setRotating(false)
+      return
+    }
+
+    // Delete current week
+    await supabase.from('weekly_assignments')
+      .delete().eq('household_id', household!.id).eq('week_start', weekStart)
+
+    // Rotate: each member gets the next member's tasks
+    const rotated = prevAssignments.map(a => {
+      const idx = members.findIndex(m => m.profile_id === a.profile_id)
+      const nextMember = members[(idx + 1) % members.length]
+      return {
+        household_id: household!.id,
+        week_start: weekStart,
+        profile_id: nextMember.profile_id,
+        chore_id: a.chore_id,
+        day_of_week: a.day_of_week,
+        completed: false,
+      }
+    })
+
+    const { data: newAssignments } = await supabase
+      .from('weekly_assignments').insert(rotated)
+      .select('*, chore:chore_definitions(*), profile:profiles(*)')
+
+    if (newAssignments) setAssignments(newAssignments as WeeklyAssignment[])
+    setRotating(false)
+  }
+
   return (
     <div>
       <div className="ht-page-header">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
           <h1 style={{ fontSize: 20, fontWeight: 800 }}>Calendario</h1>
-          <button onClick={() => setShowManage(true)} style={{
-            display: 'flex', alignItems: 'center', gap: 6, padding: '6px 12px',
-            background: 'var(--ht-indigo-light)', border: 'none', borderRadius: 8,
-            color: 'var(--ht-indigo)', fontSize: 13, fontWeight: 600, cursor: 'pointer',
-          }}>
-            <Settings size={14} /> Tareas
-          </button>
+          <div style={{ display: 'flex', gap: 6 }}>
+            <button onClick={() => setShowTemplates(true)} style={{
+              display: 'flex', alignItems: 'center', gap: 5, padding: '6px 10px',
+              background: 'var(--ht-surface-2)', border: '1px solid var(--ht-line)', borderRadius: 8,
+              color: 'var(--ht-text-3)', fontSize: 13, fontWeight: 600, cursor: 'pointer',
+            }}>
+              <LayoutTemplate size={14} />
+            </button>
+            <button onClick={rotateWeek} disabled={rotating} style={{
+              display: 'flex', alignItems: 'center', gap: 5, padding: '6px 10px',
+              background: 'var(--ht-surface-2)', border: '1px solid var(--ht-line)', borderRadius: 8,
+              color: 'var(--ht-text-3)', fontSize: 13, fontWeight: 600, cursor: 'pointer',
+            }}>
+              <RefreshCw size={14} className={rotating ? 'spinning' : ''} />
+            </button>
+            <button onClick={() => setShowManage(true)} style={{
+              display: 'flex', alignItems: 'center', gap: 5, padding: '6px 10px',
+              background: 'var(--ht-indigo-light)', border: 'none', borderRadius: 8,
+              color: 'var(--ht-indigo)', fontSize: 13, fontWeight: 600, cursor: 'pointer',
+            }}>
+              <Settings size={14} /> Tareas
+            </button>
+          </div>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <button onClick={prevWeek} style={{ background: 'var(--ht-surface-2)', border: '1px solid var(--ht-line)', borderRadius: 8, padding: '5px 8px', cursor: 'pointer' }}>
@@ -200,6 +262,17 @@ export default function SchedulePage() {
 
       {showManage && (
         <ManageChoresModal household={household!} chores={chores} onClose={() => setShowManage(false)} onUpdate={setChores} />
+      )}
+      {showTemplates && (
+        <TemplatesModal
+          householdId={household!.id}
+          members={members}
+          chores={chores}
+          currentAssignments={assignments}
+          weekStart={weekStart}
+          onClose={() => setShowTemplates(false)}
+          onApplied={newAssignments => { setAssignments(newAssignments); setShowTemplates(false) }}
+        />
       )}
       {assignTarget && (
         <AssignChoreModal

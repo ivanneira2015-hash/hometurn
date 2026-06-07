@@ -26,8 +26,8 @@ export default function OnboardingPage() {
       await supabase.from('household_members').insert({
         household_id: hh.id, profile_id: user!.id, role: 'admin',
       })
-      await refreshHousehold()
-      router.replace('/dashboard')
+      // Full reload so AuthContext re-initializes with the new household
+      window.location.href = '/dashboard'
     }
     setLoading(false)
   }
@@ -43,9 +43,7 @@ export default function OnboardingPage() {
       household_id: hh.id, profile_id: user!.id, role: 'member',
     })
     if (err) { setError('Ya sos miembro de este hogar'); setLoading(false); return }
-    await refreshHousehold()
-    router.replace('/dashboard')
-    setLoading(false)
+    window.location.href = '/dashboard'
   }
 
   return (
