@@ -29,10 +29,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   async function loadProfile(u: User): Promise<Profile | null> {
     // Always upsert to guarantee profile exists (handles trigger failures)
+    const displayName = u.user_metadata?.full_name ?? u.user_metadata?.name ?? u.email?.split('@')[0] ?? 'Usuario'
     const { data, error } = await supabase.from('profiles').upsert({
       id: u.id,
       email: u.email ?? `${u.id}@unknown.com`,
-      name: u.user_metadata?.full_name ?? u.user_metadata?.name ?? u.email?.split('@')[0] ?? 'Usuario',
+      nombre: displayName,   // MayoExpress compat (NOT NULL)
+      name: displayName,     // HomeTurn field
       avatar_url: u.user_metadata?.avatar_url ?? null,
       color: '#6366f1',
     }, { onConflict: 'id', ignoreDuplicates: true }).select().single()

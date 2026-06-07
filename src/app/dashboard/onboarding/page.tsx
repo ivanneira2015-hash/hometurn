@@ -18,10 +18,12 @@ export default function OnboardingPage() {
 
   async function ensureProfile() {
     if (!user) return
+    const displayName = user.user_metadata?.full_name ?? user.email?.split('@')[0] ?? 'Usuario'
     await supabase.from('profiles').upsert({
       id: user.id,
       email: user.email ?? `${user.id}@unknown.com`,
-      name: user.user_metadata?.full_name ?? user.email?.split('@')[0] ?? 'Usuario',
+      nombre: displayName,
+      name: displayName,
       avatar_url: user.user_metadata?.avatar_url ?? null,
       color: '#6366f1',
     }, { onConflict: 'id', ignoreDuplicates: true })
