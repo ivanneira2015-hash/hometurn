@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { Home, Calendar, CheckSquare, Vote } from 'lucide-react'
+import { Calendar, CheckSquare, Vote, ArrowRight } from 'lucide-react'
 
 export default function LoginPage() {
   const [loading, setLoading] = useState(false)
@@ -17,71 +17,105 @@ export default function LoginPage() {
   }
 
   return (
-    <div style={{
-      minHeight: '100dvh', background: '#fafafa',
-      display: 'flex', flexDirection: 'column',
-      alignItems: 'center', justifyContent: 'center',
-      padding: '24px',
-    }}>
-      <div style={{ width: '100%', maxWidth: 360 }}>
+    <div style={{ minHeight: '100dvh', display: 'flex', flexDirection: 'column' }}>
 
-        {/* Logo */}
-        <div style={{ textAlign: 'center', marginBottom: 40 }}>
-          <div style={{
-            width: 56, height: 56, borderRadius: 16,
-            background: '#6366f1', display: 'flex',
-            alignItems: 'center', justifyContent: 'center',
-            margin: '0 auto 16px',
-          }}>
-            <Home size={28} color="white" strokeWidth={2} />
-          </div>
-          <h1 style={{ fontSize: 28, fontWeight: 800, color: '#111827', marginBottom: 6 }}>
-            HomeTurn
-          </h1>
-          <p style={{ fontSize: 15, color: '#6b7280' }}>
-            Organizá las tareas del hogar en familia
-          </p>
+      {/* Top — dark hero */}
+      <div style={{
+        background: '#18181b',
+        flex: '0 0 auto',
+        padding: '48px 24px 40px',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+      }}>
+        {/* Logo mark */}
+        <div style={{
+          width: 64, height: 64, borderRadius: 20,
+          background: 'linear-gradient(135deg, #6366f1, #818cf8)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          marginBottom: 20,
+          boxShadow: '0 0 0 1px rgba(99,102,241,0.3), 0 8px 32px rgba(99,102,241,0.3)',
+        }}>
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <path d="M7 26V14l9-8 9 8v12H20v-7h-8v7H7Z" fill="white" opacity="0.9"/>
+            <path d="M12 26v-5h8v5" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
+          </svg>
         </div>
 
-        {/* Features */}
-        <div style={{
-          background: '#fff', border: '1px solid #e5e7eb',
-          borderRadius: 16, padding: 20, marginBottom: 24,
-        }}>
+        <h1 style={{ fontSize: 34, fontWeight: 900, color: '#fff', letterSpacing: '-0.02em', marginBottom: 10 }}>
+          HomeTurn
+        </h1>
+        <p style={{ fontSize: 15, color: '#a1a1aa', textAlign: 'center', maxWidth: 260, lineHeight: 1.5 }}>
+          Las tareas del hogar, organizadas. Sin discusiones.
+        </p>
+
+        {/* Stats row */}
+        <div style={{ display: 'flex', gap: 24, marginTop: 32 }}>
           {[
-            { icon: Calendar, text: 'Calendario semanal Lun–Vie por persona' },
-            { icon: CheckSquare, text: 'Listas de compras y tareas compartidas' },
-            { icon: Vote, text: 'Votación grupal para cambiar tareas' },
-            { icon: Home, text: 'Restricciones por horario de cada integrante' },
-          ].map(({ icon: Icon, text }) => (
+            { value: 'Lun–Vie', label: 'Calendario' },
+            { value: '3/3', label: 'Votos' },
+            { value: '∞', label: 'Listas' },
+          ].map(({ value, label }) => (
+            <div key={label} style={{ textAlign: 'center' }}>
+              <p style={{ fontSize: 20, fontWeight: 800, color: '#818cf8' }}>{value}</p>
+              <p style={{ fontSize: 11, color: '#71717a', fontWeight: 500 }}>{label}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Bottom — white card */}
+      <div style={{
+        flex: 1,
+        background: '#fafafa',
+        borderRadius: '24px 24px 0 0',
+        marginTop: -12,
+        padding: '28px 24px 40px',
+        display: 'flex',
+        flexDirection: 'column',
+        maxWidth: 480,
+        width: '100%',
+        margin: '-12px auto 0',
+      }}>
+
+        {/* Feature list */}
+        <div style={{ marginBottom: 28 }}>
+          {[
+            { icon: Calendar, text: 'Calendario semanal con restricciones por horario', color: '#6366f1', bg: '#eef2ff' },
+            { icon: CheckSquare, text: 'Listas de compras y pendientes compartidas', color: '#10b981', bg: '#d1fae5' },
+            { icon: Vote, text: 'Votación grupal para cambiar cualquier tarea', color: '#f97316', bg: '#fff7ed' },
+          ].map(({ icon: Icon, text, color, bg }) => (
             <div key={text} style={{
               display: 'flex', alignItems: 'center', gap: 12,
-              padding: '8px 0', borderBottom: '1px solid #f3f4f6',
+              padding: '10px 0',
+              borderBottom: '1px solid #f3f4f6',
             }}>
               <div style={{
-                width: 32, height: 32, borderRadius: 8,
-                background: '#eef2ff', display: 'flex',
+                width: 36, height: 36, borderRadius: 10,
+                background: bg, display: 'flex',
                 alignItems: 'center', justifyContent: 'center', flexShrink: 0,
               }}>
-                <Icon size={16} color="#6366f1" strokeWidth={2} />
+                <Icon size={17} color={color} strokeWidth={2} />
               </div>
-              <span style={{ fontSize: 14, color: '#374151' }}>{text}</span>
+              <span style={{ fontSize: 14, color: '#374151', lineHeight: 1.4 }}>{text}</span>
             </div>
           ))}
         </div>
 
-        {/* Google Button */}
+        {/* CTA */}
         <button
           onClick={handleGoogleLogin}
           disabled={loading}
           style={{
-            width: '100%', padding: '13px 20px',
-            background: loading ? '#f3f4f6' : '#fff',
-            border: '1.5px solid #e5e7eb',
-            borderRadius: 10, cursor: loading ? 'not-allowed' : 'pointer',
+            width: '100%', padding: '14px 20px',
+            background: loading ? '#f3f4f6' : '#18181b',
+            border: 'none', borderRadius: 12,
+            cursor: loading ? 'not-allowed' : 'pointer',
             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
-            fontSize: 15, fontWeight: 600, color: '#111827',
+            fontSize: 15, fontWeight: 700,
+            color: loading ? '#9ca3af' : '#fff',
             transition: 'background 0.15s',
+            marginBottom: 12,
           }}
         >
           {loading ? (
@@ -95,10 +129,11 @@ export default function LoginPage() {
             </svg>
           )}
           {loading ? 'Ingresando...' : 'Continuar con Google'}
+          {!loading && <ArrowRight size={16} />}
         </button>
 
-        <p style={{ fontSize: 12, color: '#9ca3af', textAlign: 'center', marginTop: 16 }}>
-          Solo para uso familiar. Compartís tareas con los integrantes del hogar.
+        <p style={{ fontSize: 12, color: '#9ca3af', textAlign: 'center' }}>
+          Solo para uso familiar · Compartís con los integrantes del hogar
         </p>
       </div>
     </div>
