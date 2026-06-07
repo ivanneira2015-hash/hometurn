@@ -73,7 +73,7 @@ export default function TemplatesModal({ householdId, members, chores, currentAs
         if (!chore) return null
         return { household_id: householdId, week_start: weekStart, profile_id: member.profile_id, chore_id: chore.id, day_of_week: slot.day, completed: false }
       })
-      .filter(Boolean)
+      .filter((x): x is NonNullable<typeof x> => x !== null)
 
     if (inserts.length === 0) { setApplying(null); return }
 
