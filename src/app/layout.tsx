@@ -1,5 +1,13 @@
 import type { Metadata, Viewport } from "next";
+import { Quicksand } from "next/font/google";
 import "./globals.css";
+
+const quicksand = Quicksand({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-quicksand",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "HomeTurn",
@@ -25,7 +33,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es">
+    <html lang="es" className={quicksand.variable}>
       <body>{children}</body>
     </html>
   );
