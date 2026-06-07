@@ -220,19 +220,17 @@ export default function SchedulePage() {
                           <span style={{ fontSize: 9, lineHeight: 1.2, textAlign: 'center' }}>{a.chore?.name}</span>
                         </button>
                       ))}
-                      {member.profile_id === user?.id && (
-                        <button
-                          onClick={() => setAssignTarget({ day, member: member.profile! })}
-                          style={{
-                            background: 'transparent', border: '1.5px dashed var(--ht-line)',
-                            borderRadius: 8, cursor: 'pointer',
-                            display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            minHeight: 32, color: 'var(--ht-text-4)',
-                          }}
-                        >
-                          <Plus size={12} />
-                        </button>
-                      )}
+                      <button
+                        onClick={() => setAssignTarget({ day, member: member.profile! })}
+                        style={{
+                          background: 'transparent', border: '1.5px dashed var(--ht-line)',
+                          borderRadius: 8, cursor: 'pointer',
+                          display: 'flex', alignItems: 'center', justifyContent: 'center',
+                          minHeight: 32, color: 'var(--ht-text-4)',
+                        }}
+                      >
+                        <Plus size={12} />
+                      </button>
                     </div>
                   )
                 })}
