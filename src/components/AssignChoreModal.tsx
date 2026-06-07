@@ -3,8 +3,8 @@
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { ChoreDefinition, Profile, WeeklyAssignment } from '@/lib/types'
-import { DAY_LABELS_FULL, isRestrictedDay } from '@/lib/dates'
-import { X, AlertTriangle, Check } from 'lucide-react'
+import { DAY_LABELS_FULL } from '@/lib/dates'
+import { X, Check } from 'lucide-react'
 
 interface Props {
   day: string
@@ -23,8 +23,7 @@ export default function AssignChoreModal({ day, member, chores, weekStart, house
   const supabase = createClient()
   const [selected, setSelected] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
-  const restricted = isRestrictedDay(day as 'tuesday' | 'thursday')
-  const available = restricted ? chores.filter(c => c.difficulty === 'light') : chores
+  const available = chores
 
   async function assign() {
     if (!selected) return
@@ -52,17 +51,10 @@ export default function AssignChoreModal({ day, member, chores, weekStart, house
           </button>
         </div>
 
-        {restricted && (
-          <div style={{ margin: '12px 16px 0', padding: '10px 12px', borderRadius: 8, background: 'var(--ht-orange-light)', border: '1px solid #fed7aa', display: 'flex', alignItems: 'center', gap: 8 }}>
-            <AlertTriangle size={15} color="var(--ht-orange)" />
-            <span style={{ fontSize: 13, color: '#9a3412', fontWeight: 600 }}>Día restringido — solo tareas livianas</span>
-          </div>
-        )}
-
         <div style={{ padding: '12px 16px 24px', maxHeight: '55vh', overflowY: 'auto' }}>
           {available.length === 0 ? (
             <div className="ht-empty" style={{ padding: '24px 0' }}>
-              <p style={{ fontSize: 14 }}>No hay tareas livianas. Agregá una en Gestionar Tareas.</p>
+              <p style={{ fontSize: 14 }}>No hay tareas. Agregá una en Gestionar Tareas.</p>
             </div>
           ) : available.map(chore => (
             <button

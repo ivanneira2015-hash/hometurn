@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { createClient } from '@/lib/supabase/client'
 import { WeeklyAssignment, ChoreDefinition, Profile } from '@/lib/types'
-import { getWeekStart, ORDERED_DAYS, DAY_LABELS, isRestrictedDay, getTodayDayOfWeek } from '@/lib/dates'
+import { getWeekStart, ORDERED_DAYS, DAY_LABELS, getTodayDayOfWeek } from '@/lib/dates'
 import { Plus, ChevronLeft, ChevronRight, Settings, Check, LayoutTemplate, RefreshCw } from 'lucide-react'
 import ManageChoresModal from '@/components/ManageChoresModal'
 import AssignChoreModal from '@/components/AssignChoreModal'
@@ -174,9 +174,6 @@ export default function SchedulePage() {
                   borderRadius: 6, padding: '4px 2px',
                 }}>
                   {DAY_LABELS[day]}
-                  {isRestrictedDay(day) && (
-                    <div style={{ fontSize: 8, color: 'var(--ht-orange)', marginTop: 1 }}>restringido</div>
-                  )}
                 </div>
               ))}
             </div>
@@ -203,7 +200,6 @@ export default function SchedulePage() {
 
                 {ORDERED_DAYS.map(day => {
                   const dayItems = getForDayMember(day, member.profile_id)
-                  const restricted = isRestrictedDay(day)
                   return (
                     <div key={day} style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
                       {dayItems.map(a => (
@@ -212,9 +208,9 @@ export default function SchedulePage() {
                           onClick={() => toggleComplete(a.id, a.completed)}
                           className="ht-chore-chip"
                           style={{
-                            background: a.completed ? 'var(--ht-green-light)' : restricted ? 'var(--ht-orange-light)' : MEMBER_LIGHT[mi % 5],
-                            color: a.completed ? 'var(--ht-green)' : restricted ? 'var(--ht-orange)' : MEMBER_COLORS[mi % 5],
-                            border: `1px solid ${a.completed ? '#a7f3d0' : restricted ? '#fed7aa' : '#e0e7ff'}`,
+                            background: a.completed ? 'var(--ht-green-light)' : MEMBER_LIGHT[mi % 5],
+                            color: a.completed ? 'var(--ht-green)' : MEMBER_COLORS[mi % 5],
+                            border: `1px solid ${a.completed ? '#a7f3d0' : '#e0e7ff'}`,
                             width: '100%', position: 'relative',
                           }}
                         >
@@ -244,12 +240,11 @@ export default function SchedulePage() {
             ))}
 
             {/* Legend */}
-            <div style={{ display: 'flex', gap: 12, marginTop: 8, flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', gap: 12, marginTop: 8 }}>
               {[
-                { bg: 'var(--ht-indigo-light)', border: '#e0e7ff', text: 'Asignada', color: 'var(--ht-indigo)' },
-                { bg: 'var(--ht-orange-light)', border: '#fed7aa', text: 'Día restringido', color: 'var(--ht-orange)' },
-                { bg: 'var(--ht-green-light)', border: '#a7f3d0', text: 'Completada', color: 'var(--ht-green)' },
-              ].map(({ bg, border, text, color }) => (
+                { bg: 'var(--ht-indigo-light)', border: '#e0e7ff', text: 'Asignada' },
+                { bg: 'var(--ht-green-light)', border: '#a7f3d0', text: 'Completada' },
+              ].map(({ bg, border, text }) => (
                 <div key={text} style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 11, color: 'var(--ht-text-3)' }}>
                   <div style={{ width: 12, height: 12, background: bg, borderRadius: 3, border: `1.5px solid ${border}` }} />
                   {text}
