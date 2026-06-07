@@ -15,12 +15,8 @@ interface AuthContextValue {
 }
 
 const AuthContext = createContext<AuthContextValue>({
-  user: null,
-  profile: null,
-  household: null,
-  members: [],
-  loading: true,
-  refreshHousehold: async () => {},
+  user: null, profile: null, household: null, members: [],
+  loading: true, refreshHousehold: async () => {},
 })
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -31,23 +27,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true)
   const supabase = createClient()
 
+  async function loadProfile(u: User): Promise<Profile | null> {
+    const { data } = await supabase.from('profiles').select('*').eq('id', u.id).single()
+    if (data) return data
+    // Profile not yet created — create it
+    const { data: created } = await supabase.from('profiles').upsert({
+      id: u.id,
+      email: u.email!,
+      name: u.user_metadata?.full_name ?? u.email!.split('@')[0],
+      avatar_url: u.user_metadata?.avatar_url ?? null,
+      color: '#6366f1',
+    }, { onConflict: 'id' }).select().single()
+    return created
+  }
+
   async function loadHousehold(userId: string) {
     const { data: memberRow } = await supabase
-      .from('household_members')
-      .select('household_id')
-      .eq('profile_id', userId)
-      .single()
-
+      .from('household_members').select('household_id')
+      .eq('profile_id', userId).single()
     if (!memberRow) return
 
     const [{ data: hh }, { data: mbrs }] = await Promise.all([
       supabase.from('households').select('*').eq('id', memberRow.household_id).single(),
-      supabase
-        .from('household_members')
-        .select('*, profile:profiles(*)')
+      supabase.from('household_members').select('*, profile:profiles(*)')
         .eq('household_id', memberRow.household_id),
     ])
-
     if (hh) setHousehold(hh)
     if (mbrs) setMembers(mbrs as HouseholdMember[])
   }
@@ -57,12 +61,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_, session) => {
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
       const u = session?.user ?? null
       setUser(u)
-
       if (u) {
-        const { data: prof } = await supabase.from('profiles').select('*').eq('id', u.id).single()
+        const prof = await loadProfile(u)
+        setProfile(prof)
+        await loadHousehold(u.id)
+      }
+      setLoading(false)
+    })
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      const u = session?.user ?? null
+      setUser(u)
+      if (u) {
+        const prof = await loadProfile(u)
         setProfile(prof)
         await loadHousehold(u.id)
       } else {

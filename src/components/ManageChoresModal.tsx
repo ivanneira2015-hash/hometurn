@@ -5,10 +5,13 @@ import { createClient } from '@/lib/supabase/client'
 import { ChoreDefinition, Household } from '@/lib/types'
 import { X, Plus, Trash2 } from 'lucide-react'
 
-const ICONS = ['🧹', '🧽', '🍽️', '🛒', '🧺', '🧴', '🪣', '🛋️', '🪟', '🚿', '🍳', '🥗', '🌿', '🐾', '📦', '🔧']
-const CATEGORIES = ['limpieza', 'cocina', 'compras', 'orden', 'jardín', 'mantenimiento', 'otro']
-const DIFFICULTIES: ChoreDefinition['difficulty'][] = ['light', 'medium', 'heavy']
-const DIFFICULTY_LABELS = { light: '🟢 Liviana', medium: '🟡 Moderada', heavy: '🔴 Pesada' }
+const CATEGORIES = ['limpieza','cocina','compras','orden','jardín','mantenimiento','otro']
+const DIFFICULTIES: { value: ChoreDefinition['difficulty']; label: string }[] = [
+  { value: 'light', label: 'Liviana' },
+  { value: 'medium', label: 'Moderada' },
+  { value: 'heavy', label: 'Pesada' },
+]
+const DIFF_COLORS = { light: 'var(--ht-green)', medium: 'var(--ht-yellow)', heavy: 'var(--ht-red)' }
 
 interface Props {
   household: Household
@@ -20,7 +23,6 @@ interface Props {
 export default function ManageChoresModal({ household, chores, onClose, onUpdate }: Props) {
   const supabase = createClient()
   const [name, setName] = useState('')
-  const [icon, setIcon] = useState('🧹')
   const [category, setCategory] = useState('limpieza')
   const [difficulty, setDifficulty] = useState<ChoreDefinition['difficulty']>('medium')
   const [saving, setSaving] = useState(false)
@@ -29,16 +31,10 @@ export default function ManageChoresModal({ household, chores, onClose, onUpdate
   async function addChore() {
     if (!name.trim()) return
     setSaving(true)
-    const { data, error } = await supabase
-      .from('chore_definitions')
-      .insert({ household_id: household.id, name: name.trim(), icon, category, difficulty })
-      .select()
-      .single()
-
-    if (!error && data) {
-      onUpdate([...chores, data])
-      setName('')
-    }
+    const { data } = await supabase.from('chore_definitions')
+      .insert({ household_id: household.id, name: name.trim(), icon: '•', category, difficulty })
+      .select().single()
+    if (data) { onUpdate([...chores, data]); setName('') }
     setSaving(false)
   }
 
@@ -53,96 +49,66 @@ export default function ManageChoresModal({ household, chores, onClose, onUpdate
     <>
       <div className="ht-overlay" onClick={onClose} />
       <div className="ht-modal">
-        <div style={{ padding: '20px 16px 8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <h2 style={{ fontSize: 18, fontWeight: 800 }}>Gestionar Tareas</h2>
-          <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--ht-text-3)' }}>
-            <X size={22} />
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px 16px 16px', borderBottom: '1px solid var(--ht-line)' }}>
+          <h2 style={{ fontSize: 17, fontWeight: 800 }}>Gestionar Tareas</h2>
+          <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--ht-text-3)', padding: 4 }}>
+            <X size={20} />
           </button>
         </div>
 
-        {/* Add new chore */}
-        <div style={{ padding: '0 16px 16px', borderBottom: '1px solid var(--ht-line)' }}>
-          <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--ht-text-3)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 10 }}>
-            Nueva Tarea
-          </p>
-
-          {/* Icon selector */}
-          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 10 }}>
-            {ICONS.map(ic => (
-              <button
-                key={ic}
-                onClick={() => setIcon(ic)}
-                style={{
-                  width: 36, height: 36, borderRadius: 8, border: '2px solid',
-                  borderColor: icon === ic ? 'var(--ht-purple)' : 'var(--ht-line)',
-                  background: icon === ic ? 'var(--ht-purple-light)' : 'white',
-                  fontSize: 18, cursor: 'pointer',
-                }}
-              >
-                {ic}
-              </button>
-            ))}
-          </div>
-
+        {/* Add form */}
+        <div style={{ padding: '16px', borderBottom: '1px solid var(--ht-line)' }}>
+          <p className="ht-section-label">Nueva tarea</p>
           <input
             className="ht-input"
-            placeholder="Nombre de la tarea (ej: Barrer)"
+            placeholder="Nombre (ej: Barrer)"
             value={name}
             onChange={e => setName(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && addChore()}
             style={{ marginBottom: 8 }}
           />
-
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 10 }}>
-            <select className="ht-input" value={category} onChange={e => setCategory(e.target.value)}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 12 }}>
+            <select className="ht-input" value={category} onChange={e => setCategory(e.target.value)} style={{ cursor: 'pointer' }}>
               {CATEGORIES.map(c => <option key={c} value={c} style={{ textTransform: 'capitalize' }}>{c}</option>)}
             </select>
-            <select className="ht-input" value={difficulty} onChange={e => setDifficulty(e.target.value as ChoreDefinition['difficulty'])}>
-              {DIFFICULTIES.map(d => <option key={d} value={d}>{DIFFICULTY_LABELS[d]}</option>)}
+            <select className="ht-input" value={difficulty} onChange={e => setDifficulty(e.target.value as ChoreDefinition['difficulty'])} style={{ cursor: 'pointer' }}>
+              {DIFFICULTIES.map(d => <option key={d.value} value={d.value}>{d.label}</option>)}
             </select>
           </div>
-
-          <button
-            onClick={addChore}
-            disabled={saving || !name.trim()}
-            className="ht-btn ht-btn-primary"
-            style={{ width: '100%' }}
-          >
-            <Plus size={16} />
-            {saving ? 'Guardando...' : 'Agregar Tarea'}
+          <button onClick={addChore} disabled={saving || !name.trim()} className="ht-btn ht-btn-primary" style={{ width: '100%' }}>
+            <Plus size={15} /> {saving ? 'Guardando...' : 'Agregar tarea'}
           </button>
         </div>
 
-        {/* Existing chores */}
-        <div style={{ padding: '16px', maxHeight: '50vh', overflowY: 'auto' }}>
-          <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--ht-text-3)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 10 }}>
-            Tareas del hogar ({chores.length})
-          </p>
-          {chores.length === 0 && (
-            <div className="ht-empty">
-              <div style={{ fontSize: 36, marginBottom: 8 }}>🧹</div>
-              <p>No hay tareas definidas aún</p>
+        {/* List */}
+        <div style={{ padding: 16, maxHeight: '45vh', overflowY: 'auto' }}>
+          <p className="ht-section-label">Tareas del hogar ({chores.length})</p>
+          {chores.length === 0 ? (
+            <div className="ht-empty" style={{ padding: '24px 0' }}>
+              <p style={{ fontSize: 14 }}>No hay tareas definidas aún</p>
             </div>
-          )}
-          {chores.map(chore => (
+          ) : chores.map(chore => (
             <div key={chore.id} style={{
               display: 'flex', alignItems: 'center', gap: 10,
               padding: '10px 12px', borderRadius: 10,
               background: 'var(--ht-surface-2)', marginBottom: 6,
             }}>
-              <span style={{ fontSize: 22 }}>{chore.icon}</span>
+              <div style={{
+                width: 6, height: 6, borderRadius: '50%', flexShrink: 0,
+                background: DIFF_COLORS[chore.difficulty],
+              }} />
               <div style={{ flex: 1 }}>
-                <div style={{ fontWeight: 600, fontSize: 14 }}>{chore.name}</div>
-                <div style={{ fontSize: 11, color: 'var(--ht-text-3)', textTransform: 'capitalize' }}>
-                  {chore.category} · {DIFFICULTY_LABELS[chore.difficulty]}
-                </div>
+                <p style={{ fontWeight: 600, fontSize: 14 }}>{chore.name}</p>
+                <p style={{ fontSize: 11, color: 'var(--ht-text-3)', textTransform: 'capitalize' }}>
+                  {chore.category} · {DIFFICULTIES.find(d => d.value === chore.difficulty)?.label}
+                </p>
               </div>
               <button
                 onClick={() => deleteChore(chore.id)}
                 disabled={deleting === chore.id}
-                style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--ht-red)', padding: 6, borderRadius: 6 }}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--ht-text-4)', padding: 6, borderRadius: 6 }}
               >
-                <Trash2 size={16} />
+                <Trash2 size={15} />
               </button>
             </div>
           ))}

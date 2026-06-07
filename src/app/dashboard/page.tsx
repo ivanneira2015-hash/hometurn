@@ -5,8 +5,10 @@ import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import { createClient } from '@/lib/supabase/client'
 import { WeeklyAssignment } from '@/lib/types'
-import { getWeekStart, DAYS, getDayLabel } from '@/lib/dates'
-import { CheckCircle2, AlertCircle } from 'lucide-react'
+import { getWeekStart, getTodayDayOfWeek, DAY_LABELS_FULL } from '@/lib/dates'
+import { CheckCircle2, Circle, Users, Calendar } from 'lucide-react'
+
+const MEMBER_COLORS = ['#6366f1','#10b981','#f97316','#3b82f6','#ec4899']
 
 export default function DashboardPage() {
   const { user, profile, household, members, loading } = useAuth()
@@ -16,28 +18,19 @@ export default function DashboardPage() {
   const [tasksLoading, setTasksLoading] = useState(true)
 
   useEffect(() => {
-    if (!loading && !user) router.replace('/login')
-  }, [loading, user])
-
-  useEffect(() => {
-    if (!loading && user && household) {
-      if (!household) {
-        router.replace('/dashboard/onboarding')
-        return
-      }
-      loadMyTasks()
-    }
+    if (loading) return
+    if (!user) { router.replace('/login'); return }
+    if (!household) { router.replace('/dashboard/onboarding'); return }
+    loadMyTasks()
   }, [loading, user, household])
 
   async function loadMyTasks() {
-    const weekStart = getWeekStart()
     const { data } = await supabase
       .from('weekly_assignments')
       .select('*, chore:chore_definitions(*)')
       .eq('profile_id', user!.id)
-      .eq('week_start', weekStart)
+      .eq('week_start', getWeekStart())
       .order('day_of_week')
-
     setMyTasks(data ?? [])
     setTasksLoading(false)
   }
@@ -48,119 +41,130 @@ export default function DashboardPage() {
   }
 
   if (loading) return <LoadingSkeleton />
-  if (!user || !profile) return null
+  if (!user || !profile || !household) return null
 
-  const today = new Date().toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase() as keyof typeof DAYS
-  const todayTasks = myTasks.filter(t => t.day_of_week === today)
-  const completedCount = myTasks.filter(t => t.completed).length
-  const totalCount = myTasks.length
-  const percent = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0
+  const today = getTodayDayOfWeek()
+  const todayTasks = today ? myTasks.filter(t => t.day_of_week === today) : []
+  const completed = myTasks.filter(t => t.completed).length
+  const total = myTasks.length
+  const percent = total > 0 ? Math.round((completed / total) * 100) : 0
+  const todayLabel = today ? DAY_LABELS_FULL[today] : ''
 
   return (
     <div>
       {/* Header */}
-      <div className="ht-header-gradient" style={{ paddingBottom: 48 }}>
-        <div style={{ position: 'relative', zIndex: 1 }}>
-          <p style={{ opacity: 0.8, fontSize: 14, marginBottom: 4 }}>
-            {household?.name ?? 'Mi Casa'} 🏠
-          </p>
-          <h1 style={{ fontSize: 26, fontWeight: 800, marginBottom: 4 }}>
-            Hola, {profile.name.split(' ')[0]} 👋
-          </h1>
-          <p style={{ opacity: 0.75, fontSize: 14 }}>
-            {new Date().toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long' })}
-          </p>
+      <div className="ht-page-header">
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+          <div>
+            <p style={{ fontSize: 12, color: 'var(--ht-text-3)', marginBottom: 2, fontWeight: 500 }}>
+              {household.name}
+            </p>
+            <h1 style={{ fontSize: 22, fontWeight: 800, color: 'var(--ht-text)' }}>
+              Hola, {profile.name.split(' ')[0]}
+            </h1>
+          </div>
+          <div style={{
+            width: 40, height: 40, borderRadius: '50%', overflow: 'hidden',
+            background: 'var(--ht-indigo)', display: 'flex', alignItems: 'center',
+            justifyContent: 'center', fontSize: 16, fontWeight: 700, color: 'white',
+            flexShrink: 0,
+          }}>
+            {profile.avatar_url
+              ? <img src={profile.avatar_url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              : profile.name[0].toUpperCase()
+            }
+          </div>
         </div>
       </div>
 
-      <div className="ht-page" style={{ marginTop: -28, paddingTop: 0 }}>
-        {/* Progress card */}
-        <div className="ht-card" style={{ marginBottom: 16 }}>
+      <div className="ht-page" style={{ paddingTop: 16 }}>
+
+        {/* Progress */}
+        <div className="ht-card" style={{ marginBottom: 12 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-            <span style={{ fontWeight: 700, fontSize: 15 }}>Tu semana</span>
-            <span style={{
-              background: 'var(--ht-purple-light)', color: 'var(--ht-purple)',
-              borderRadius: 20, padding: '2px 10px', fontSize: 13, fontWeight: 700,
-            }}>
-              {completedCount}/{totalCount} ✓
-            </span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <Calendar size={16} color="var(--ht-indigo)" />
+              <span style={{ fontWeight: 700, fontSize: 14 }}>Esta semana</span>
+            </div>
+            <span className="ht-badge ht-badge-indigo">{completed}/{total} listas</span>
           </div>
-          <div style={{ height: 8, background: 'var(--ht-surface-2)', borderRadius: 4, overflow: 'hidden' }}>
+          <div style={{ height: 6, background: 'var(--ht-line)', borderRadius: 3, overflow: 'hidden' }}>
             <div style={{
               height: '100%', width: `${percent}%`,
-              background: 'linear-gradient(90deg, var(--ht-purple), var(--ht-pink))',
-              borderRadius: 4, transition: 'width 0.4s ease',
+              background: percent === 100 ? 'var(--ht-green)' : 'var(--ht-indigo)',
+              borderRadius: 3, transition: 'width 0.4s ease',
             }} />
           </div>
           <p style={{ fontSize: 12, color: 'var(--ht-text-3)', marginTop: 6 }}>
-            {percent === 100 ? '🎉 ¡Semana completada!' : `${100 - percent}% restante esta semana`}
+            {percent === 100 ? 'Semana completada' : `${100 - percent}% restante`}
           </p>
         </div>
 
-        {/* Today's tasks */}
+        {/* Today */}
         <div style={{ marginBottom: 16 }}>
-          <h2 style={{ fontWeight: 700, fontSize: 16, marginBottom: 10, color: 'var(--ht-text)' }}>
-            Hoy — {getDayLabel(today)}
-          </h2>
+          <p className="ht-section-label">{todayLabel || 'Hoy'}</p>
           {tasksLoading ? (
-            <div style={{ color: 'var(--ht-text-3)', fontSize: 14 }}>Cargando...</div>
+            <div style={{ height: 72, background: 'var(--ht-line-2)', borderRadius: 12, animation: 'pulse 1.5s infinite' }} />
           ) : todayTasks.length === 0 ? (
-            <div className="ht-card" style={{ textAlign: 'center', color: 'var(--ht-text-3)', fontSize: 14 }}>
-              🎉 Sin tareas asignadas hoy
+            <div className="ht-card" style={{ textAlign: 'center', color: 'var(--ht-text-3)', fontSize: 14, padding: '24px 16px' }}>
+              Sin tareas asignadas hoy
             </div>
           ) : (
             todayTasks.map(task => (
-              <div key={task.id} className="ht-card" style={{
-                marginBottom: 8, display: 'flex', alignItems: 'center', gap: 12,
-              }}>
-                <button
-                  onClick={() => toggleComplete(task.id, task.completed)}
-                  style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
-                >
-                  {task.completed
-                    ? <CheckCircle2 size={26} color="var(--ht-green)" fill="var(--ht-green-light)" />
-                    : <AlertCircle size={26} color="var(--ht-yellow)" />
-                  }
-                </button>
+              <button
+                key={task.id}
+                onClick={() => toggleComplete(task.id, task.completed)}
+                className="ht-list-item"
+                style={{ width: '100%', cursor: 'pointer', textAlign: 'left', background: 'none' }}
+              >
+                {task.completed
+                  ? <CheckCircle2 size={22} color="var(--ht-green)" />
+                  : <Circle size={22} color="var(--ht-text-4)" />
+                }
                 <div style={{ flex: 1 }}>
-                  <div style={{ fontWeight: 600, fontSize: 15, display: 'flex', alignItems: 'center', gap: 6 }}>
-                    <span>{task.chore?.icon}</span>
-                    <span style={{ textDecoration: task.completed ? 'line-through' : 'none', color: task.completed ? 'var(--ht-text-3)' : 'var(--ht-text)' }}>
-                      {task.chore?.name}
-                    </span>
-                  </div>
-                  <div style={{ fontSize: 12, color: 'var(--ht-text-3)', textTransform: 'capitalize' }}>
-                    {task.chore?.difficulty} · {task.chore?.category}
-                  </div>
+                  <p style={{
+                    fontWeight: 600, fontSize: 15,
+                    color: task.completed ? 'var(--ht-text-4)' : 'var(--ht-text)',
+                    textDecoration: task.completed ? 'line-through' : 'none',
+                  }}>
+                    {task.chore?.name}
+                  </p>
+                  <p style={{ fontSize: 12, color: 'var(--ht-text-3)', textTransform: 'capitalize' }}>
+                    {task.chore?.category} · {task.chore?.difficulty === 'light' ? 'Liviana' : task.chore?.difficulty === 'medium' ? 'Moderada' : 'Pesada'}
+                  </p>
                 </div>
-              </div>
+              </button>
             ))
           )}
         </div>
 
-        {/* Members overview */}
-        {members.length > 0 && (
-          <div>
-            <h2 style={{ fontWeight: 700, fontSize: 16, marginBottom: 10 }}>
-              Integrantes
-            </h2>
-            <div style={{ display: 'flex', gap: 10 }}>
-              {members.map((m, i) => (
-                <div key={m.id} className="ht-card" style={{ flex: 1, textAlign: 'center', padding: 12 }}>
-                  <div className={`ht-avatar member-color-${i % 5}`} style={{ margin: '0 auto 6px' }}>
-                    {m.profile?.avatar_url
-                      ? <img src={m.profile.avatar_url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                      : m.profile?.name?.[0]?.toUpperCase()
-                    }
-                  </div>
-                  <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--ht-text)' }}>
-                    {m.profile?.name?.split(' ')[0]}
-                  </div>
+        {/* Members */}
+        <div>
+          <p className="ht-section-label" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <Users size={12} /> Integrantes
+          </p>
+          <div style={{ display: 'flex', gap: 8 }}>
+            {members.map((m, i) => (
+              <div key={m.id} className="ht-card" style={{ flex: 1, textAlign: 'center', padding: '12px 8px' }}>
+                <div style={{
+                  width: 36, height: 36, borderRadius: '50%',
+                  background: MEMBER_COLORS[i % 5],
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: 14, fontWeight: 700, color: 'white', margin: '0 auto 6px',
+                  overflow: 'hidden',
+                }}>
+                  {m.profile?.avatar_url
+                    ? <img src={m.profile.avatar_url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    : m.profile?.name?.[0]?.toUpperCase()
+                  }
                 </div>
-              ))}
-            </div>
+                <p style={{ fontSize: 11, fontWeight: 600, color: 'var(--ht-text-2)' }}>
+                  {m.profile?.name?.split(' ')[0]}
+                </p>
+              </div>
+            ))}
           </div>
-        )}
+        </div>
       </div>
     </div>
   )
@@ -169,11 +173,10 @@ export default function DashboardPage() {
 function LoadingSkeleton() {
   return (
     <div>
-      <div style={{ height: 140, background: 'linear-gradient(135deg, #7c3aed, #ec4899)' }} />
-      <div className="ht-page" style={{ marginTop: -28 }}>
-        {[1, 2, 3].map(i => (
-          <div key={i} style={{ height: 72, background: '#f3f0ff', borderRadius: 12, marginBottom: 12,
-            animation: 'pulse 1.5s infinite' }} />
+      <div style={{ height: 80, background: 'var(--ht-surface)', borderBottom: '1px solid var(--ht-line)' }} />
+      <div className="ht-page" style={{ paddingTop: 16 }}>
+        {[1,2,3].map(i => (
+          <div key={i} style={{ height: 72, background: 'var(--ht-line-2)', borderRadius: 12, marginBottom: 12 }} />
         ))}
       </div>
     </div>
