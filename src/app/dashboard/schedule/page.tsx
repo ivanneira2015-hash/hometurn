@@ -24,6 +24,7 @@ export default function SchedulePage() {
   const [showTemplates, setShowTemplates] = useState(false)
   const [rotating, setRotating] = useState(false)
   const [assignTarget, setAssignTarget] = useState<{ day: string; member: Profile } | null>(null)
+  const [actionTarget, setActionTarget] = useState<WeeklyAssignment | null>(null)
 
   const isCurrentWeek = weekStart === getWeekStart()
   const today = getTodayDayOfWeek()
@@ -58,6 +59,13 @@ export default function SchedulePage() {
   async function toggleComplete(id: string, current: boolean) {
     await supabase.from('weekly_assignments').update({ completed: !current }).eq('id', id)
     setAssignments(prev => prev.map(a => a.id === id ? { ...a, completed: !current } : a))
+    setActionTarget(null)
+  }
+
+  async function deleteAssignment(id: string) {
+    await supabase.from('weekly_assignments').delete().eq('id', id)
+    setAssignments(prev => prev.filter(a => a.id !== id))
+    setActionTarget(null)
   }
 
   function weekLabel() {
@@ -205,18 +213,17 @@ export default function SchedulePage() {
                       {dayItems.map(a => (
                         <button
                           key={a.id}
-                          onClick={() => toggleComplete(a.id, a.completed)}
+                          onClick={() => setActionTarget(a)}
                           className="ht-chore-chip"
                           style={{
-                            background: a.completed ? 'var(--ht-green-light)' : MEMBER_LIGHT[mi % 5],
-                            color: a.completed ? 'var(--ht-green)' : MEMBER_COLORS[mi % 5],
-                            border: `1px solid ${a.completed ? '#a7f3d0' : '#e0e7ff'}`,
+                            background: a.completed ? 'rgba(16,185,129,0.12)' : MEMBER_LIGHT[mi % 5],
+                            color: a.completed ? 'var(--ht-mint)' : MEMBER_COLORS[mi % 5],
+                            border: `1px solid ${a.completed ? 'rgba(16,185,129,0.25)' : 'rgba(255,255,255,0.5)'}`,
                             width: '100%', position: 'relative',
+                            backdropFilter: 'blur(8px)',
                           }}
                         >
-                          {a.completed && (
-                            <Check size={9} style={{ position: 'absolute', top: 3, right: 3 }} strokeWidth={3} />
-                          )}
+                          {a.completed && <Check size={9} style={{ position: 'absolute', top: 3, right: 3 }} strokeWidth={3} />}
                           <span style={{ fontSize: 9, lineHeight: 1.2, textAlign: 'center' }}>{a.chore?.name}</span>
                         </button>
                       ))}
@@ -274,6 +281,47 @@ export default function SchedulePage() {
           onClose={() => setAssignTarget(null)}
           onAssigned={newA => { setAssignments(prev => [...prev, newA]); setAssignTarget(null) }}
         />
+      )}
+
+      {/* Action sheet — tap on chore chip */}
+      {actionTarget && (
+        <>
+          <div className="ht-overlay" onClick={() => setActionTarget(null)} />
+          <div className="ht-modal" style={{ padding: '20px 16px 32px' }}>
+            {/* Handle */}
+            <div style={{ width: 36, height: 4, background: 'rgba(99,102,241,0.2)', borderRadius: 9999, margin: '0 auto 20px' }} />
+
+            <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--ht-text-3)', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 6 }}>
+              Tarea
+            </p>
+            <p style={{ fontSize: 18, fontWeight: 800, color: 'var(--ht-text)', marginBottom: 20 }}>
+              {actionTarget.chore?.name}
+            </p>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              <button
+                onClick={() => toggleComplete(actionTarget.id, actionTarget.completed)}
+                className="ht-btn"
+                style={{
+                  background: actionTarget.completed ? 'rgba(99,102,241,0.08)' : 'rgba(16,185,129,0.1)',
+                  color: actionTarget.completed ? 'var(--ht-primary)' : 'var(--ht-mint)',
+                  border: `1.5px solid ${actionTarget.completed ? 'rgba(99,102,241,0.2)' : 'rgba(16,185,129,0.2)'}`,
+                  width: '100%', justifyContent: 'center', fontSize: 15,
+                }}
+              >
+                {actionTarget.completed ? 'Marcar como pendiente' : 'Marcar como completada'}
+              </button>
+
+              <button
+                onClick={() => deleteAssignment(actionTarget.id)}
+                className="ht-btn ht-btn-danger"
+                style={{ width: '100%', justifyContent: 'center', fontSize: 15 }}
+              >
+                Eliminar asignación
+              </button>
+            </div>
+          </div>
+        </>
       )}
     </div>
   )
