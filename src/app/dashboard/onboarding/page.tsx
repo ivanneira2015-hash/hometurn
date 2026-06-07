@@ -17,32 +17,62 @@ export default function OnboardingPage() {
   const [error, setError] = useState('')
 
   async function createHousehold() {
-    if (!householdName.trim()) return
+    if (!householdName.trim() || !user) return
     setLoading(true)
     setError('')
-    const { data: hh } = await supabase
-      .from('households').insert({ name: householdName.trim() }).select().single()
-    if (hh) {
-      await supabase.from('household_members').insert({
-        household_id: hh.id, profile_id: user!.id, role: 'admin',
-      })
-      // Full reload so AuthContext re-initializes with the new household
-      window.location.href = '/dashboard'
+
+    const { data: hh, error: errHH } = await supabase
+      .from('households')
+      .insert({ name: householdName.trim() })
+      .select()
+      .single()
+
+    if (errHH || !hh) {
+      setError(`Error al crear el hogar: ${errHH?.message ?? 'sin respuesta'}`)
+      setLoading(false)
+      return
     }
-    setLoading(false)
+
+    const { error: errMember } = await supabase
+      .from('household_members')
+      .insert({ household_id: hh.id, profile_id: user.id, role: 'admin' })
+
+    if (errMember) {
+      setError(`Error al unirse al hogar: ${errMember.message}`)
+      setLoading(false)
+      return
+    }
+
+    window.location.href = '/dashboard'
   }
 
   async function joinHousehold() {
-    if (!inviteCode.trim()) return
+    if (!inviteCode.trim() || !user) return
     setLoading(true)
     setError('')
-    const { data: hh } = await supabase
-      .from('households').select('id').eq('invite_code', inviteCode.trim().toUpperCase()).single()
-    if (!hh) { setError('Código no válido'); setLoading(false); return }
-    const { error: err } = await supabase.from('household_members').insert({
-      household_id: hh.id, profile_id: user!.id, role: 'member',
-    })
-    if (err) { setError('Ya sos miembro de este hogar'); setLoading(false); return }
+
+    const { data: hh, error: errHH } = await supabase
+      .from('households')
+      .select('id')
+      .eq('invite_code', inviteCode.trim().toUpperCase())
+      .single()
+
+    if (errHH || !hh) {
+      setError('Código no válido')
+      setLoading(false)
+      return
+    }
+
+    const { error: errMember } = await supabase
+      .from('household_members')
+      .insert({ household_id: hh.id, profile_id: user.id, role: 'member' })
+
+    if (errMember) {
+      setError(`Error: ${errMember.message}`)
+      setLoading(false)
+      return
+    }
+
     window.location.href = '/dashboard'
   }
 
@@ -100,8 +130,9 @@ export default function OnboardingPage() {
               onChange={e => setHouseholdName(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && createHousehold()}
               autoFocus
-              style={{ marginBottom: 16 }}
+              style={{ marginBottom: error ? 8 : 16 }}
             />
+            {error && <p style={{ fontSize: 13, color: '#ef4444', marginBottom: 12 }}>{error}</p>}
             <button
               onClick={createHousehold}
               disabled={loading || !householdName.trim()}
