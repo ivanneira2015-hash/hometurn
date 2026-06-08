@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { ScheduleTemplate, HouseholdMember, WeeklyAssignment, ChoreDefinition } from '@/lib/types'
 import { X, Plus, Trash2, Check, LayoutTemplate, Sparkles, ChevronLeft, ChevronRight } from 'lucide-react'
+import { useRef } from 'react'
 import { ORDERED_DAYS, DAY_LABELS_FULL } from '@/lib/dates'
 import { PRESET_TEMPLATES, PresetTemplate } from '@/lib/presetTemplates'
 
@@ -134,6 +135,25 @@ export default function TemplatesModal({ householdId, members, chores, currentAs
   const [newName, setNewName] = useState('')
   const [showSave, setShowSave] = useState(false)
   const [previewIdx, setPreviewIdx] = useState(0)
+  const touchStartX = useRef<number | null>(null)
+
+  function handleTouchStart(e: React.TouchEvent) {
+    touchStartX.current = e.touches[0].clientX
+  }
+
+  function handleTouchEnd(e: React.TouchEvent) {
+    if (touchStartX.current === null) return
+    const delta = touchStartX.current - e.changedTouches[0].clientX
+    if (Math.abs(delta) < 40) return // ignore small movements
+    if (delta > 0) {
+      // swipe left → next
+      setPreviewIdx(i => Math.min(PRESET_TEMPLATES.length - 1, i + 1))
+    } else {
+      // swipe right → prev
+      setPreviewIdx(i => Math.max(0, i - 1))
+    }
+    touchStartX.current = null
+  }
 
   // Member display names from actual household members
   const memberNames = [0, 1, 2].map(i => members[i]?.profile?.name?.split(' ')[0] ?? `Miembro ${i + 1}`)
@@ -240,7 +260,11 @@ export default function TemplatesModal({ householdId, members, chores, currentAs
 
           {/* ── PRESET TAB — visual carousel ── */}
           {tab === 'preset' && (
-            <>
+            <div
+              onTouchStart={handleTouchStart}
+              onTouchEnd={handleTouchEnd}
+              style={{ userSelect: 'none' }}
+            >
               {/* Navigation header */}
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
                 <button
@@ -339,7 +363,7 @@ export default function TemplatesModal({ householdId, members, chores, currentAs
                   : <><Sparkles size={15} /> Aplicar "{currentPreset.name}" esta semana</>
                 }
               </button>
-            </>
+            </div>
           )}
 
           {/* ── SAVED TAB ── */}
