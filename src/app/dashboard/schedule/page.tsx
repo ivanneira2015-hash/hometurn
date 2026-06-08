@@ -10,8 +10,17 @@ import ManageChoresModal from '@/components/ManageChoresModal'
 import AssignChoreModal from '@/components/AssignChoreModal'
 import TemplatesModal from '@/components/TemplatesModal'
 
-const MEMBER_COLORS = ['#6366f1','#10b981','#f97316','#3b82f6','#ec4899']
-const MEMBER_LIGHT  = ['#eef2ff','#d1fae5','#fff7ed','#eff6ff','#fce7f3']
+const MEMBER_GRAD  = [
+  'linear-gradient(135deg,#7c3aed,#a78bfa)',
+  'linear-gradient(135deg,#f43f5e,#fb7185)',
+  'linear-gradient(135deg,#f59e0b,#fbbf24)',
+  'linear-gradient(135deg,#10b981,#34d399)',
+  'linear-gradient(135deg,#3b82f6,#60a5fa)',
+]
+const MEMBER_COLORS = ['#7c3aed','#f43f5e','#f59e0b','#10b981','#3b82f6']
+const MEMBER_LIGHT  = ['rgba(237,233,254,0.85)','rgba(255,241,242,0.85)','rgba(255,251,235,0.85)','rgba(209,250,229,0.85)','rgba(239,246,255,0.85)']
+const MEMBER_BORDER = ['rgba(124,58,237,0.25)','rgba(244,63,94,0.25)','rgba(245,158,11,0.25)','rgba(16,185,129,0.25)','rgba(59,130,246,0.25)']
+const MEMBER_GLOW   = ['rgba(124,58,237,0.3)','rgba(244,63,94,0.3)','rgba(245,158,11,0.3)','rgba(16,185,129,0.3)','rgba(59,130,246,0.3)']
 
 export default function SchedulePage() {
   const { user, household, members } = useAuth()
@@ -191,10 +200,11 @@ export default function SchedulePage() {
               <div key={member.id} style={{ display: 'grid', gridTemplateColumns: '72px repeat(5,1fr)', gap: 4, marginBottom: 8 }}>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start', paddingTop: 4, gap: 4 }}>
                   <div style={{
-                    width: 30, height: 30, borderRadius: '50%',
-                    background: MEMBER_COLORS[mi % 5],
+                    width: 32, height: 32, borderRadius: 9999,
+                    background: MEMBER_GRAD[mi % 5],
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: 12, fontWeight: 700, color: 'white', overflow: 'hidden',
+                    fontSize: 12, fontWeight: 900, color: 'white', overflow: 'hidden',
+                    boxShadow: `0 3px 8px ${MEMBER_GLOW[mi % 5]}`,
                   }}>
                     {member.profile?.avatar_url
                       ? <img src={member.profile.avatar_url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
@@ -209,22 +219,35 @@ export default function SchedulePage() {
                 {ORDERED_DAYS.map(day => {
                   const dayItems = getForDayMember(day, member.profile_id)
                   return (
-                    <div key={day} style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                    <div key={day} style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
                       {dayItems.map(a => (
                         <button
                           key={a.id}
                           onClick={() => setActionTarget(a)}
                           className="ht-chore-chip"
                           style={{
-                            background: a.completed ? 'rgba(16,185,129,0.12)' : MEMBER_LIGHT[mi % 5],
+                            background: a.completed
+                              ? 'rgba(16,185,129,0.1)'
+                              : MEMBER_LIGHT[mi % 5],
                             color: a.completed ? 'var(--ht-mint)' : MEMBER_COLORS[mi % 5],
-                            border: `1px solid ${a.completed ? 'rgba(16,185,129,0.25)' : 'rgba(255,255,255,0.5)'}`,
+                            border: `1.5px solid ${a.completed ? 'rgba(16,185,129,0.3)' : MEMBER_BORDER[mi % 5]}`,
                             width: '100%', position: 'relative',
                             backdropFilter: 'blur(8px)',
+                            boxShadow: a.completed ? 'none' : `0 2px 8px ${MEMBER_GLOW[mi % 5]}`,
+                            minHeight: 58,
                           }}
                         >
-                          {a.completed && <Check size={9} style={{ position: 'absolute', top: 3, right: 3 }} strokeWidth={3} />}
-                          <span style={{ fontSize: 9, lineHeight: 1.2, textAlign: 'center' }}>{a.chore?.name}</span>
+                          {a.completed && (
+                            <div style={{
+                              position: 'absolute', top: 3, right: 3,
+                              width: 14, height: 14, borderRadius: 9999,
+                              background: 'var(--ht-mint)',
+                              display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            }}>
+                              <Check size={8} color="white" strokeWidth={3} />
+                            </div>
+                          )}
+                          <span style={{ fontSize: 9, lineHeight: 1.3, textAlign: 'center', fontWeight: 800, padding: '0 2px' }}>{a.chore?.name}</span>
                         </button>
                       ))}
                       <button
