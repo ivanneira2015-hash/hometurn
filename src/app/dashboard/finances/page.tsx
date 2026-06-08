@@ -6,8 +6,9 @@ import { createClient } from '@/lib/supabase/client'
 import { Transaction, ExpenseCategory, Budget } from '@/lib/types'
 import {
   TrendingUp, Plus, ArrowUpCircle, ArrowDownCircle,
-  X, Check, Trash2, Lock, Globe, Settings, Edit2, Target
+  X, Check, Trash2, Lock, Globe, Settings, Edit2, Target, FileSpreadsheet
 } from 'lucide-react'
+import ImportExcelModal from '@/components/ImportExcelModal'
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts'
 
 const DEFAULT_CATEGORIES = [
@@ -64,6 +65,7 @@ export default function FinancesPage() {
 
   // Settings modal
   const [showSettings, setShowSettings] = useState(false)
+  const [showImport,   setShowImport]   = useState(false)
   const [newCatName,   setNewCatName]   = useState('')
   const [newCatIcon,   setNewCatIcon]   = useState('📦')
   const [newCatType,   setNewCatType]   = useState<'income'|'expense'>('expense')
@@ -217,6 +219,9 @@ export default function FinancesPage() {
             <h1 style={{ fontSize:20, fontWeight:800 }}>Finanzas</h1>
           </div>
           <div style={{ display:'flex', gap:8 }}>
+            <button onClick={() => setShowImport(true)} style={{ background:'rgba(16,185,129,0.08)', border:'none', borderRadius:9999, padding:'7px 10px', cursor:'pointer', color:'var(--ht-mint)' }}>
+              <FileSpreadsheet size={15} />
+            </button>
             <button onClick={() => setShowSettings(true)} style={{ background:'rgba(124,58,237,0.08)', border:'none', borderRadius:9999, padding:'7px 10px', cursor:'pointer', color:'var(--ht-purple)' }}>
               <Settings size={15} />
             </button>
@@ -500,6 +505,17 @@ export default function FinancesPage() {
             </div>
           </div>
         </>
+      )}
+
+      {/* ══ MODAL IMPORTAR EXCEL ══ */}
+      {showImport && profile && (
+        <ImportExcelModal
+          householdId={household!.id}
+          profileId={profile.id}
+          categories={categories}
+          onClose={() => setShowImport(false)}
+          onImported={() => { setShowImport(false); loadData() }}
+        />
       )}
 
       {/* ══ MODAL CATEGORÍAS ══ */}
