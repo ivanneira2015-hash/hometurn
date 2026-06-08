@@ -133,8 +133,8 @@ export default function ImportExcelModal({ householdId, profileId, categories, o
       const date   = parseDate(rawDate)
       const amount = parseAmount(rawAmount)
 
-      if (!date) return { date: '', amount: 0, type: 'expense', description: rawDesc, categoryId: null, valid: false, error: `Fecha inválida: "${rawDate}"` }
-      if (amount === null) return { date, amount: 0, type: 'expense', description: rawDesc, categoryId: null, valid: false, error: `Monto inválido: "${rawAmount}"` }
+      if (!date) return { date: '', amount: 0, type: 'expense' as const, description: rawDesc, categoryId: null, valid: false, error: `Fecha inválida: "${rawDate}"` }
+      if (amount === null) return { date, amount: 0, type: 'expense' as const, description: rawDesc, categoryId: null, valid: false, error: `Monto inválido: "${rawAmount}"` }
 
       let type: 'income' | 'expense'
       if (defaultType === 'auto') {
