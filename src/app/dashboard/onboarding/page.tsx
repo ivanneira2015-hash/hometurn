@@ -1,20 +1,20 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import { createClient } from '@/lib/supabase/client'
-import { Home, Users, ArrowRight } from 'lucide-react'
+import { Home, Users } from 'lucide-react'
+import SuccessAnimation from '@/components/SuccessAnimation'
 
 export default function OnboardingPage() {
-  const { user, refreshHousehold } = useAuth()
-  const router = useRouter()
+  const { user } = useAuth()
   const supabase = createClient()
   const [tab, setTab] = useState<'create' | 'join'>('create')
   const [householdName, setHouseholdName] = useState('')
   const [inviteCode, setInviteCode] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [success, setSuccess] = useState<{ type: 'created' | 'joined'; name: string } | null>(null)
 
   async function ensureProfile() {
     if (!user) return
@@ -25,7 +25,7 @@ export default function OnboardingPage() {
       nombre: displayName,
       name: displayName,
       avatar_url: user.user_metadata?.avatar_url ?? null,
-      color: '#6366f1',
+      color: '#4f46e5',
     }, { onConflict: 'id', ignoreDuplicates: true })
   }
 
@@ -58,7 +58,8 @@ export default function OnboardingPage() {
       return
     }
 
-    window.location.href = '/dashboard'
+    // Mostrar animación antes de redirigir
+    setSuccess({ type: 'created', name: hh.name })
   }
 
   async function joinHousehold() {
@@ -70,7 +71,7 @@ export default function OnboardingPage() {
 
     const { data: hh, error: errHH } = await supabase
       .from('households')
-      .select('id')
+      .select('id, name')
       .eq('invite_code', inviteCode.trim().toUpperCase())
       .single()
 
@@ -90,103 +91,135 @@ export default function OnboardingPage() {
       return
     }
 
-    window.location.href = '/dashboard'
+    // Mostrar animación antes de redirigir
+    setSuccess({ type: 'joined', name: hh.name })
+  }
+
+  // Mostrar animación de éxito
+  if (success) {
+    return (
+      <SuccessAnimation
+        type={success.type}
+        householdName={success.name}
+        onDone={() => { window.location.href = '/dashboard' }}
+      />
+    )
   }
 
   return (
     <div style={{
-      minHeight: '100dvh', background: '#fafafa',
+      minHeight: '100dvh',
       display: 'flex', flexDirection: 'column',
       alignItems: 'center', justifyContent: 'center', padding: 24,
+      position: 'relative',
     }}>
-      <div style={{ width: '100%', maxWidth: 360 }}>
+      {/* Blobs */}
+      <div style={{ position: 'absolute', top: '5%', left: '5%', width: 160, height: 160, borderRadius: '50%', background: 'rgba(167,139,250,0.3)', filter: 'blur(48px)', pointerEvents: 'none' }} />
+      <div style={{ position: 'absolute', bottom: '10%', right: '5%', width: 200, height: 200, borderRadius: '50%', background: 'rgba(251,207,232,0.35)', filter: 'blur(56px)', pointerEvents: 'none' }} />
+
+      <div style={{ width: '100%', maxWidth: 360, position: 'relative', zIndex: 1 }}>
+
+        {/* Logo */}
         <div style={{ textAlign: 'center', marginBottom: 32 }}>
           <div style={{
-            width: 56, height: 56, borderRadius: 16, background: '#6366f1',
+            width: 56, height: 56, borderRadius: 9999,
+            background: 'linear-gradient(135deg,#4f46e5,#a78bfa)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             margin: '0 auto 16px',
+            boxShadow: '0 8px 24px rgba(79,70,229,0.35)',
           }}>
-            <Home size={28} color="white" />
+            <Home size={26} color="white" strokeWidth={2.2} />
           </div>
-          <h1 style={{ fontSize: 24, fontWeight: 800, color: '#111827', marginBottom: 6 }}>
+          <h1 style={{ fontSize: 24, fontWeight: 800, color: 'var(--ht-text)', letterSpacing: '-0.02em', marginBottom: 6 }}>
             Configurar hogar
           </h1>
-          <p style={{ fontSize: 14, color: '#6b7280' }}>
-            Creá un hogar nuevo o unite a uno existente con el código de invitación
+          <p style={{ fontSize: 14, color: 'var(--ht-text-3)', fontWeight: 500 }}>
+            Creá un hogar nuevo o unite con el código de invitación
           </p>
         </div>
 
-        {/* Tabs */}
+        {/* Glass card */}
         <div style={{
-          display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6,
-          background: '#f3f4f6', padding: 4, borderRadius: 10, marginBottom: 24,
+          background: 'rgba(255,255,255,0.72)', backdropFilter: 'blur(24px)',
+          border: '1px solid rgba(255,255,255,0.55)', borderRadius: 28, padding: '24px',
+          boxShadow: '0 8px 32px rgba(99,102,241,0.1)',
         }}>
-          {(['create', 'join'] as const).map(t => (
-            <button key={t} onClick={() => setTab(t)} style={{
-              padding: '8px 12px', borderRadius: 8, border: 'none', cursor: 'pointer',
-              fontSize: 14, fontWeight: 600,
-              background: tab === t ? '#fff' : 'transparent',
-              color: tab === t ? '#111827' : '#6b7280',
-              boxShadow: tab === t ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
-              transition: 'all 0.15s',
-            }}>
-              {t === 'create' ? 'Crear hogar' : 'Unirse'}
-            </button>
-          ))}
-        </div>
+          {/* Tabs */}
+          <div style={{
+            display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6,
+            background: 'rgba(99,102,241,0.07)', padding: 4, borderRadius: 9999, marginBottom: 24,
+          }}>
+            {(['create', 'join'] as const).map(t => (
+              <button key={t} onClick={() => { setTab(t); setError('') }} style={{
+                padding: '9px 12px', borderRadius: 9999, border: 'none', cursor: 'pointer',
+                fontSize: 13, fontWeight: 700,
+                background: tab === t ? 'white' : 'transparent',
+                color: tab === t ? 'var(--ht-primary)' : 'var(--ht-text-3)',
+                boxShadow: tab === t ? '0 2px 8px rgba(99,102,241,0.12)' : 'none',
+                transition: 'all 0.15s',
+              }}>
+                {t === 'create' ? '🏠 Crear hogar' : '🔑 Unirse'}
+              </button>
+            ))}
+          </div>
 
-        {tab === 'create' ? (
-          <div>
-            <label style={{ fontSize: 13, fontWeight: 600, color: '#374151', display: 'block', marginBottom: 6 }}>
-              Nombre del hogar
-            </label>
-            <input
-              className="ht-input"
-              placeholder="Ej: Casa de los García"
-              value={householdName}
-              onChange={e => setHouseholdName(e.target.value)}
-              onKeyDown={e => e.key === 'Enter' && createHousehold()}
-              autoFocus
-              style={{ marginBottom: error ? 8 : 16 }}
-            />
-            {error && <p style={{ fontSize: 13, color: '#ef4444', marginBottom: 12 }}>{error}</p>}
-            <button
-              onClick={createHousehold}
-              disabled={loading || !householdName.trim()}
-              className="ht-btn ht-btn-primary"
-              style={{ width: '100%' }}
-            >
-              {loading ? <div className="ht-spinner" style={{ borderTopColor: 'white' }} /> : <ArrowRight size={16} />}
-              {loading ? 'Creando...' : 'Crear hogar'}
-            </button>
-          </div>
-        ) : (
-          <div>
-            <label style={{ fontSize: 13, fontWeight: 600, color: '#374151', display: 'block', marginBottom: 6 }}>
-              Código de invitación
-            </label>
-            <input
-              className="ht-input"
-              placeholder="ABC123"
-              value={inviteCode}
-              onChange={e => setInviteCode(e.target.value.toUpperCase())}
-              onKeyDown={e => e.key === 'Enter' && joinHousehold()}
-              style={{ marginBottom: error ? 6 : 16, letterSpacing: '0.12em', fontWeight: 700, textAlign: 'center' }}
-              autoFocus
-              maxLength={6}
-            />
-            {error && <p style={{ fontSize: 13, color: '#ef4444', marginBottom: 12 }}>{error}</p>}
-            <button
-              onClick={joinHousehold}
-              disabled={loading || inviteCode.length < 4}
-              className="ht-btn ht-btn-primary"
-              style={{ width: '100%' }}
-            >
-              {loading ? <div className="ht-spinner" style={{ borderTopColor: 'white' }} /> : <Users size={16} />}
-              {loading ? 'Uniéndose...' : 'Unirse al hogar'}
-            </button>
-          </div>
-        )}
+          {tab === 'create' ? (
+            <div>
+              <label style={{ fontSize: 12, fontWeight: 700, color: 'var(--ht-text-3)', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block', marginBottom: 8 }}>
+                Nombre del hogar
+              </label>
+              <input
+                className="ht-input"
+                placeholder="Ej: Casa García, Depto Centro..."
+                value={householdName}
+                onChange={e => setHouseholdName(e.target.value)}
+                onKeyDown={e => e.key === 'Enter' && createHousehold()}
+                autoFocus
+                style={{ marginBottom: error ? 8 : 20 }}
+              />
+              {error && <p style={{ fontSize: 13, color: 'var(--ht-rose)', marginBottom: 14, fontWeight: 500 }}>{error}</p>}
+              <button
+                onClick={createHousehold}
+                disabled={loading || !householdName.trim()}
+                className="ht-btn ht-btn-primary"
+                style={{ width: '100%', padding: '13px' }}
+              >
+                {loading
+                  ? <><div className="ht-spinner" /> Creando...</>
+                  : <><Home size={16} /> Crear hogar</>
+                }
+              </button>
+            </div>
+          ) : (
+            <div>
+              <label style={{ fontSize: 12, fontWeight: 700, color: 'var(--ht-text-3)', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block', marginBottom: 8 }}>
+                Código de invitación
+              </label>
+              <input
+                className="ht-input"
+                placeholder="ABC123"
+                value={inviteCode}
+                onChange={e => setInviteCode(e.target.value.toUpperCase())}
+                onKeyDown={e => e.key === 'Enter' && joinHousehold()}
+                style={{ marginBottom: error ? 8 : 20, letterSpacing: '0.18em', fontWeight: 900, textAlign: 'center', fontSize: 18 }}
+                autoFocus
+                maxLength={6}
+              />
+              {error && <p style={{ fontSize: 13, color: 'var(--ht-rose)', marginBottom: 14, fontWeight: 500 }}>{error}</p>}
+              <button
+                onClick={joinHousehold}
+                disabled={loading || inviteCode.length < 4}
+                className="ht-btn ht-btn-primary"
+                style={{ width: '100%', padding: '13px' }}
+              >
+                {loading
+                  ? <><div className="ht-spinner" /> Uniéndose...</>
+                  : <><Users size={16} /> Unirse al hogar</>
+                }
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   )
