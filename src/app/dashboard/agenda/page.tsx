@@ -7,7 +7,7 @@ import { CalendarEvent } from '@/lib/types'
 import {
   CalendarRange, Plus, X, Check, Trash2,
   Lock, Globe, ChevronLeft, ChevronRight,
-  GraduationCap, Gift, Clock, StickyNote, Star
+  GraduationCap, Gift, Clock, StickyNote, Star, Edit2
 } from 'lucide-react'
 
 // ── Event type config ──────────────────────────────────────
@@ -55,6 +55,21 @@ export default function AgendaPage() {
   const [fDesc,     setFDesc]     = useState('')
   const [fVisib,    setFVisib]    = useState<'shared'|'private'>('shared')
   const [saving,    setSaving]    = useState(false)
+  const [editEvent, setEditEvent] = useState<CalendarEvent | null>(null)
+
+  function openEdit(ev: CalendarEvent) {
+    setEditEvent(ev)
+    setFTitle(ev.title)
+    setFType(ev.type)
+    setFDate(ev.date)
+    setFTime(ev.time?.slice(0,5) ?? '')
+    setFAllDay(ev.is_all_day)
+    setFRecur(ev.is_recurring)
+    setFRule(ev.recurrence_rule ?? 'yearly')
+    setFDesc(ev.description ?? '')
+    setFVisib(ev.visibility)
+    setShowAdd(true)
+  }
 
   // Calendar grid
   const firstDay     = new Date(year, month, 1).getDay()
@@ -112,9 +127,7 @@ export default function AgendaPage() {
     if (!fTitle.trim() || !household || !profile) return
     setSaving(true)
     const cfg = getTypeConfig(fType)
-    await supabase.from('calendar_events').insert({
-      household_id: household.id,
-      profile_id: profile.id,
+    const payload = {
       title: fTitle.trim(),
       type: fType,
       color: cfg.color,
@@ -125,9 +138,15 @@ export default function AgendaPage() {
       recurrence_rule: fRecur ? fRule : null,
       description: fDesc.trim() || null,
       visibility: fVisib,
-    })
+    }
+    if (editEvent) {
+      await supabase.from('calendar_events').update(payload).eq('id', editEvent.id)
+    } else {
+      await supabase.from('calendar_events').insert({ ...payload, household_id: household.id, profile_id: profile.id })
+    }
     setSaving(false)
     setShowAdd(false)
+    setEditEvent(null)
     setFTitle(''); setFDesc(''); setFTime('')
     await loadEvents()
   }
@@ -244,7 +263,7 @@ export default function AgendaPage() {
                 </button>
               </div>
             ) : selectedEvents.map(ev => (
-              <EventCard key={ev.id} event={ev} userId={user?.id} onDelete={deleteEvent} />
+              <EventCard key={ev.id} event={ev} userId={user?.id} onDelete={deleteEvent} onEdit={openEdit} />
             ))}
           </div>
         )}
@@ -275,8 +294,8 @@ export default function AgendaPage() {
             <div style={{ padding: '20px 16px 0' }}>
               <div style={{ width: 36, height: 4, background: 'rgba(124,58,237,0.2)', borderRadius: 9999, margin: '0 auto 16px' }} />
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-                <h2 style={{ fontSize: 17, fontWeight: 800 }}>Nuevo evento</h2>
-                <button onClick={() => setShowAdd(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--ht-text-3)', padding: 4 }}><X size={20} /></button>
+                <h2 style={{ fontSize: 17, fontWeight: 800 }}>{editEvent ? 'Editar evento' : 'Nuevo evento'}</h2>
+                <button onClick={() => { setShowAdd(false); setEditEvent(null) }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--ht-text-3)', padding: 4 }}><X size={20} /></button>
               </div>
             </div>
 
@@ -377,10 +396,11 @@ export default function AgendaPage() {
 }
 
 // ── EventCard component ──────────────────────────────────
-function EventCard({ event, userId, onDelete, showDate }: {
+function EventCard({ event, userId, onDelete, onEdit, showDate }: {
   event: CalendarEvent
   userId?: string
   onDelete: (id: string) => void
+  onEdit?: (ev: CalendarEvent) => void
   showDate?: boolean
 }) {
   const cfg = getTypeConfig(event.type)
@@ -416,9 +436,14 @@ function EventCard({ event, userId, onDelete, showDate }: {
       </div>
 
       {event.profile_id === userId && (
-        <button onClick={() => onDelete(event.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--ht-text-4)', padding: '2px 4px' }}>
-          <Trash2 size={14} />
-        </button>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+          <button onClick={() => onEdit?.(event)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--ht-purple)', padding: '2px 4px' }}>
+            <Edit2 size={13} />
+          </button>
+          <button onClick={() => onDelete(event.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--ht-text-4)', padding: '2px 4px' }}>
+            <Trash2 size={13} />
+          </button>
+        </div>
       )}
     </div>
   )
