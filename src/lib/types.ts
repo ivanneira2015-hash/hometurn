@@ -98,6 +98,7 @@ export interface TaskList {
   icon: string
   created_by: string
   created_at: string
+  visibility: 'shared' | 'private'
   items?: TaskItem[]
 }
 
