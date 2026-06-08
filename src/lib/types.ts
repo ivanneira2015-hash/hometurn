@@ -143,6 +143,25 @@ export interface Transaction {
   profile?: Profile
 }
 
+export interface CalendarEvent {
+  id: string
+  household_id: string
+  profile_id: string
+  title: string
+  description: string | null
+  date: string
+  time: string | null
+  end_date: string | null
+  type: 'event' | 'birthday' | 'exam' | 'reminder' | 'note'
+  color: string
+  is_all_day: boolean
+  is_recurring: boolean
+  recurrence_rule: 'daily' | 'weekly' | 'monthly' | 'yearly' | null
+  visibility: 'private' | 'shared'
+  created_at: string
+  profile?: Profile
+}
+
 export interface Budget {
   id: string
   household_id: string
