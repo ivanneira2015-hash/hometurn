@@ -117,3 +117,38 @@ export interface TaskItem {
   completer?: Profile
   creator?: Profile
 }
+
+export interface ExpenseCategory {
+  id: string
+  household_id: string
+  name: string
+  icon: string
+  color: string
+  type: 'income' | 'expense' | 'both'
+  created_at: string
+}
+
+export interface Transaction {
+  id: string
+  household_id: string
+  profile_id: string
+  category_id: string | null
+  amount: number
+  type: 'income' | 'expense'
+  description: string | null
+  date: string
+  visibility: 'shared' | 'private'
+  created_at: string
+  category?: ExpenseCategory
+  profile?: Profile
+}
+
+export interface Budget {
+  id: string
+  household_id: string
+  category_id: string
+  amount: number
+  period: 'weekly' | 'monthly' | 'yearly'
+  created_at: string
+  category?: ExpenseCategory
+}
