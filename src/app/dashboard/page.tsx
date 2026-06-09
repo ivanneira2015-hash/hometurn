@@ -52,7 +52,7 @@ export default function DashboardPage() {
   const supabase = createClient()
 
   const [myTasks,      setMyTasks]      = useState<WeeklyAssignment[]>([])
-  const [allTasks,     setAllTasks]     = useState<WeeklyAssignment[]>([])
+  const [allTasks,     setAllTasks]     = useState<{profile_id:string; completed:boolean}[]>([])
   const [tasksLoading, setTasksLoading] = useState(true)
   const [monthBalance, setMonthBalance] = useState({ income: 0, expense: 0 })
   const [nextEvent,    setNextEvent]    = useState<CalendarEvent | null>(null)
