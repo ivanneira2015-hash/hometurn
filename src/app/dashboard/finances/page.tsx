@@ -53,7 +53,7 @@ function FinancesInner() {
 
   const [categories,    setCategories]    = useState<ExpenseCategory[]>([])
   const [transactions,  setTransactions]  = useState<Transaction[]>([])
-  const [prevTxs,       setPrevTxs]       = useState<Transaction[]>([])  // prev month for chart
+  const [prevTxs,       setPrevTxs]       = useState<{amount:string;type:string;category_id:string|null}[]>([])  // prev month for chart
   const [budgets,       setBudgets]       = useState<Budget[]>([])
 
   // Filters
