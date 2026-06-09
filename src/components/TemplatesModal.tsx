@@ -7,23 +7,7 @@ import { X, Plus, Trash2, Check, LayoutTemplate, Sparkles, ChevronLeft, ChevronR
 import { useRef } from 'react'
 import { ORDERED_DAYS, DAY_LABELS_FULL } from '@/lib/dates'
 import { PRESET_TEMPLATES, PresetTemplate } from '@/lib/presetTemplates'
-
-const MEMBER_COLORS = ['#4f46e5', '#10b981', '#f97316', '#3b82f6', '#f43f5e']
-const MEMBER_GRAD = [
-  'linear-gradient(135deg,#4f46e5,#818cf8)',
-  'linear-gradient(135deg,#10b981,#34d399)',
-  'linear-gradient(135deg,#f97316,#fbbf24)',
-  'linear-gradient(135deg,#3b82f6,#60a5fa)',
-  'linear-gradient(135deg,#f43f5e,#fb7185)',
-]
-const MEMBER_BG = [
-  'rgba(79,70,229,0.08)', 'rgba(16,185,129,0.08)',
-  'rgba(249,115,22,0.08)', 'rgba(59,130,246,0.08)', 'rgba(244,63,94,0.08)',
-]
-const MEMBER_BORDER = [
-  'rgba(79,70,229,0.2)', 'rgba(16,185,129,0.2)',
-  'rgba(249,115,22,0.2)', 'rgba(59,130,246,0.2)', 'rgba(244,63,94,0.2)',
-]
+import { MEMBER_GRAD, MEMBER_BORDER, MEMBER_SOLID as MEMBER_COLORS, MEMBER_BG } from '@/lib/colors'
 
 interface Props {
   householdId: string

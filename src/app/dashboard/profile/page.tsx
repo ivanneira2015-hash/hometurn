@@ -5,14 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import { createClient } from '@/lib/supabase/client'
 import { Copy, LogOut, Users, Check, Share2, X, Home, UserMinus, DoorOpen, AlertTriangle } from 'lucide-react'
-
-const MEMBER_GRAD = [
-  'linear-gradient(135deg,#7c3aed,#a78bfa)',
-  'linear-gradient(135deg,#f43f5e,#fb7185)',
-  'linear-gradient(135deg,#f59e0b,#fbbf24)',
-  'linear-gradient(135deg,#10b981,#34d399)',
-  'linear-gradient(135deg,#3b82f6,#60a5fa)',
-]
+import { MEMBER_GRAD } from '@/lib/colors'
 
 type ConfirmAction =
   | { type: 'leave' }

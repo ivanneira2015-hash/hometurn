@@ -515,7 +515,17 @@ export default function FinancesPage() {
           members={members.map(m => ({ profile_id: m.profile_id, name: m.profile?.name ?? 'Miembro' }))}
           categories={categories}
           onClose={() => setShowImport(false)}
-          onImported={() => { setShowImport(false); loadData() }}
+          onImported={(firstDate?: string) => {
+            setShowImport(false)
+            // Navigate to the month of the imported data if provided
+            if (firstDate) {
+              const d = new Date(firstDate + 'T12:00:00')
+              setYear(d.getFullYear())
+              setMonth(d.getMonth())
+              setTab('movimientos')
+            }
+            loadData()
+          }}
         />
       )}
 

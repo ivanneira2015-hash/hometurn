@@ -8,21 +8,7 @@ import { createClient } from '@/lib/supabase/client'
 import { WeeklyAssignment } from '@/lib/types'
 import { getWeekStart, getTodayDayOfWeek, DAY_LABELS_FULL } from '@/lib/dates'
 import { CheckCircle2, Circle, CalendarDays, TrendingUp, CalendarRange, CheckSquare, Sparkles, ArrowRight } from 'lucide-react'
-
-const MEMBER_GRAD = [
-  'linear-gradient(135deg,#7c3aed,#a78bfa)',
-  'linear-gradient(135deg,#f43f5e,#fb7185)',
-  'linear-gradient(135deg,#f59e0b,#fbbf24)',
-  'linear-gradient(135deg,#10b981,#34d399)',
-  'linear-gradient(135deg,#3b82f6,#60a5fa)',
-]
-const MEMBER_GLOW = [
-  '0 4px 16px rgba(124,58,237,0.35)',
-  '0 4px 16px rgba(244,63,94,0.35)',
-  '0 4px 16px rgba(245,158,11,0.35)',
-  '0 4px 16px rgba(16,185,129,0.35)',
-  '0 4px 16px rgba(59,130,246,0.35)',
-]
+import { MEMBER_GRAD, MEMBER_GLOW } from '@/lib/colors'
 
 const HUB_MODULES = [
   {

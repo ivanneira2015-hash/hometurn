@@ -9,18 +9,7 @@ import { Plus, ChevronLeft, ChevronRight, Settings, Check, LayoutTemplate, Refre
 import ManageChoresModal from '@/components/ManageChoresModal'
 import AssignChoreModal from '@/components/AssignChoreModal'
 import TemplatesModal from '@/components/TemplatesModal'
-
-const MEMBER_GRAD  = [
-  'linear-gradient(135deg,#7c3aed,#a78bfa)',
-  'linear-gradient(135deg,#f43f5e,#fb7185)',
-  'linear-gradient(135deg,#f59e0b,#fbbf24)',
-  'linear-gradient(135deg,#10b981,#34d399)',
-  'linear-gradient(135deg,#3b82f6,#60a5fa)',
-]
-const MEMBER_COLORS = ['#7c3aed','#f43f5e','#f59e0b','#10b981','#3b82f6']
-const MEMBER_LIGHT  = ['rgba(237,233,254,0.85)','rgba(255,241,242,0.85)','rgba(255,251,235,0.85)','rgba(209,250,229,0.85)','rgba(239,246,255,0.85)']
-const MEMBER_BORDER = ['rgba(124,58,237,0.25)','rgba(244,63,94,0.25)','rgba(245,158,11,0.25)','rgba(16,185,129,0.25)','rgba(59,130,246,0.25)']
-const MEMBER_GLOW   = ['rgba(124,58,237,0.3)','rgba(244,63,94,0.3)','rgba(245,158,11,0.3)','rgba(16,185,129,0.3)','rgba(59,130,246,0.3)']
+import { MEMBER_GRAD, MEMBER_GLOW, MEMBER_LIGHT, MEMBER_BORDER, MEMBER_SOLID as MEMBER_COLORS } from '@/lib/colors'
 
 export default function SchedulePage() {
   const { user, household, members } = useAuth()

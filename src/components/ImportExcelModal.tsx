@@ -27,7 +27,7 @@ interface Props {
   members: Member[]
   categories: ExpenseCategory[]
   onClose: () => void
-  onImported: () => void
+  onImported: (firstDate?: string) => void
 }
 
 // Common column name patterns for auto-detection
@@ -192,7 +192,8 @@ export default function ImportExcelModal({ householdId, profileId, members, cate
     }
     setImporting(false)
     setImportDone(true)
-    setTimeout(() => { onImported(); onClose() }, 1500)
+    const firstDate = valid.sort((a,b) => a.date.localeCompare(b.date))[0]?.date
+    setTimeout(() => { onImported(firstDate); onClose() }, 1500)
   }
 
   const validCount   = parsed.filter(r => r.valid).length
