@@ -235,7 +235,7 @@ function AgendaInner() {
                 <Sun size={22} color="rgba(124,58,237,0.3)" style={{ margin:'0 auto 8px', display:'block' }} />
                 <p style={{ fontSize:14, color:'var(--ht-text-3)', fontWeight:600 }}>Sin eventos hoy</p>
                 <button onClick={() => openNew(todayStr)} className="ht-btn ht-btn-ghost" style={{ marginTop:10, fontSize:12 }}>
-                  <Plus size:12 /> Agregar para hoy
+                  <Plus size={12} /> Agregar para hoy
                 </button>
               </div>
             ) : (
