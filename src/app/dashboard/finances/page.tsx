@@ -8,8 +8,9 @@ import { Transaction, ExpenseCategory, Budget } from '@/lib/types'
 import {
   TrendingUp, Plus, ArrowUpCircle, ArrowDownCircle,
   X, Check, Trash2, Lock, Globe, Settings, Edit2, Target, FileSpreadsheet,
-  PieChartIcon, BarChart2, List, Wallet
+  PieChartIcon, BarChart2, List, Wallet, Download
 } from 'lucide-react'
+import * as XLSX from 'xlsx'
 import ImportExcelModal from '@/components/ImportExcelModal'
 import {
   PieChart, Pie, Cell, Tooltip, ResponsiveContainer,
@@ -81,6 +82,21 @@ function FinancesInner() {
   // Settings / import
   const [showSettings,  setShowSettings]  = useState(false)
   const [showImport,    setShowImport]    = useState(false)
+
+  function exportToExcel() {
+    const rows = transactions.map(t => ({
+      Fecha: t.date,
+      Tipo: t.type === 'income' ? 'Ingreso' : 'Gasto',
+      Categoría: t.category?.name ?? '',
+      Descripción: t.description ?? '',
+      Monto: Number(t.amount),
+      Visibilidad: t.visibility === 'shared' ? 'Compartido' : 'Privado',
+    }))
+    const ws = XLSX.utils.json_to_sheet(rows)
+    const wb = XLSX.utils.book_new()
+    XLSX.utils.book_append_sheet(wb, ws, 'Movimientos')
+    XLSX.writeFile(wb, `HomeTurn-Finanzas-${MONTHS_FULL[month]}-${year}.xlsx`)
+  }
   const [newCatName,    setNewCatName]    = useState('')
   const [newCatIcon,    setNewCatIcon]    = useState('📦')
   const [newCatType,    setNewCatType]    = useState<'income'|'expense'>('expense')
@@ -279,6 +295,9 @@ function FinancesInner() {
             <h1 style={{ fontSize:20, fontWeight:800 }}>Finanzas</h1>
           </div>
           <div style={{ display:'flex', gap:8 }}>
+            <button onClick={exportToExcel} disabled={transactions.length === 0} style={{ background:'rgba(4,120,87,0.08)', border:'none', borderRadius:9999, padding:'7px 10px', cursor:'pointer', color:'#047857', opacity: transactions.length === 0 ? 0.4 : 1 }} title="Exportar Excel">
+              <Download size={15} />
+            </button>
             <button onClick={() => setShowImport(true)} style={{ background:'rgba(124,58,237,0.08)', border:'none', borderRadius:9999, padding:'7px 10px', cursor:'pointer', color:'var(--ht-purple)' }}>
               <FileSpreadsheet size={15} />
             </button>

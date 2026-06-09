@@ -86,6 +86,11 @@ export default function DashboardPage() {
   if (loading) return <LoadingSkeleton />
   if (!user || !profile || !household) return null
 
+  // Saludo según hora del día
+  const hour = new Date().getHours()
+  const greeting = hour < 12 ? 'Buenos días' : hour < 19 ? 'Buenas tardes' : 'Buenas noches'
+  const greetingEmoji = hour < 12 ? '🌅' : hour < 19 ? '☀️' : '🌙'
+
   const today = getTodayDayOfWeek()
   const todayLabel = today ? DAY_LABELS_FULL[today] : 'Hoy'
   const todayTasks = today ? myTasks.filter(t => t.day_of_week === today) : []
@@ -108,8 +113,10 @@ export default function DashboardPage() {
             <p style={{ fontSize: 11, fontWeight: 800, color: 'var(--ht-text-3)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 4 }}>
               {household.name}
             </p>
+            <p style={{ fontSize: 12, color: 'var(--ht-text-3)', fontWeight: 600, marginBottom: 2 }}>
+              {greetingEmoji} {greeting}
+            </p>
             <h1 style={{ fontSize: 28, fontWeight: 900, letterSpacing: '-0.03em', lineHeight: 1.1 }}>
-              <span>Hola, </span>
               <span className="ht-gradient-text">{profile.name.split(' ')[0]}</span>
             </h1>
           </div>

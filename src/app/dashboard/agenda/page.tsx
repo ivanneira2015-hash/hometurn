@@ -228,6 +228,49 @@ function AgendaInner() {
               </p>
             </div>
 
+            {/* Birthday reminder — próximos 7 días */}
+            {(() => {
+              const upcomingBirthdays = events.filter(e => {
+                if (e.type !== 'birthday' || !e.is_recurring) return false
+                const orig = new Date(e.date + 'T12:00:00')
+                for (let i = 0; i <= 7; i++) {
+                  const d = new Date(now); d.setDate(now.getDate() + i)
+                  if (orig.getMonth() === d.getMonth() && orig.getDate() === d.getDate()) return true
+                }
+                return false
+              })
+              if (upcomingBirthdays.length === 0) return null
+              return (
+                <div style={{ marginBottom: 14 }}>
+                  {upcomingBirthdays.map(b => {
+                    const orig = new Date(b.date + 'T12:00:00')
+                    const isToday = orig.getMonth() === now.getMonth() && orig.getDate() === now.getDate()
+                    const daysUntil = Array.from({ length: 8 }, (_, i) => {
+                      const d = new Date(now); d.setDate(now.getDate() + i)
+                      return orig.getMonth() === d.getMonth() && orig.getDate() === d.getDate() ? i : null
+                    }).find(x => x !== null) ?? 0
+                    return (
+                      <div key={b.id} style={{
+                        display: 'flex', alignItems: 'center', gap: 12, padding: '12px 16px',
+                        borderRadius: 16, marginBottom: 8,
+                        background: isToday ? 'rgba(190,24,93,0.08)' : 'rgba(180,83,9,0.06)',
+                        border: `1px solid ${isToday ? 'rgba(190,24,93,0.2)' : 'rgba(180,83,9,0.15)'}`,
+                      }}>
+                        <span style={{ fontSize: 28 }}>🎂</span>
+                        <div style={{ flex: 1 }}>
+                          <p style={{ fontWeight: 800, fontSize: 14, color: 'var(--ht-text)' }}>{b.title}</p>
+                          <p style={{ fontSize: 12, color: isToday ? '#be185d' : '#b45309', fontWeight: 600 }}>
+                            {isToday ? '¡Hoy es su cumpleaños!' : `En ${daysUntil} día${daysUntil > 1 ? 's' : ''}`}
+                          </p>
+                        </div>
+                        {isToday && <span style={{ fontSize: 20 }}>🎉</span>}
+                      </div>
+                    )
+                  })}
+                </div>
+              )
+            })()}
+
             {/* Today's events */}
             <p className="ht-section-label">Eventos de hoy</p>
             {todayEvents.length === 0 ? (
