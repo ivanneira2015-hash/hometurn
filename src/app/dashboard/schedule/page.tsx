@@ -179,6 +179,27 @@ export default function SchedulePage() {
           <div style={{ textAlign: 'center', color: 'var(--ht-text-3)', padding: 40, fontSize: 14 }}>Cargando semana...</div>
         ) : (
           <>
+            {/* Empty week CTA */}
+            {assignments.length === 0 && isCurrentWeek && !loading && (
+              <div style={{
+                background: 'rgba(124,58,237,0.06)', border: '1.5px dashed rgba(124,58,237,0.25)',
+                borderRadius: 20, padding: '20px 16px', marginBottom: 14, textAlign: 'center',
+              }}>
+                <p style={{ fontWeight: 800, fontSize: 15, color: 'var(--ht-purple)', marginBottom: 4 }}>Semana nueva, sin tareas aún</p>
+                <p style={{ fontSize: 13, color: 'var(--ht-text-3)', marginBottom: 14 }}>
+                  Rotá desde la semana anterior o elegí una plantilla para empezar rápido
+                </p>
+                <div style={{ display: 'flex', gap: 8, justifyContent: 'center' }}>
+                  <button onClick={rotateWeek} disabled={rotating} className="ht-btn ht-btn-primary" style={{ fontSize: 13 }}>
+                    <RefreshCw size={14} className={rotating ? 'spinning' : ''} /> Rotar semana anterior
+                  </button>
+                  <button onClick={() => setShowTemplates(true)} className="ht-btn ht-btn-ghost" style={{ fontSize: 13 }}>
+                    <LayoutTemplate size={14} /> Plantillas
+                  </button>
+                </div>
+              </div>
+            )}
+
             {/* Day headers */}
             <div style={{ display: 'grid', gridTemplateColumns: '72px repeat(5,1fr)', gap: 4, marginBottom: 6 }}>
               <div />

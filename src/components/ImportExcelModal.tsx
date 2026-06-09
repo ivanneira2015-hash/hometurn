@@ -16,9 +16,15 @@ interface ParsedRow {
   error?: string
 }
 
+interface Member {
+  profile_id: string
+  name: string
+}
+
 interface Props {
   householdId: string
   profileId: string
+  members: Member[]
   categories: ExpenseCategory[]
   onClose: () => void
   onImported: () => void
@@ -70,7 +76,7 @@ function parseAmount(val: unknown): number | null {
   return isNaN(n) ? null : n
 }
 
-export default function ImportExcelModal({ householdId, profileId, categories, onClose, onImported }: Props) {
+export default function ImportExcelModal({ householdId, profileId, members, categories, onClose, onImported }: Props) {
   const supabase = createClient()
   const fileRef = useRef<HTMLInputElement>(null)
 
@@ -86,9 +92,11 @@ export default function ImportExcelModal({ householdId, profileId, categories, o
   const [colType,   setColType]   = useState('')
   const [defaultType, setDefaultType] = useState<'auto'|'income'|'expense'>('auto')
 
-  const [parsed,    setParsed]    = useState<ParsedRow[]>([])
-  const [importing, setImporting] = useState(false)
-  const [importDone, setImportDone] = useState(false)
+  const [parsed,       setParsed]       = useState<ParsedRow[]>([])
+  const [importing,    setImporting]    = useState(false)
+  const [importDone,   setImportDone]   = useState(false)
+  // Visibility: 'shared'=todos, 'private'=solo yo, or a specific profile_id
+  const [importVisib,  setImportVisib]  = useState<'shared'|'private'|string>('shared')
 
   function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
@@ -176,7 +184,7 @@ export default function ImportExcelModal({ householdId, profileId, categories, o
       type: r.type,
       description: r.description || null,
       date: r.date,
-      visibility: 'shared',
+      visibility: importVisib === 'shared' || importVisib === 'private' ? importVisib : 'shared',
     }))
     // Batch inserts (50 at a time)
     for (let i = 0; i < inserts.length; i += 50) {
@@ -377,6 +385,31 @@ export default function ImportExcelModal({ householdId, profileId, categories, o
                   </p>
                 )}
               </div>
+
+              {/* Visibility selector */}
+              {!importDone && (
+                <div style={{ marginBottom: 14 }}>
+                  <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--ht-text-3)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 8 }}>¿Quiénes pueden ver estos movimientos?</p>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                    <button onClick={() => setImportVisib('shared')} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', borderRadius: 14, border: '1.5px solid', borderColor: importVisib === 'shared' ? 'var(--ht-mint)' : 'var(--ht-glass-border)', background: importVisib === 'shared' ? 'rgba(16,185,129,0.08)' : 'var(--ht-glass-warm)', cursor: 'pointer', textAlign: 'left', transition: 'all 0.15s' }}>
+                      <div style={{ width: 32, height: 32, borderRadius: 9999, background: importVisib === 'shared' ? 'var(--ht-mint)' : 'rgba(0,0,0,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: 16 }}>👥</div>
+                      <div><p style={{ fontSize: 13, fontWeight: 700, color: importVisib === 'shared' ? 'var(--ht-mint)' : 'var(--ht-text)' }}>Todos del hogar</p><p style={{ fontSize: 11, color: 'var(--ht-text-3)' }}>Todos los integrantes los ven</p></div>
+                    </button>
+                    <button onClick={() => setImportVisib('private')} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', borderRadius: 14, border: '1.5px solid', borderColor: importVisib === 'private' ? 'var(--ht-purple)' : 'var(--ht-glass-border)', background: importVisib === 'private' ? 'rgba(124,58,237,0.08)' : 'var(--ht-glass-warm)', cursor: 'pointer', textAlign: 'left', transition: 'all 0.15s' }}>
+                      <div style={{ width: 32, height: 32, borderRadius: 9999, background: importVisib === 'private' ? 'var(--ht-purple)' : 'rgba(0,0,0,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: 16 }}>🔒</div>
+                      <div><p style={{ fontSize: 13, fontWeight: 700, color: importVisib === 'private' ? 'var(--ht-purple)' : 'var(--ht-text)' }}>Solo yo</p><p style={{ fontSize: 11, color: 'var(--ht-text-3)' }}>Solo vos los podés ver</p></div>
+                    </button>
+                    {members.filter(m => m.profile_id !== profileId).map(m => (
+                      <button key={m.profile_id} onClick={() => setImportVisib(m.profile_id)} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', borderRadius: 14, border: '1.5px solid', borderColor: importVisib === m.profile_id ? 'var(--ht-rose)' : 'var(--ht-glass-border)', background: importVisib === m.profile_id ? 'rgba(244,63,94,0.08)' : 'var(--ht-glass-warm)', cursor: 'pointer', textAlign: 'left', transition: 'all 0.15s' }}>
+                        <div style={{ width: 32, height: 32, borderRadius: 9999, background: importVisib === m.profile_id ? 'var(--ht-rose)' : 'rgba(0,0,0,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: 14, fontWeight: 800, color: importVisib === m.profile_id ? 'white' : 'var(--ht-text-3)' }}>
+                          {m.name[0].toUpperCase()}
+                        </div>
+                        <div><p style={{ fontSize: 13, fontWeight: 700, color: importVisib === m.profile_id ? 'var(--ht-rose)' : 'var(--ht-text)' }}>Yo + {m.name.split(' ')[0]}</p><p style={{ fontSize: 11, color: 'var(--ht-text-3)' }}>Vos y {m.name.split(' ')[0]} los pueden ver</p></div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               {importDone ? (
                 <div style={{ textAlign: 'center', padding: '16px 0' }}>

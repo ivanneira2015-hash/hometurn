@@ -83,15 +83,27 @@ export default function AgendaPage() {
     const startDate = `${year}-${String(month + 1).padStart(2,'0')}-01`
     const endDate   = new Date(year, month + 1, 0).toISOString().split('T')[0]
 
-    const { data } = await supabase
+    // Simplified query — fetch all household events matching visibility, filter dates in JS
+    const { data, error } = await supabase
       .from('calendar_events')
       .select('*, profile:profiles(name,avatar_url)')
       .eq('household_id', household.id)
       .or(`visibility.eq.shared,profile_id.eq.${user!.id}`)
-      .or(`and(date.gte.${startDate},date.lte.${endDate}),is_recurring.eq.true`)
       .order('date').order('time', { ascending: true, nullsFirst: true })
 
-    setEvents(data ?? [])
+    if (error) {
+      console.error('Agenda error:', error.message)
+      setLoading(false)
+      return
+    }
+
+    // Filter in JS: show events for this month OR recurring events
+    const filtered = (data ?? []).filter(e => {
+      if (e.is_recurring) return true
+      return e.date >= startDate && e.date <= endDate
+    })
+
+    setEvents(filtered)
     setLoading(false)
   }, [household, year, month])
 
@@ -139,12 +151,16 @@ export default function AgendaPage() {
       description: fDesc.trim() || null,
       visibility: fVisib,
     }
+    let error: string | null = null
     if (editEvent) {
-      await supabase.from('calendar_events').update(payload).eq('id', editEvent.id)
+      const { error: e } = await supabase.from('calendar_events').update(payload).eq('id', editEvent.id)
+      if (e) error = e.message
     } else {
-      await supabase.from('calendar_events').insert({ ...payload, household_id: household.id, profile_id: profile.id })
+      const { error: e } = await supabase.from('calendar_events').insert({ ...payload, household_id: household.id, profile_id: profile.id })
+      if (e) error = e.message
     }
     setSaving(false)
+    if (error) { alert(`Error: ${error}`); return }
     setShowAdd(false)
     setEditEvent(null)
     setFTitle(''); setFDesc(''); setFTime('')
