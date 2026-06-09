@@ -138,9 +138,23 @@ export interface Transaction {
   description: string | null
   date: string
   visibility: 'shared' | 'private'
+  shared_with: string[]
   created_at: string
   category?: ExpenseCategory
   profile?: Profile
+}
+
+export interface Notification {
+  id: string
+  household_id: string
+  for_profile_id: string
+  from_profile_id: string
+  type: 'transaction' | 'task_completed' | 'event' | 'assignment'
+  title: string
+  body: string | null
+  read: boolean
+  created_at: string
+  from_profile?: Profile
 }
 
 export interface CalendarEvent {

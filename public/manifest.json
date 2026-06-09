@@ -4,8 +4,8 @@
   "description": "Organizá las tareas del hogar con tu familia",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#fafafa",
-  "theme_color": "#6366f1",
+  "background_color": "#fdf4ff",
+  "theme_color": "#7c3aed",
   "orientation": "portrait",
   "icons": [
     {
@@ -13,6 +13,36 @@
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Agregar Gasto",
+      "short_name": "Gasto",
+      "description": "Registrar un gasto rápido",
+      "url": "/dashboard/finances?q=expense",
+      "icons": [{ "src": "/shortcuts/expense.svg", "sizes": "any", "type": "image/svg+xml" }]
+    },
+    {
+      "name": "Agregar Ingreso",
+      "short_name": "Ingreso",
+      "description": "Registrar un ingreso rápido",
+      "url": "/dashboard/finances?q=income",
+      "icons": [{ "src": "/shortcuts/income.svg", "sizes": "any", "type": "image/svg+xml" }]
+    },
+    {
+      "name": "Nueva Tarea",
+      "short_name": "Tarea",
+      "description": "Agregar tarea a la semana",
+      "url": "/dashboard/schedule?q=add",
+      "icons": [{ "src": "/shortcuts/task.svg", "sizes": "any", "type": "image/svg+xml" }]
+    },
+    {
+      "name": "Nuevo Evento",
+      "short_name": "Evento",
+      "description": "Agregar evento a la agenda",
+      "url": "/dashboard/agenda?q=add",
+      "icons": [{ "src": "/shortcuts/event.svg", "sizes": "any", "type": "image/svg+xml" }]
     }
   ]
 }

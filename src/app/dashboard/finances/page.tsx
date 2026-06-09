@@ -1,6 +1,7 @@
 ﻿'use client'
 
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, Suspense } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import { createClient } from '@/lib/supabase/client'
 import { Transaction, ExpenseCategory, Budget } from '@/lib/types'
@@ -70,24 +71,42 @@ export default function FinancesPage() {
   const [newCatIcon,   setNewCatIcon]   = useState('📦')
   const [newCatType,   setNewCatType]   = useState<'income'|'expense'>('expense')
 
+  // Shared with specific member
+  const [addSharedWith, setAddSharedWith] = useState<string>('')  // profile_id or ''
+
+  // Force refresh after import
+  const [refreshKey, setRefreshKey] = useState(0)
+
+  // PWA shortcut: auto-open modal from URL param ?q=expense|income
+  const searchParams = useSearchParams()
+  useEffect(() => {
+    const q = searchParams.get('q')
+    if (q === 'expense') { setAddType('expense'); setShowAdd(true) }
+    if (q === 'income')  { setAddType('income');  setShowAdd(true) }
+  }, [searchParams])
+
   useEffect(() => { if (household) initFinances() }, [household])
 
   const loadData = useCallback(async () => {
-    if (!household) return
+    if (!household || !user) return
     const startDate = `${year}-${String(month+1).padStart(2,'0')}-01`
     const endDate   = new Date(year, month+1, 0).toISOString().split('T')[0]
+
+    // Build visibility filter: shared OR mine OR shared_with contains me
+    const visibilityFilter = `visibility.eq.shared,profile_id.eq.${user.id},shared_with.cs.{${user.id}}`
+
     const [{ data: txs }, { data: buds }] = await Promise.all([
       supabase.from('transactions')
         .select('*, category:expense_categories(*), profile:profiles(id,name,avatar_url)')
         .eq('household_id', household.id)
         .gte('date', startDate).lte('date', endDate)
-        .or(`visibility.eq.shared,profile_id.eq.${user!.id}`)
+        .or(visibilityFilter)
         .order('date', { ascending: false }),
       supabase.from('budgets').select('*, category:expense_categories(*)').eq('household_id', household.id),
     ])
     setTransactions(txs ?? [])
     setBudgets(buds ?? [])
-  }, [household, year, month])
+  }, [household, user, year, month, refreshKey])
 
   useEffect(() => { loadData() }, [loadData])
 
@@ -123,20 +142,25 @@ export default function FinancesPage() {
   async function saveTransaction() {
     if (!addAmount || !household || !profile) return
     setSaving(true)
+    // Determine actual visibility and shared_with
+    const actualVisibility = addSharedWith ? 'private' : addVisib
+    const sharedWithArr = addSharedWith ? [addSharedWith] : []
     const payload = {
       household_id: household.id, profile_id: profile.id,
       category_id: addCat || null,
       amount: parseFloat(addAmount.replace(',','.')),
       type: addType, description: addDesc.trim() || null,
-      date: addDate, visibility: addVisib,
+      date: addDate,
+      visibility: actualVisibility,
+      shared_with: sharedWithArr,
     }
     if (editTx) {
       await supabase.from('transactions').update(payload).eq('id', editTx.id)
     } else {
       await supabase.from('transactions').insert(payload)
     }
-    setSaving(false); setShowAdd(false); setEditTx(null)
-    await loadData()
+    setSaving(false); setShowAdd(false); setEditTx(null); setAddSharedWith('')
+    setRefreshKey(k => k + 1)
   }
 
   async function deleteTx(id: string) {
@@ -457,13 +481,30 @@ export default function FinancesPage() {
               <input className="ht-input" placeholder="Descripción (opcional)" value={addDesc} onChange={e => setAddDesc(e.target.value)} style={{ marginBottom:12 }} />
               <input type="date" className="ht-input" value={addDate} onChange={e => setAddDate(e.target.value)} style={{ marginBottom:12 }} />
               <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:8, marginBottom:20 }}>
-                {(['shared','private'] as const).map(v => (
-                  <button key={v} onClick={() => setAddVisib(v)} style={{ padding:'10px', borderRadius:14, border:'1.5px solid', borderColor:addVisib===v?(v==='shared'?'var(--ht-mint)':'var(--ht-purple)'):'var(--ht-glass-border)', background:addVisib===v?(v==='shared'?'rgba(4,120,87,0.07)':'rgba(124,58,237,0.08)'):'var(--ht-glass-warm)', cursor:'pointer', textAlign:'left', transition:'all 0.15s' }}>
-                    {v==='shared' ? <Globe size={14} color={addVisib===v?'var(--ht-mint)':'var(--ht-text-4)'} style={{ marginBottom:4 }} /> : <Lock size={14} color={addVisib===v?'var(--ht-purple)':'var(--ht-text-4)'} style={{ marginBottom:4 }} />}
-                    <p style={{ fontSize:12, fontWeight:700, color:addVisib===v?(v==='shared'?'var(--ht-mint)':'var(--ht-purple)'):'var(--ht-text)' }}>{v==='shared'?'Compartido':'Privado'}</p>
-                    <p style={{ fontSize:10, color:'var(--ht-text-3)' }}>{v==='shared'?'Todos lo ven':'Solo vos'}</p>
-                  </button>
-                ))}
+                {/* Todos / Solo yo */}
+                {(['shared','private'] as const).map(v => {
+                  const active = addVisib===v && !addSharedWith
+                  return (
+                    <button key={v} onClick={() => { setAddVisib(v); setAddSharedWith('') }} style={{ padding:'10px', borderRadius:14, border:'none', background:active?'var(--ht-purple)':'var(--ht-glass-warm)', cursor:'pointer', textAlign:'left', transition:'all 0.15s' }}>
+                      {v==='shared' ? <Globe size={14} color={active?'white':'var(--ht-text-4)'} style={{ marginBottom:4 }} /> : <Lock size={14} color={active?'white':'var(--ht-text-4)'} style={{ marginBottom:4 }} />}
+                      <p style={{ fontSize:12, fontWeight:700, color:active?'white':'var(--ht-text)' }}>{v==='shared'?'Todos':'Solo yo'}</p>
+                      <p style={{ fontSize:10, color:active?'rgba(255,255,255,0.7)':'var(--ht-text-3)' }}>{v==='shared'?'Todos lo ven':'Solo vos'}</p>
+                    </button>
+                  )
+                })}
+                {/* Compartir con miembro específico */}
+                {members.filter(m => m.profile_id !== profile?.id).map(m => {
+                  const active = addSharedWith === m.profile_id
+                  return (
+                    <button key={m.profile_id} onClick={() => { setAddSharedWith(active?'':m.profile_id); setAddVisib('private') }} style={{ padding:'10px', borderRadius:14, border:'none', background:active?'var(--ht-rose)':'var(--ht-glass-warm)', cursor:'pointer', textAlign:'left', transition:'all 0.15s' }}>
+                      <div style={{ width:20, height:20, borderRadius:9999, background:'rgba(255,255,255,0.3)', display:'flex', alignItems:'center', justifyContent:'center', marginBottom:4, fontSize:10, fontWeight:800, color:active?'white':'var(--ht-text-3)' }}>
+                        {m.profile?.name?.[0]?.toUpperCase()}
+                      </div>
+                      <p style={{ fontSize:12, fontWeight:700, color:active?'white':'var(--ht-text)' }}>Yo + {m.profile?.name?.split(' ')[0]}</p>
+                      <p style={{ fontSize:10, color:active?'rgba(255,255,255,0.7)':'var(--ht-text-3)' }}>Solo vos dos</p>
+                    </button>
+                  )
+                })}
               </div>
               <button onClick={saveTransaction} disabled={saving||!addAmount} className="ht-btn ht-btn-primary" style={{ width:'100%', padding:'13px' }}>
                 {saving ? <><div className="ht-spinner" /> Guardando...</> : <><Check size={16} /> {editTx?'Guardar cambios':(`Guardar ${addType==='income'?'ingreso':'gasto'}`)}</>}
@@ -517,7 +558,7 @@ export default function FinancesPage() {
           onClose={() => setShowImport(false)}
           onImported={(firstDate?: string) => {
             setShowImport(false)
-            // Navigate to the month of the imported data if provided
+            setTab('movimientos')
             if (firstDate) {
               const d = new Date(firstDate + 'T12:00:00')
               setYear(d.getFullYear())
