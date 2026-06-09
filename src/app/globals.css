@@ -39,6 +39,26 @@
   --ht-warning:      #d97706;
   --ht-warning-light:#fef3c7;
 
+  /* ── Aliases de compatibilidad (componentes legacy) ── */
+  --ht-primary:        var(--ht-purple);
+  --ht-primary-light:  var(--ht-purple-light);
+  --ht-primary-hover:  var(--ht-purple-dark);
+  --ht-mint:           var(--ht-success);
+  --ht-mint-light:     var(--ht-success-light);
+  --ht-green:          var(--ht-success);
+  --ht-green-light:    var(--ht-success-light);
+  --ht-blue:           var(--ht-indigo);
+  --ht-blue-light:     var(--ht-indigo-light);
+  --ht-red:            var(--ht-error);
+  --ht-red-light:      var(--ht-error-light);
+  --ht-yellow:         var(--ht-warning);
+  --ht-yellow-light:   var(--ht-warning-light);
+  --ht-orange:         var(--ht-amber);
+  --ht-orange-light:   var(--ht-amber-light);
+  --ht-surface-2:      rgba(243, 232, 255, 0.55);
+  --ht-line:           rgba(124, 58, 237, 0.12);
+  --ht-line-2:         rgba(124, 58, 237, 0.06);
+
   /* ── Gradientes de marca ── */
   --ht-grad:      linear-gradient(135deg, #7c3aed 0%, #be185d 100%);
   --ht-grad-warm: linear-gradient(135deg, #b45309 0%, #be185d 100%);
