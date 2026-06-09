@@ -85,11 +85,22 @@ function FinancesInner() {
   const [newCatIcon,    setNewCatIcon]    = useState('📦')
   const [newCatType,    setNewCatType]    = useState<'income'|'expense'>('expense')
 
+  // Recordar último tipo seleccionado
+  useEffect(() => {
+    const last = localStorage.getItem('ht-last-tx-type') as 'income'|'expense'|null
+    if (last) setAddType(last)
+  }, [])
+
+  function setAddTypeAndSave(t: 'income'|'expense') {
+    setAddType(t); setAddCat('')
+    localStorage.setItem('ht-last-tx-type', t)
+  }
+
   // PWA shortcut: auto-open from URL ?q=expense|income
   useEffect(() => {
     const q = searchParams.get('q')
-    if (q === 'expense') { setAddType('expense'); setShowAdd(true) }
-    if (q === 'income')  { setAddType('income');  setShowAdd(true) }
+    if (q === 'expense') { setAddTypeAndSave('expense'); setShowAdd(true) }
+    if (q === 'income')  { setAddTypeAndSave('income');  setShowAdd(true) }
   }, [searchParams])
 
   useEffect(() => { if (household) initFinances() }, [household])
@@ -502,20 +513,29 @@ function FinancesInner() {
               </div>
             </div>
             <div style={{ padding:'0 16px 32px' }}>
-              {/* Tipo */}
-              <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:6, marginBottom:20, background:'rgba(0,0,0,0.04)', padding:4, borderRadius:9999 }}>
-                {(['expense','income'] as const).map(t => (
-                  <button key={t} onClick={() => { setAddType(t); setAddCat('') }} style={{ padding:'10px', borderRadius:9999, border:'none', cursor:'pointer', fontSize:14, fontWeight:800, background:addType===t?(t==='expense'?'#be185d':'#047857'):'transparent', color:addType===t?'white':'var(--ht-text-3)', transition:'all 0.15s' }}>
-                    {t==='expense'?'Gasto':'Ingreso'}
-                  </button>
-                ))}
-              </div>
-              {/* Monto */}
-              <div style={{ position:'relative', marginBottom:16 }}>
-                <span style={{ position:'absolute', left:16, top:'50%', transform:'translateY(-50%)', fontSize:20, fontWeight:900, color:'var(--ht-text-3)' }}>$</span>
-                <input type="number" placeholder="0" value={addAmount} onChange={e => setAddAmount(e.target.value)}
-                  style={{ width:'100%', padding:'14px 16px 14px 36px', border:'1.5px solid rgba(124,58,237,0.25)', borderRadius:9999, fontSize:28, fontWeight:900, background:'rgba(255,255,255,0.8)', color:addType==='income'?'#047857':'#be185d', outline:'none', fontFamily:'var(--font-qs)' }}
-                  autoFocus={!editTx} />
+              {/* Tipo + Monto siempre juntos y visibles */}
+              <div style={{ display:'flex', gap:10, marginBottom:16, alignItems:'stretch' }}>
+                {/* Tipo: columna izquierda */}
+                <div style={{ display:'flex', flexDirection:'column', gap:6, flexShrink:0 }}>
+                  {(['expense','income'] as const).map(t => (
+                    <button key={t} onClick={() => setAddTypeAndSave(t)} style={{
+                      flex:1, padding:'0 14px', borderRadius:12, border:'none', cursor:'pointer',
+                      fontSize:13, fontWeight:800, whiteSpace:'nowrap',
+                      background:addType===t?(t==='expense'?'#be185d':'#047857'):'rgba(0,0,0,0.05)',
+                      color:addType===t?'white':'var(--ht-text-3)',
+                      transition:'all 0.15s', minHeight:44,
+                    }}>
+                      {t==='expense'?'💸 Gasto':'💰 Ingreso'}
+                    </button>
+                  ))}
+                </div>
+                {/* Monto: bloque derecho */}
+                <div style={{ position:'relative', flex:1 }}>
+                  <span style={{ position:'absolute', left:14, top:'50%', transform:'translateY(-50%)', fontSize:18, fontWeight:900, color:'var(--ht-text-3)' }}>$</span>
+                  <input type="number" placeholder="0" value={addAmount} onChange={e => setAddAmount(e.target.value)}
+                    style={{ width:'100%', height:'100%', minHeight:100, padding:'12px 12px 12px 34px', border:'1.5px solid rgba(124,58,237,0.25)', borderRadius:16, fontSize:32, fontWeight:900, background:'rgba(255,255,255,0.85)', color:addType==='income'?'#047857':'#be185d', outline:'none', fontFamily:'var(--font-qs)', textAlign:'right' }}
+                    autoFocus={!editTx} />
+                </div>
               </div>
               {/* Categoría */}
               <p className="ht-section-label">Categoría</p>
