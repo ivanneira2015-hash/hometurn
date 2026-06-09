@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState, useCallback } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
@@ -12,14 +12,14 @@ import ImportExcelModal from '@/components/ImportExcelModal'
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts'
 
 const DEFAULT_CATEGORIES = [
-  { name: 'Comida',          icon: '🍕', color: '#f43f5e', type: 'expense' },
+  { name: 'Comida',          icon: '🍕', color: '#be185d', type: 'expense' },
   { name: 'Transporte',      icon: '🚗', color: '#f59e0b', type: 'expense' },
   { name: 'Hogar',           icon: '🏠', color: '#7c3aed', type: 'expense' },
-  { name: 'Salud',           icon: '💊', color: '#10b981', type: 'expense' },
+  { name: 'Salud',           icon: '💊', color: '#047857', type: 'expense' },
   { name: 'Entretenimiento', icon: '🎬', color: '#3b82f6', type: 'expense' },
   { name: 'Ropa',            icon: '👕', color: '#ec4899', type: 'expense' },
   { name: 'Educación',       icon: '📚', color: '#8b5cf6', type: 'expense' },
-  { name: 'Sueldo',          icon: '💼', color: '#10b981', type: 'income'  },
+  { name: 'Sueldo',          icon: '💼', color: '#047857', type: 'income'  },
   { name: 'Otros ingresos',  icon: '💰', color: '#f59e0b', type: 'income'  },
   { name: 'Otros gastos',    icon: '📦', color: '#6b7280', type: 'expense' },
 ] as const
@@ -166,7 +166,7 @@ export default function FinancesPage() {
 
   async function addCategory() {
     if (!newCatName.trim() || !household) return
-    const color = ['#f43f5e','#f59e0b','#7c3aed','#10b981','#3b82f6','#ec4899'][Math.floor(Math.random()*6)]
+    const color = ['#be185d','#f59e0b','#7c3aed','#047857','#3b82f6','#ec4899'][Math.floor(Math.random()*6)]
     const { data } = await supabase.from('expense_categories').insert({ household_id: household.id, name: newCatName.trim(), icon: newCatIcon, color, type: newCatType }).select().single()
     if (data) { setCategories(prev => [...prev, data]); setNewCatName('') }
   }
@@ -213,13 +213,13 @@ export default function FinancesPage() {
       <div className="ht-page-header">
         <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:12 }}>
           <div style={{ display:'flex', alignItems:'center', gap:10 }}>
-            <div style={{ width:34, height:34, borderRadius:9999, background:'linear-gradient(135deg,#10b981,#34d399)', display:'flex', alignItems:'center', justifyContent:'center', boxShadow:'0 3px 10px rgba(16,185,129,0.35)' }}>
+            <div style={{ width:34, height:34, borderRadius:9999, background:'linear-gradient(135deg,#7c3aed,#be185d)', display:'flex', alignItems:'center', justifyContent:'center', boxShadow:'0 3px 10px rgba(4,120,87,0.3)' }}>
               <TrendingUp size={16} color="white" strokeWidth={2.5} />
             </div>
             <h1 style={{ fontSize:20, fontWeight:800 }}>Finanzas</h1>
           </div>
           <div style={{ display:'flex', gap:8 }}>
-            <button onClick={() => setShowImport(true)} style={{ background:'rgba(16,185,129,0.08)', border:'none', borderRadius:9999, padding:'7px 10px', cursor:'pointer', color:'var(--ht-mint)' }}>
+            <button onClick={() => setShowImport(true)} style={{ background:'rgba(4,120,87,0.07)', border:'none', borderRadius:9999, padding:'7px 10px', cursor:'pointer', color:'var(--ht-purple)' }}>
               <FileSpreadsheet size={15} />
             </button>
             <button onClick={() => setShowSettings(true)} style={{ background:'rgba(124,58,237,0.08)', border:'none', borderRadius:9999, padding:'7px 10px', cursor:'pointer', color:'var(--ht-purple)' }}>
@@ -241,25 +241,25 @@ export default function FinancesPage() {
 
         {/* Balance cards */}
         <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:10, marginBottom:10 }}>
-          <div className="ht-card" style={{ background:'rgba(16,185,129,0.08)', border:'1px solid rgba(16,185,129,0.2)', padding:14 }}>
+          <div className="ht-card" style={{ background:'rgba(5,120,87,0.07)', border:'1px solid rgba(5,120,87,0.15)', padding:14 }}>
             <div style={{ display:'flex', alignItems:'center', gap:5, marginBottom:5 }}>
-              <ArrowUpCircle size={13} color="#10b981" />
+              <ArrowUpCircle size={13} color="#047857" />
               <span style={{ fontSize:10, fontWeight:700, color:'var(--ht-text-3)', textTransform:'uppercase', letterSpacing:'0.05em' }}>Ingresos</span>
             </div>
-            <p style={{ fontSize:20, fontWeight:900, color:'#10b981', letterSpacing:'-0.02em' }}>{fmt(income)}</p>
+            <p style={{ fontSize:20, fontWeight:900, color:'#047857', letterSpacing:'-0.02em' }}>{fmt(income)}</p>
           </div>
-          <div className="ht-card" style={{ background:'rgba(244,63,94,0.08)', border:'1px solid rgba(244,63,94,0.2)', padding:14 }}>
+          <div className="ht-card" style={{ background:'rgba(190,24,93,0.07)', border:'1px solid rgba(190,24,93,0.15)', padding:14 }}>
             <div style={{ display:'flex', alignItems:'center', gap:5, marginBottom:5 }}>
-              <ArrowDownCircle size={13} color="#f43f5e" />
+              <ArrowDownCircle size={13} color="#be185d" />
               <span style={{ fontSize:10, fontWeight:700, color:'var(--ht-text-3)', textTransform:'uppercase', letterSpacing:'0.05em' }}>Gastos</span>
             </div>
-            <p style={{ fontSize:20, fontWeight:900, color:'#f43f5e', letterSpacing:'-0.02em' }}>{fmt(expense)}</p>
+            <p style={{ fontSize:20, fontWeight:900, color:'#be185d', letterSpacing:'-0.02em' }}>{fmt(expense)}</p>
           </div>
         </div>
 
-        <div className="ht-card" style={{ marginBottom:16, padding:'12px 16px', background:balance>=0?'rgba(16,185,129,0.06)':'rgba(244,63,94,0.06)', border:`1px solid ${balance>=0?'rgba(16,185,129,0.2)':'rgba(244,63,94,0.2)'}`, display:'flex', justifyContent:'space-between', alignItems:'center' }}>
+        <div className="ht-card" style={{ marginBottom:16, padding:'12px 16px', background:balance>=0?'rgba(4,120,87,0.05)':'rgba(190,24,93,0.05)', border:`1px solid ${balance>=0?'rgba(16,185,129,0.2)':'rgba(190,24,93,0.15)'}`, display:'flex', justifyContent:'space-between', alignItems:'center' }}>
           <span style={{ fontWeight:700, fontSize:13, color:'var(--ht-text-3)' }}>Balance del mes</span>
-          <span style={{ fontWeight:900, fontSize:20, letterSpacing:'-0.02em', color:balance>=0?'#10b981':'#f43f5e' }}>{balance>=0?'+':''}{fmt(balance)}</span>
+          <span style={{ fontWeight:900, fontSize:20, letterSpacing:'-0.02em', color:balance>=0?'#047857':'#be185d' }}>{balance>=0?'+':''}{fmt(balance)}</span>
         </div>
 
         {/* Tabs */}
@@ -346,7 +346,7 @@ export default function FinancesPage() {
                     <p className="ht-section-label">{day}</p>
                     {list.map(tx => (
                       <div key={tx.id} className="ht-list-item" style={{ marginBottom:6 }}>
-                        <div style={{ width:38, height:38, borderRadius:9999, flexShrink:0, background:tx.type==='income'?'rgba(16,185,129,0.12)':`${tx.category?.color??'#6b7280'}15`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:18 }}>
+                        <div style={{ width:38, height:38, borderRadius:9999, flexShrink:0, background:tx.type==='income'?'rgba(4,120,87,0.1)':`${tx.category?.color??'#6b7280'}15`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:18 }}>
                           {tx.category?.icon ?? (tx.type==='income'?'💰':'📦')}
                         </div>
                         <div style={{ flex:1 }}>
@@ -358,7 +358,7 @@ export default function FinancesPage() {
                           </div>
                         </div>
                         <div style={{ textAlign:'right', display:'flex', flexDirection:'column', alignItems:'flex-end', gap:4 }}>
-                          <p style={{ fontSize:15, fontWeight:900, color:tx.type==='income'?'#10b981':'#f43f5e', letterSpacing:'-0.01em' }}>
+                          <p style={{ fontSize:15, fontWeight:900, color:tx.type==='income'?'#047857':'#be185d', letterSpacing:'-0.01em' }}>
                             {tx.type==='income'?'+':'-'}{fmt(Number(tx.amount))}
                           </p>
                           {tx.profile_id===user?.id && (
@@ -386,7 +386,7 @@ export default function FinancesPage() {
               const spent  = transactions.filter(t => t.type==='expense'&&t.category_id===cat.id).reduce((s,t)=>s+Number(t.amount),0)
               const budget = budgets.find(b => b.category_id===cat.id)
               const pct    = budget ? Math.min(100, Math.round((spent/budget.amount)*100)) : 0
-              const barColor = pct>=100?'#f43f5e':pct>=80?'#f59e0b':cat.color
+              const barColor = pct>=100?'#be185d':pct>=80?'#f59e0b':cat.color
               return (
                 <div key={cat.id} className="ht-card" style={{ marginBottom:10, padding:16, cursor:'pointer', transition:'box-shadow 0.15s' }}
                   onClick={() => { setBudgetModal(cat); setBudgetAmt(budget?String(budget.amount):'') }}>
@@ -434,7 +434,7 @@ export default function FinancesPage() {
               {/* Tipo */}
               <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:6, marginBottom:20, background:'rgba(0,0,0,0.04)', padding:4, borderRadius:9999 }}>
                 {(['expense','income'] as const).map(t => (
-                  <button key={t} onClick={() => { setAddType(t); setAddCat('') }} style={{ padding:'10px', borderRadius:9999, border:'none', cursor:'pointer', fontSize:14, fontWeight:800, background:addType===t?(t==='expense'?'#f43f5e':'#10b981'):'transparent', color:addType===t?'white':'var(--ht-text-3)', transition:'all 0.15s' }}>
+                  <button key={t} onClick={() => { setAddType(t); setAddCat('') }} style={{ padding:'10px', borderRadius:9999, border:'none', cursor:'pointer', fontSize:14, fontWeight:800, background:addType===t?(t==='expense'?'#be185d':'#047857'):'transparent', color:addType===t?'white':'var(--ht-text-3)', transition:'all 0.15s' }}>
                     {t==='expense'?'Gasto':'Ingreso'}
                   </button>
                 ))}
@@ -442,7 +442,7 @@ export default function FinancesPage() {
               {/* Monto */}
               <div style={{ position:'relative', marginBottom:16 }}>
                 <span style={{ position:'absolute', left:16, top:'50%', transform:'translateY(-50%)', fontSize:20, fontWeight:900, color:'var(--ht-text-3)' }}>$</span>
-                <input type="number" placeholder="0" value={addAmount} onChange={e => setAddAmount(e.target.value)} style={{ width:'100%', padding:'14px 16px 14px 36px', border:`2px solid ${addType==='income'?'rgba(16,185,129,0.4)':'rgba(244,63,94,0.4)'}`, borderRadius:9999, fontSize:28, fontWeight:900, background:'rgba(255,255,255,0.8)', color:addType==='income'?'#10b981':'#f43f5e', outline:'none', fontFamily:'var(--font-qs)' }} autoFocus={!editTx} />
+                <input type="number" placeholder="0" value={addAmount} onChange={e => setAddAmount(e.target.value)} style={{ width:'100%', padding:'14px 16px 14px 36px', border:`2px solid ${addType==='income'?'rgba(16,185,129,0.4)':'rgba(190,24,93,0.3)'}`, borderRadius:9999, fontSize:28, fontWeight:900, background:'rgba(255,255,255,0.8)', color:addType==='income'?'#047857':'#be185d', outline:'none', fontFamily:'var(--font-qs)' }} autoFocus={!editTx} />
               </div>
               {/* Categoría */}
               <p style={{ fontSize:12, fontWeight:700, color:'var(--ht-text-3)', textTransform:'uppercase', letterSpacing:'0.05em', marginBottom:8 }}>Categoría</p>
@@ -458,7 +458,7 @@ export default function FinancesPage() {
               <input type="date" className="ht-input" value={addDate} onChange={e => setAddDate(e.target.value)} style={{ marginBottom:12 }} />
               <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:8, marginBottom:20 }}>
                 {(['shared','private'] as const).map(v => (
-                  <button key={v} onClick={() => setAddVisib(v)} style={{ padding:'10px', borderRadius:14, border:'1.5px solid', borderColor:addVisib===v?(v==='shared'?'var(--ht-mint)':'var(--ht-purple)'):'var(--ht-glass-border)', background:addVisib===v?(v==='shared'?'rgba(16,185,129,0.08)':'rgba(124,58,237,0.08)'):'var(--ht-glass-warm)', cursor:'pointer', textAlign:'left', transition:'all 0.15s' }}>
+                  <button key={v} onClick={() => setAddVisib(v)} style={{ padding:'10px', borderRadius:14, border:'1.5px solid', borderColor:addVisib===v?(v==='shared'?'var(--ht-mint)':'var(--ht-purple)'):'var(--ht-glass-border)', background:addVisib===v?(v==='shared'?'rgba(4,120,87,0.07)':'rgba(124,58,237,0.08)'):'var(--ht-glass-warm)', cursor:'pointer', textAlign:'left', transition:'all 0.15s' }}>
                     {v==='shared' ? <Globe size={14} color={addVisib===v?'var(--ht-mint)':'var(--ht-text-4)'} style={{ marginBottom:4 }} /> : <Lock size={14} color={addVisib===v?'var(--ht-purple)':'var(--ht-text-4)'} style={{ marginBottom:4 }} />}
                     <p style={{ fontSize:12, fontWeight:700, color:addVisib===v?(v==='shared'?'var(--ht-mint)':'var(--ht-purple)'):'var(--ht-text)' }}>{v==='shared'?'Compartido':'Privado'}</p>
                     <p style={{ fontSize:10, color:'var(--ht-text-3)' }}>{v==='shared'?'Todos lo ven':'Solo vos'}</p>

@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -216,7 +216,7 @@ export default function ProfilePage() {
               <button
                 onClick={() => setConfirm({ type: 'leave' })}
                 className="ht-btn"
-                style={{ width: '100%', marginTop: 12, background: 'rgba(244,63,94,0.06)', color: 'var(--ht-rose)', border: '1px solid rgba(244,63,94,0.15)', justifyContent: 'center' }}
+                style={{ width: '100%', marginTop: 12, background: 'rgba(190,24,93,0.05)', color: 'var(--ht-rose)', border: '1px solid rgba(190,24,93,0.12)', justifyContent: 'center' }}
               >
                 <DoorOpen size={15} /> Salir del hogar
               </button>
@@ -244,7 +244,7 @@ export default function ProfilePage() {
           </div>
         )}
 
-        <button onClick={logout} className="ht-btn" style={{ width: '100%', background: 'rgba(244,63,94,0.06)', color: 'var(--ht-rose)', border: '1px solid rgba(244,63,94,0.15)', justifyContent: 'center' }}>
+        <button onClick={logout} className="ht-btn" style={{ width: '100%', background: 'rgba(190,24,93,0.05)', color: 'var(--ht-rose)', border: '1px solid rgba(190,24,93,0.12)', justifyContent: 'center' }}>
           <LogOut size={15} /> Cerrar sesión
         </button>
       </div>
@@ -280,7 +280,7 @@ export default function ProfilePage() {
           <div className="ht-overlay" onClick={() => !actionLoading && setConfirm(null)} />
           <div className="ht-modal">
             <div style={{ padding: '28px 20px 32px', textAlign: 'center' }}>
-              <div style={{ width: 52, height: 52, borderRadius: 9999, background: 'rgba(244,63,94,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
+              <div style={{ width: 52, height: 52, borderRadius: 9999, background: 'rgba(190,24,93,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
                 <AlertTriangle size={24} color="var(--ht-rose)" />
               </div>
               <h2 style={{ fontSize: 18, fontWeight: 800, marginBottom: 8 }}>

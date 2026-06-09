@@ -1,4 +1,4 @@
-@import "tailwindcss";
+﻿@import "tailwindcss";
 
 /* ══════════════════════════════════════
    STITCH DESIGN DNA — HomeTurn
@@ -32,7 +32,7 @@
   --ht-indigo-light: #e0e7ff;
 
   /* ── Semantic colors ── */
-  --ht-success:      #059669;   /* Verde oscuro, no neon */
+  --ht-success:      #047857;   /* Verde oscuro, no neon */
   --ht-success-light:#d1fae5;
   --ht-error:        #be123c;
   --ht-error-light:  #ffe4e6;
@@ -223,7 +223,7 @@ body::before {
   color: var(--ht-text); outline: none;
   transition: border-color 0.15s, box-shadow 0.15s;
 }
-.ht-input:focus { border-color: var(--ht-purple); box-shadow: 0 0 0 3px rgba(124,58,237,0.1); }
+.ht-input:focus { border-color: rgba(124,58,237,0.4); }
 .ht-input::placeholder { color: var(--ht-text-4); }
 select.ht-input { cursor: pointer; }
 

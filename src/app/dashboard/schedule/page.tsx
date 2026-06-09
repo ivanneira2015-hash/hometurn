@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState, useCallback } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
@@ -237,10 +237,10 @@ export default function SchedulePage() {
                           className="ht-chore-chip"
                           style={{
                             background: a.completed
-                              ? 'rgba(16,185,129,0.1)'
+                              ? 'rgba(4,120,87,0.08)'
                               : MEMBER_LIGHT[mi % 5],
                             color: a.completed ? 'var(--ht-mint)' : MEMBER_COLORS[mi % 5],
-                            border: `1.5px solid ${a.completed ? 'rgba(16,185,129,0.3)' : MEMBER_BORDER[mi % 5]}`,
+                            border: `1.5px solid ${a.completed ? 'rgba(4,120,87,0.25)' : MEMBER_BORDER[mi % 5]}`,
                             width: '100%', position: 'relative',
                             backdropFilter: 'blur(8px)',
                             boxShadow: a.completed ? 'none' : `0 2px 8px ${MEMBER_GLOW[mi % 5]}`,
@@ -336,7 +336,7 @@ export default function SchedulePage() {
                 onClick={() => toggleComplete(actionTarget.id, actionTarget.completed)}
                 className="ht-btn"
                 style={{
-                  background: actionTarget.completed ? 'rgba(99,102,241,0.08)' : 'rgba(16,185,129,0.1)',
+                  background: actionTarget.completed ? 'rgba(99,102,241,0.08)' : 'rgba(4,120,87,0.08)',
                   color: actionTarget.completed ? 'var(--ht-primary)' : 'var(--ht-mint)',
                   border: `1.5px solid ${actionTarget.completed ? 'rgba(99,102,241,0.2)' : 'rgba(16,185,129,0.2)'}`,
                   width: '100%', justifyContent: 'center', fontSize: 15,

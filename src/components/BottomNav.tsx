@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
@@ -94,7 +94,7 @@ export default function BottomNav() {
                   <div style={{
                     width: 40, height: 40, borderRadius: 9999,
                     background: active
-                      ? 'linear-gradient(135deg,#7c3aed,#f43f5e)'
+                      ? 'linear-gradient(135deg,#7c3aed,#be185d)'
                       : 'rgba(255,255,255,0.08)',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     flexShrink: 0,

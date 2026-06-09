@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
@@ -62,7 +62,7 @@ export default function LoginPage() {
           <div style={{ marginBottom: 24 }}>
             {[
               { icon: Calendar, text: 'Calendario Lun–Vie con tareas por persona', color: '#4f46e5', bg: '#ede9fe' },
-              { icon: CheckSquare, text: 'Listas de compras y pendientes compartidas', color: '#10b981', bg: '#d1fae5' },
+              { icon: CheckSquare, text: 'Listas de compras y pendientes compartidas', color: '#047857', bg: '#d1fae5' },
               { icon: RefreshCw, text: 'Rotación automática semanal de tareas', color: '#f59e0b', bg: '#fef3c7' },
             ].map(({ icon: Icon, text, color, bg }) => (
               <div key={text} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 0', borderBottom: '1px solid rgba(99,102,241,0.07)' }}>

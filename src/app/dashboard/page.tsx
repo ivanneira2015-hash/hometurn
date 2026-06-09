@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -26,9 +26,9 @@ const HUB_MODULES = [
     icon: TrendingUp,
     label: 'Finanzas',
     desc: 'Gastos e ingresos',
-    grad: 'linear-gradient(135deg,#10b981,#34d399)',
-    glow: 'rgba(16,185,129,0.25)',
-    light: 'rgba(16,185,129,0.08)',
+    grad: 'linear-gradient(135deg,#7c3aed,#be185d)',
+    glow: 'rgba(4,120,87,0.2)',
+    light: 'rgba(4,120,87,0.07)',
     border: 'rgba(16,185,129,0.2)',
   },
   {
@@ -36,10 +36,10 @@ const HUB_MODULES = [
     icon: CalendarRange,
     label: 'Agenda',
     desc: 'Eventos y recordatorios',
-    grad: 'linear-gradient(135deg,#f43f5e,#fb7185)',
+    grad: 'linear-gradient(135deg,#be185d,#f43f8e)',
     glow: 'rgba(244,63,94,0.25)',
-    light: 'rgba(244,63,94,0.08)',
-    border: 'rgba(244,63,94,0.2)',
+    light: 'rgba(190,24,93,0.07)',
+    border: 'rgba(190,24,93,0.15)',
   },
   {
     href: '/dashboard/tasks',
@@ -142,7 +142,7 @@ export default function DashboardPage() {
             <div style={{ height: 10, background: 'rgba(124,58,237,0.12)', borderRadius: 9999, overflow: 'hidden', marginBottom: 8 }}>
               <div style={{
                 height: '100%', width: `${percent}%`,
-                background: percent === 100 ? 'linear-gradient(90deg,#10b981,#34d399)' : 'var(--ht-grad)',
+                background: percent === 100 ? 'linear-gradient(90deg,#047857,#059669)' : 'var(--ht-grad)',
                 borderRadius: 9999, transition: 'width 0.6s cubic-bezier(0.16,1,0.3,1)',
               }} />
             </div>
@@ -152,13 +152,13 @@ export default function DashboardPage() {
           </div>
           <div className="ht-card" style={{
             display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-            background: percent === 100 ? 'rgba(16,185,129,0.12)' : 'linear-gradient(135deg,rgba(124,58,237,0.1),rgba(244,63,94,0.06))',
+            background: percent === 100 ? 'rgba(4,120,87,0.1)' : 'linear-gradient(135deg,rgba(124,58,237,0.1),rgba(190,24,93,0.05))',
             border: `1px solid ${percent === 100 ? 'rgba(16,185,129,0.2)' : 'rgba(124,58,237,0.15)'}`,
             padding: 0, minHeight: 84,
           }}>
             <span style={{
               fontSize: 30, fontWeight: 900, letterSpacing: '-0.04em', lineHeight: 1,
-              background: percent === 100 ? 'linear-gradient(135deg,#10b981,#34d399)' : 'var(--ht-grad)',
+              background: percent === 100 ? 'linear-gradient(135deg,#7c3aed,#be185d)' : 'var(--ht-grad)',
               WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
             }}>{percent}</span>
             <span style={{ fontSize: 11, fontWeight: 800, color: 'var(--ht-text-3)', marginTop: 1 }}>%</span>
@@ -170,7 +170,7 @@ export default function DashboardPage() {
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
             <p className="ht-section-label" style={{ marginBottom: 0 }}>{todayLabel}</p>
             {todayTasks.filter(t => !t.completed).length > 0 && (
-              <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--ht-rose)', background: 'var(--ht-rose-light)', padding: '2px 8px', borderRadius: 9999, border: '1px solid rgba(244,63,94,0.15)' }}>
+              <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--ht-rose)', background: 'var(--ht-rose-light)', padding: '2px 8px', borderRadius: 9999, border: '1px solid rgba(190,24,93,0.12)' }}>
                 {todayTasks.filter(t => !t.completed).length} pendientes
               </span>
             )}
@@ -187,7 +187,7 @@ export default function DashboardPage() {
             </div>
           ) : todayTasks.slice(0, 3).map(task => (
             <button key={task.id} onClick={() => toggleComplete(task.id, task.completed)} className="ht-list-item"
-              style={{ width: '100%', cursor: 'pointer', textAlign: 'left', background: task.completed ? 'rgba(16,185,129,0.08)' : 'var(--ht-glass-warm)', border: `1px solid ${task.completed ? 'rgba(16,185,129,0.2)' : 'var(--ht-glass-border)'}` }}>
+              style={{ width: '100%', cursor: 'pointer', textAlign: 'left', background: task.completed ? 'rgba(4,120,87,0.07)' : 'var(--ht-glass-warm)', border: `1px solid ${task.completed ? 'rgba(16,185,129,0.2)' : 'var(--ht-glass-border)'}` }}>
               {task.completed ? <CheckCircle2 size={22} color="var(--ht-mint)" /> : <Circle size={22} color="rgba(124,58,237,0.25)" />}
               <div style={{ flex: 1 }}>
                 <p style={{ fontWeight: 800, fontSize: 15, color: task.completed ? 'var(--ht-text-3)' : 'var(--ht-text)', textDecoration: task.completed ? 'line-through' : 'none' }}>{task.chore?.name}</p>

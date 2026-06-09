@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState, useRef } from 'react'
 
@@ -16,7 +16,7 @@ function Confetti() {
     delay: Math.random() * 0.6,
     duration: 1.2 + Math.random() * 0.8,
     size: 5 + Math.random() * 7,
-    color: ['#4f46e5','#a78bfa','#10b981','#f59e0b','#f43f5e','#60a5fa','#34d399'][i % 7],
+    color: ['#4f46e5','#a78bfa','#047857','#f59e0b','#be185d','#60a5fa','#047857'][i % 7],
     rotate: Math.random() * 360,
     shape: i % 3 === 0 ? 'circle' : i % 3 === 1 ? 'rect' : 'triangle',
   }))

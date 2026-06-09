@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState, useCallback } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
@@ -13,9 +13,9 @@ import {
 // ── Event type config ──────────────────────────────────────
 const EVENT_TYPES = [
   { type: 'event'     as const, icon: CalendarRange, label: 'Evento',       color: '#7c3aed' },
-  { type: 'birthday'  as const, icon: Gift,          label: 'Cumpleaños',   color: '#f43f5e' },
+  { type: 'birthday'  as const, icon: Gift,          label: 'Cumpleaños',   color: '#be185d' },
   { type: 'exam'      as const, icon: GraduationCap, label: 'Examen',       color: '#f59e0b' },
-  { type: 'reminder'  as const, icon: Clock,         label: 'Recordatorio', color: '#10b981' },
+  { type: 'reminder'  as const, icon: Clock,         label: 'Recordatorio', color: '#047857' },
   { type: 'note'      as const, icon: StickyNote,    label: 'Nota',         color: '#3b82f6' },
 ]
 
@@ -190,7 +190,7 @@ export default function AgendaPage() {
       <div className="ht-page-header">
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <div style={{ width: 34, height: 34, borderRadius: 9999, background: 'linear-gradient(135deg,#7c3aed,#f43f5e)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 3px 10px rgba(124,58,237,0.35)' }}>
+            <div style={{ width: 34, height: 34, borderRadius: 9999, background: 'linear-gradient(135deg,#7c3aed,#be185d)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 3px 10px rgba(124,58,237,0.35)' }}>
               <CalendarRange size={16} color="white" strokeWidth={2.5} />
             </div>
             <h1 style={{ fontSize: 20, fontWeight: 800 }}>Agenda</h1>

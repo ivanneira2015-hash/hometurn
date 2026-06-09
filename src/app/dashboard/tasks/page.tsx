@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
@@ -7,7 +7,7 @@ import { TaskList, TaskItem } from '@/lib/types'
 import { Plus, X, Check, ShoppingCart, ClipboardList, Sparkles, Trash2, ChevronRight, Lock, Globe } from 'lucide-react'
 
 const LIST_TYPES = [
-  { type: 'shopping' as const, icon: ShoppingCart, label: 'Compras',       color: '#10b981', light: 'rgba(16,185,129,0.1)'  },
+  { type: 'shopping' as const, icon: ShoppingCart, label: 'Compras',       color: '#047857', light: 'rgba(4,120,87,0.08)'  },
   { type: 'todo'     as const, icon: ClipboardList, label: 'Pendientes',    color: '#7c3aed', light: 'rgba(124,58,237,0.1)'  },
   { type: 'custom'   as const, icon: Sparkles,      label: 'Personalizada', color: '#f59e0b', light: 'rgba(245,158,11,0.1)'  },
 ]
@@ -240,7 +240,7 @@ export default function TasksPage() {
                   <div key={item.id} style={{
                     display: 'flex', alignItems: 'center', gap: 12,
                     padding: '10px 14px', borderRadius: 16, marginBottom: 5,
-                    background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.15)',
+                    background: 'rgba(4,120,87,0.07)', border: '1px solid rgba(4,120,87,0.12)',
                   }}>
                     <button onClick={() => toggleItem(item.id, item.completed)} className="ht-checkbox checked">
                       <Check size={12} color="white" strokeWidth={3} />
