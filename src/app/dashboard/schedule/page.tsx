@@ -12,7 +12,7 @@ import TemplatesModal from '@/components/TemplatesModal'
 import { MEMBER_GRAD, MEMBER_GLOW, MEMBER_LIGHT, MEMBER_BORDER, MEMBER_SOLID as MEMBER_COLORS } from '@/lib/colors'
 
 export default function SchedulePage() {
-  const { user, household, members } = useAuth()
+  const { user, profile, household, members } = useAuth()
   const supabase = createClient()
   const [weekStart, setWeekStart] = useState(getWeekStart())
   const [assignments, setAssignments] = useState<WeeklyAssignment[]>([])
