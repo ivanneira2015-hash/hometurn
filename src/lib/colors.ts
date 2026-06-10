@@ -1,48 +1,45 @@
-// HomeTurn — Brand palette siguiendo Stitch DNA
-// Concepto: cálido, vibrante, familiar. Purple → Rose → Amber.
-// SIN colores neon genéricos (no mint eléctrico, no azul Material Design)
+// HomeTurn — Arena Dorada + Oliva · Bitono cálido premium
 
 export const MEMBER_GRAD = [
-  'linear-gradient(135deg, #7c3aed, #9333ea)',  // Púrpura marca
-  'linear-gradient(135deg, #be185d, #e11d48)',  // Rosa profundo
-  'linear-gradient(135deg, #b45309, #d97706)',  // Ámbar cálido
-  'linear-gradient(135deg, #4338ca, #6d28d9)',  // Índigo profundo
-  'linear-gradient(135deg, #0f766e, #0d9488)',  // Teal cálido
+  'linear-gradient(135deg, #C8956C, #A67552)',  // Arena dorada
+  'linear-gradient(135deg, #7A8A5E, #5D6B45)',  // Oliva profundo
+  'linear-gradient(135deg, #A67552, #8B5E3C)',  // Ámbar oscuro
+  'linear-gradient(135deg, #5D6B45, #3D4D2A)',  // Oliva oscuro
+  'linear-gradient(135deg, #C8956C, #7A8A5E)',  // Arena + Oliva
 ]
 
 export const MEMBER_GLOW = [
-  '0 4px 16px rgba(124,58,237,0.35)',
-  '0 4px 16px rgba(190,24,93,0.35)',
-  '0 4px 16px rgba(180,83,9,0.35)',
-  '0 4px 16px rgba(67,56,202,0.35)',
-  '0 4px 16px rgba(15,118,110,0.35)',
+  '0 4px 16px rgba(200,149,108,0.35)',
+  '0 4px 16px rgba(122,138,94,0.35)',
+  '0 4px 16px rgba(166,117,82,0.35)',
+  '0 4px 16px rgba(93,107,69,0.35)',
+  '0 4px 16px rgba(200,149,108,0.25)',
 ]
 
 export const MEMBER_SOLID = [
-  '#7c3aed', '#be185d', '#b45309', '#4338ca', '#0f766e',
-]
-
-// Para uso en tablas/listas donde se necesita BG suave
-export const MEMBER_BG = [
-  'rgba(124,58,237,0.1)',
-  'rgba(190,24,93,0.1)',
-  'rgba(180,83,9,0.1)',
-  'rgba(67,56,202,0.1)',
-  'rgba(15,118,110,0.1)',
+  '#C8956C', '#7A8A5E', '#A67552', '#5D6B45', '#8B7A60',
 ]
 
 export const MEMBER_LIGHT = [
-  'rgba(124,58,237,0.1)',
-  'rgba(190,24,93,0.1)',
-  'rgba(180,83,9,0.1)',
-  'rgba(67,56,202,0.1)',
-  'rgba(15,118,110,0.1)',
+  'rgba(200,149,108,0.1)',
+  'rgba(122,138,94,0.1)',
+  'rgba(166,117,82,0.1)',
+  'rgba(93,107,69,0.1)',
+  'rgba(200,149,108,0.08)',
 ]
 
 export const MEMBER_BORDER = [
-  'rgba(124,58,237,0.25)',
-  'rgba(190,24,93,0.25)',
-  'rgba(180,83,9,0.25)',
-  'rgba(67,56,202,0.25)',
-  'rgba(15,118,110,0.25)',
+  'rgba(200,149,108,0.25)',
+  'rgba(122,138,94,0.25)',
+  'rgba(166,117,82,0.25)',
+  'rgba(93,107,69,0.25)',
+  'rgba(139,122,96,0.25)',
+]
+
+export const MEMBER_BG = [
+  'rgba(200,149,108,0.1)',
+  'rgba(122,138,94,0.1)',
+  'rgba(166,117,82,0.1)',
+  'rgba(93,107,69,0.1)',
+  'rgba(139,122,96,0.1)',
 ]

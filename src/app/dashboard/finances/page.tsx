@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState, useCallback, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
@@ -18,14 +18,14 @@ import {
 } from 'recharts'
 
 const DEFAULT_CATEGORIES = [
-  { name: 'Comida',          icon: '🍕', color: '#be185d', type: 'expense' },
+  { name: 'Comida',          icon: '🍕', color: '#8B2020', type: 'expense' },
   { name: 'Transporte',      icon: '🚗', color: '#b45309', type: 'expense' },
-  { name: 'Hogar',           icon: '🏠', color: '#7c3aed', type: 'expense' },
+  { name: 'Hogar',           icon: '🏠', color: '#C8956C', type: 'expense' },
   { name: 'Salud',           icon: '💊', color: '#0f766e', type: 'expense' },
-  { name: 'Entretenimiento', icon: '🎬', color: '#4338ca', type: 'expense' },
-  { name: 'Ropa',            icon: '👕', color: '#be185d', type: 'expense' },
-  { name: 'Educación',       icon: '📚', color: '#7c3aed', type: 'expense' },
-  { name: 'Sueldo',          icon: '💼', color: '#047857', type: 'income'  },
+  { name: 'Entretenimiento', icon: '🎬', color: '#7A8A5E', type: 'expense' },
+  { name: 'Ropa',            icon: '👕', color: '#8B2020', type: 'expense' },
+  { name: 'Educación',       icon: '📚', color: '#C8956C', type: 'expense' },
+  { name: 'Sueldo',          icon: '💼', color: '#3D6B42', type: 'income'  },
   { name: 'Otros ingresos',  icon: '💰', color: '#b45309', type: 'income'  },
   { name: 'Otros gastos',    icon: '📦', color: '#6b7280', type: 'expense' },
 ] as const
@@ -257,7 +257,7 @@ function FinancesInner() {
 
   async function addCategory() {
     if (!newCatName.trim() || !household) return
-    const colors = ['#be185d','#b45309','#7c3aed','#047857','#4338ca','#0f766e']
+    const colors = ['#8B2020','#b45309','#C8956C','#3D6B42','#7A8A5E','#0f766e']
     const color = colors[categories.length % colors.length]
     const { data } = await supabase.from('expense_categories').insert({ household_id: household.id, name: newCatName.trim(), icon: newCatIcon, color, type: newCatType }).select().single()
     if (data) { setCategories(prev => [...prev, data]); setNewCatName('') }
@@ -309,22 +309,22 @@ function FinancesInner() {
   return (
     <div>
       {/* Header */}
-      <div className="ht-page-header">
+      <div className="ht-page-header" style={{ paddingRight: 52 }}>
         <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:12 }}>
           <div style={{ display:'flex', alignItems:'center', gap:10 }}>
-            <div style={{ width:34, height:34, borderRadius:9999, background:'linear-gradient(135deg,#7c3aed,#be185d)', display:'flex', alignItems:'center', justifyContent:'center', boxShadow:'0 3px 10px rgba(124,58,237,0.3)' }}>
+            <div style={{ width:34, height:34, borderRadius:9999, background:'linear-gradient(135deg,#7c3aed,#be185d)', display:'flex', alignItems:'center', justifyContent:'center', boxShadow:'0 3px 10px rgba(200,149,108,0.3)' }}>
               <TrendingUp size={16} color="white" strokeWidth={2.5} />
             </div>
             <h1 style={{ fontSize:20, fontWeight:800 }}>Finanzas</h1>
           </div>
           <div style={{ display:'flex', gap:8 }}>
-            <button onClick={exportToExcel} disabled={transactions.length === 0} style={{ background:'rgba(4,120,87,0.08)', border:'none', borderRadius:9999, padding:'7px 10px', cursor:'pointer', color:'#047857', opacity: transactions.length === 0 ? 0.4 : 1 }} title="Exportar Excel">
+            <button onClick={exportToExcel} disabled={transactions.length === 0} style={{ background:'rgba(4,120,87,0.08)', border:'none', borderRadius:9999, padding:'7px 10px', cursor:'pointer', color:'#3D6B42', opacity: transactions.length === 0 ? 0.4 : 1 }} title="Exportar Excel">
               <Download size={15} />
             </button>
-            <button onClick={() => setShowImport(true)} style={{ background:'rgba(124,58,237,0.08)', border:'none', borderRadius:9999, padding:'7px 10px', cursor:'pointer', color:'var(--ht-purple)' }}>
+            <button onClick={() => setShowImport(true)} style={{ background:'rgba(200,149,108,0.08)', border:'none', borderRadius:9999, padding:'7px 10px', cursor:'pointer', color:'var(--ht-purple)' }}>
               <FileSpreadsheet size={15} />
             </button>
-            <button onClick={() => setShowSettings(true)} style={{ background:'rgba(124,58,237,0.08)', border:'none', borderRadius:9999, padding:'7px 10px', cursor:'pointer', color:'var(--ht-purple)' }}>
+            <button onClick={() => setShowSettings(true)} style={{ background:'rgba(200,149,108,0.08)', border:'none', borderRadius:9999, padding:'7px 10px', cursor:'pointer', color:'var(--ht-purple)' }}>
               <Settings size={15} />
             </button>
             <button onClick={() => openAdd()} className="ht-btn ht-btn-primary" style={{ padding:'7px 14px', fontSize:13 }}>
@@ -335,9 +335,9 @@ function FinancesInner() {
 
         {/* Month selector */}
         <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between' }}>
-          <button onClick={prevMonth} style={{ background:'rgba(124,58,237,0.08)', border:'none', borderRadius:9999, padding:'6px 12px', cursor:'pointer', color:'var(--ht-purple)', fontWeight:700, fontSize:15 }}>‹</button>
+          <button onClick={prevMonth} style={{ background:'rgba(200,149,108,0.08)', border:'none', borderRadius:9999, padding:'6px 12px', cursor:'pointer', color:'var(--ht-purple)', fontWeight:700, fontSize:15 }}>‹</button>
           <span style={{ fontWeight:800, fontSize:15 }}>{MONTHS_FULL[month]} {year}</span>
-          <button onClick={nextMonth} style={{ background:'rgba(124,58,237,0.08)', border:'none', borderRadius:9999, padding:'6px 12px', cursor:'pointer', color:'var(--ht-purple)', fontWeight:700, fontSize:15 }}>›</button>
+          <button onClick={nextMonth} style={{ background:'rgba(200,149,108,0.08)', border:'none', borderRadius:9999, padding:'6px 12px', cursor:'pointer', color:'var(--ht-purple)', fontWeight:700, fontSize:15 }}>›</button>
         </div>
       </div>
 
@@ -350,15 +350,15 @@ function FinancesInner() {
               <ArrowUpCircle size={13} color="#047857" />
               <span style={{ fontSize:10, fontWeight:700, color:'var(--ht-text-3)', textTransform:'uppercase', letterSpacing:'0.05em' }}>Ingresos</span>
             </div>
-            <p style={{ fontSize:20, fontWeight:900, color:'#047857', letterSpacing:'-0.02em' }}>{fmtShort(income)}</p>
+            <p style={{ fontSize:20, fontWeight:900, color:'#3D6B42', letterSpacing:'-0.02em' }}>{fmtShort(income)}</p>
             {prevIncome > 0 && <p style={{ fontSize:11, color:'var(--ht-text-4)', marginTop:3 }}>vs {fmtShort(prevIncome)} mes ant.</p>}
           </div>
-          <div className="ht-card" style={{ background:'rgba(190,24,93,0.07)', border:'1px solid rgba(190,24,93,0.15)', padding:14 }}>
+          <div className="ht-card" style={{ background:'rgba(190,24,93,0.07)', border:'1px solid rgba(139,32,32,0.15)', padding:14 }}>
             <div style={{ display:'flex', alignItems:'center', gap:5, marginBottom:5 }}>
               <ArrowDownCircle size={13} color="#be185d" />
               <span style={{ fontSize:10, fontWeight:700, color:'var(--ht-text-3)', textTransform:'uppercase', letterSpacing:'0.05em' }}>Gastos</span>
             </div>
-            <p style={{ fontSize:20, fontWeight:900, color:'#be185d', letterSpacing:'-0.02em' }}>{fmtShort(expense)}</p>
+            <p style={{ fontSize:20, fontWeight:900, color:'#8B2020', letterSpacing:'-0.02em' }}>{fmtShort(expense)}</p>
             {prevExpense > 0 && <p style={{ fontSize:11, color:'var(--ht-text-4)', marginTop:3 }}>vs {fmtShort(prevExpense)} mes ant.</p>}
           </div>
         </div>
@@ -368,11 +368,11 @@ function FinancesInner() {
           <div className="ht-card" style={{ background: balance>=0?'rgba(4,120,87,0.05)':'rgba(190,24,93,0.05)', border:`1px solid ${balance>=0?'rgba(4,120,87,0.12)':'rgba(190,24,93,0.12)'}`, padding:'13px 16px', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
             <div>
               <p style={{ fontSize:11, fontWeight:700, color:'var(--ht-text-3)', textTransform:'uppercase', letterSpacing:'0.05em', marginBottom:4 }}>Balance</p>
-              <p style={{ fontSize:22, fontWeight:900, color:balance>=0?'#047857':'#be185d', letterSpacing:'-0.02em' }}>{balance>=0?'+':''}{fmtShort(balance)}</p>
+              <p style={{ fontSize:22, fontWeight:900, color:balance>=0?'#3D6B42':'#8B2020', letterSpacing:'-0.02em' }}>{balance>=0?'+':''}{fmtShort(balance)}</p>
             </div>
-            <Wallet size={28} color={balance>=0?'#047857':'#be185d'} strokeWidth={1.5} />
+            <Wallet size={28} color={balance>=0?'#3D6B42':'#8B2020'} strokeWidth={1.5} />
           </div>
-          <div className="ht-card" style={{ padding:0, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', background:'rgba(124,58,237,0.07)', border:'1px solid rgba(124,58,237,0.12)' }}>
+          <div className="ht-card" style={{ padding:0, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', background:'rgba(124,58,237,0.07)', border:'1px solid rgba(200,149,108,0.12)' }}>
             <p style={{ fontSize:22, fontWeight:900, color:'var(--ht-purple)', letterSpacing:'-0.03em' }}>{savingsRate}%</p>
             <p style={{ fontSize:10, fontWeight:700, color:'var(--ht-text-3)', marginTop:2 }}>ahorro</p>
           </div>
@@ -381,7 +381,7 @@ function FinancesInner() {
         {/* Tabs */}
         <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:6, marginBottom:16, background:'rgba(124,58,237,0.06)', padding:4, borderRadius:9999 }}>
           {([['resumen', PieChartIcon, 'Resumen'], ['movimientos', List, 'Movimientos'], ['presupuestos', Target, 'Metas']] as const).map(([t, Icon, label]) => (
-            <button key={t} onClick={() => setTab(t as Tab)} style={{ padding:'8px 4px', borderRadius:9999, border:'none', cursor:'pointer', fontSize:11, fontWeight:700, display:'flex', alignItems:'center', justifyContent:'center', gap:4, background:tab===t?'white':'transparent', color:tab===t?'var(--ht-purple)':'var(--ht-text-3)', boxShadow:tab===t?'0 2px 8px rgba(124,58,237,0.1)':'none', transition:'all 0.15s' }}>
+            <button key={t} onClick={() => setTab(t as Tab)} style={{ padding:'8px 4px', borderRadius:9999, border:'none', cursor:'pointer', fontSize:11, fontWeight:700, display:'flex', alignItems:'center', justifyContent:'center', gap:4, background:tab===t?'white':'transparent', color:tab===t?'var(--ht-purple)':'var(--ht-text-3)', boxShadow:tab===t?'0 2px 8px rgba(200,149,108,0.1)':'none', transition:'all 0.15s' }}>
               <Icon size={13} /> {label}
             </button>
           ))}
@@ -391,7 +391,7 @@ function FinancesInner() {
         {tab === 'resumen' && (
           transactions.length === 0
             ? <div className="ht-card" style={{ textAlign:'center', padding:'32px 20px' }}>
-                <TrendingUp size={28} color="rgba(124,58,237,0.3)" style={{ margin:'0 auto 10px', display:'block' }} />
+                <TrendingUp size={28} color="rgba(200,149,108,0.3)" style={{ margin:'0 auto 10px', display:'block' }} />
                 <p style={{ fontWeight:700, fontSize:15, marginBottom:6 }}>Sin movimientos este mes</p>
                 <p style={{ fontSize:13, color:'var(--ht-text-3)', marginBottom:16 }}>Agregá tu primer ingreso o gasto</p>
                 <button onClick={() => openAdd()} className="ht-btn ht-btn-primary"><Plus size={14} /> Agregar</button>
@@ -445,7 +445,7 @@ function FinancesInner() {
             {/* Filters */}
             <div style={{ display:'flex', gap:6, marginBottom:14, overflowX:'auto', paddingBottom:4 }}>
               {(['all','expense','income'] as const).map(f => (
-                <button key={f} onClick={() => setFilterType(f)} style={{ padding:'5px 12px', borderRadius:9999, border:'none', cursor:'pointer', fontSize:12, fontWeight:700, flexShrink:0, background:filterType===f?'var(--ht-purple)':'rgba(124,58,237,0.08)', color:filterType===f?'white':'var(--ht-purple)', transition:'all 0.15s' }}>
+                <button key={f} onClick={() => setFilterType(f)} style={{ padding:'5px 12px', borderRadius:9999, border:'none', cursor:'pointer', fontSize:12, fontWeight:700, flexShrink:0, background:filterType===f?'var(--ht-purple)':'rgba(200,149,108,0.08)', color:filterType===f?'white':'var(--ht-purple)', transition:'all 0.15s' }}>
                   {f==='all'?'Todos':f==='expense'?'Gastos':'Ingresos'}
                 </button>
               ))}
@@ -484,7 +484,7 @@ function FinancesInner() {
                           </div>
                         </div>
                         <div style={{ textAlign:'right', display:'flex', flexDirection:'column', alignItems:'flex-end', gap:4 }}>
-                          <p style={{ fontSize:15, fontWeight:900, color:tx.type==='income'?'#047857':'#be185d', letterSpacing:'-0.01em' }}>
+                          <p style={{ fontSize:15, fontWeight:900, color:tx.type==='income'?'#3D6B42':'#8B2020', letterSpacing:'-0.01em' }}>
                             {tx.type==='income'?'+':'-'}{fmtShort(Number(tx.amount))}
                           </p>
                           {tx.profile_id===user?.id && (
@@ -512,7 +512,7 @@ function FinancesInner() {
               const spent  = transactions.filter(t => t.type==='expense'&&t.category_id===cat.id).reduce((s,t)=>s+Number(t.amount),0)
               const budget = budgets.find(b => b.category_id===cat.id)
               const pct    = budget ? Math.min(100, Math.round((spent/budget.amount)*100)) : 0
-              const barColor = pct>=100?'#be185d':pct>=80?'#b45309':cat.color
+              const barColor = pct>=100?'#8B2020':pct>=80?'#b45309':cat.color
               return (
                 <div key={cat.id} className="ht-card" style={{ marginBottom:10, padding:16, cursor:'pointer' }}
                   onClick={() => { setBudgetModal(cat); setBudgetAmt(budget?String(budget.amount):'') }}>
@@ -548,7 +548,7 @@ function FinancesInner() {
           <div className="ht-overlay" onClick={() => setShowAdd(false)} />
           <div className="ht-modal">
             <div style={{ padding:'20px 16px 0' }}>
-              <div style={{ width:36, height:4, background:'rgba(124,58,237,0.2)', borderRadius:9999, margin:'0 auto 16px' }} />
+              <div style={{ width:36, height:4, background:'rgba(200,149,108,0.2)', borderRadius:9999, margin:'0 auto 16px' }} />
               <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:20 }}>
                 <h2 style={{ fontSize:17, fontWeight:800 }}>{editTx?'Editar movimiento':'Nuevo movimiento'}</h2>
                 <button onClick={() => setShowAdd(false)} style={{ background:'none', border:'none', cursor:'pointer', color:'var(--ht-text-3)', padding:4 }}><X size={20} /></button>
@@ -563,7 +563,7 @@ function FinancesInner() {
                     <button key={t} onClick={() => setAddTypeAndSave(t)} style={{
                       flex:1, padding:'0 14px', borderRadius:12, border:'none', cursor:'pointer',
                       fontSize:13, fontWeight:800, whiteSpace:'nowrap',
-                      background:addType===t?(t==='expense'?'#be185d':'#047857'):'rgba(0,0,0,0.05)',
+                      background:addType===t?(t==='expense'?'#8B2020':'#3D6B42'):'rgba(0,0,0,0.05)',
                       color:addType===t?'white':'var(--ht-text-3)',
                       transition:'all 0.15s', minHeight:44,
                     }}>
@@ -575,7 +575,7 @@ function FinancesInner() {
                 <div style={{ position:'relative', flex:1 }}>
                   <span style={{ position:'absolute', left:14, top:'50%', transform:'translateY(-50%)', fontSize:18, fontWeight:900, color:'var(--ht-text-3)' }}>$</span>
                   <input type="number" placeholder="0" value={addAmount} onChange={e => setAddAmount(e.target.value)}
-                    style={{ width:'100%', height:'100%', minHeight:100, padding:'12px 12px 12px 34px', border:'1.5px solid rgba(124,58,237,0.25)', borderRadius:16, fontSize:32, fontWeight:900, background:'rgba(255,255,255,0.85)', color:addType==='income'?'#047857':'#be185d', outline:'none', fontFamily:'var(--font-qs)', textAlign:'right' }}
+                    style={{ width:'100%', height:'100%', minHeight:100, padding:'12px 12px 12px 34px', border:'1.5px solid rgba(200,149,108,0.25)', borderRadius:16, fontSize:32, fontWeight:900, background:'rgba(255,255,255,0.85)', color:addType==='income'?'#3D6B42':'#8B2020', outline:'none', fontFamily:'var(--font-qs)', textAlign:'right' }}
                     autoFocus={!editTx} />
                 </div>
               </div>
@@ -627,7 +627,7 @@ function FinancesInner() {
           <div className="ht-overlay" onClick={() => setBudgetModal(null)} />
           <div className="ht-modal">
             <div style={{ padding:'24px 16px 32px' }}>
-              <div style={{ width:36, height:4, background:'rgba(124,58,237,0.2)', borderRadius:9999, margin:'0 auto 20px' }} />
+              <div style={{ width:36, height:4, background:'rgba(200,149,108,0.2)', borderRadius:9999, margin:'0 auto 20px' }} />
               <div style={{ display:'flex', alignItems:'center', gap:12, marginBottom:20 }}>
                 <div style={{ width:48, height:48, borderRadius:9999, background:`${budgetModal.color}15`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:24 }}>{budgetModal.icon}</div>
                 <div>
@@ -660,7 +660,7 @@ function FinancesInner() {
           <div className="ht-overlay" onClick={() => setShowSettings(false)} />
           <div className="ht-modal">
             <div style={{ padding:'20px 16px 0' }}>
-              <div style={{ width:36, height:4, background:'rgba(124,58,237,0.2)', borderRadius:9999, margin:'0 auto 16px' }} />
+              <div style={{ width:36, height:4, background:'rgba(200,149,108,0.2)', borderRadius:9999, margin:'0 auto 16px' }} />
               <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:16 }}>
                 <h2 style={{ fontSize:17, fontWeight:800 }}>Categorías</h2>
                 <button onClick={() => setShowSettings(false)} style={{ background:'none', border:'none', cursor:'pointer', color:'var(--ht-text-3)', padding:4 }}><X size={20} /></button>
@@ -675,7 +675,7 @@ function FinancesInner() {
                 ))}
               </div>
               <div style={{ display:'flex', gap:8, marginBottom:12 }}>
-                <input value={newCatIcon} onChange={e => setNewCatIcon(e.target.value)} style={{ width:52, border:'1.5px solid rgba(124,58,237,0.2)', borderRadius:12, textAlign:'center', fontSize:20, padding:'8px 4px', background:'rgba(255,255,255,0.8)', outline:'none' }} maxLength={2} />
+                <input value={newCatIcon} onChange={e => setNewCatIcon(e.target.value)} style={{ width:52, border:'1.5px solid rgba(200,149,108,0.2)', borderRadius:12, textAlign:'center', fontSize:20, padding:'8px 4px', background:'rgba(255,255,255,0.8)', outline:'none' }} maxLength={2} />
                 <input className="ht-input" placeholder="Nombre de categoría" value={newCatName} onChange={e => setNewCatName(e.target.value)} onKeyDown={e => e.key==='Enter'&&addCategory()} />
                 <button onClick={addCategory} disabled={!newCatName.trim()} className="ht-btn ht-btn-primary" style={{ flexShrink:0, padding:'9px 14px' }}><Plus size={15} /></button>
               </div>

@@ -16,7 +16,7 @@ function Confetti() {
     delay: Math.random() * 0.6,
     duration: 1.2 + Math.random() * 0.8,
     size: 5 + Math.random() * 7,
-    color: ['#4f46e5','#a78bfa','#047857','#f59e0b','#be185d','#60a5fa','#047857'][i % 7],
+    color: ['#C8956C','#a78bfa','#3D6B42','#f59e0b','#8B2020','#60a5fa','#3D6B42'][i % 7],
     rotate: Math.random() * 360,
     shape: i % 3 === 0 ? 'circle' : i % 3 === 1 ? 'rect' : 'triangle',
   }))
@@ -346,7 +346,7 @@ export default function SuccessAnimation({ type, householdName, onDone }: Props)
           </p>
           <p style={{
             fontSize: 16, fontWeight: 600,
-            color: '#4f46e5',
+            color: '#C8956C',
             background: 'rgba(255,255,255,0.7)',
             backdropFilter: 'blur(8px)',
             padding: '6px 20px', borderRadius: 9999,
@@ -363,7 +363,7 @@ export default function SuccessAnimation({ type, householdName, onDone }: Props)
           {[0,1,2].map(i => (
             <div key={i} style={{
               width: 6, height: 6, borderRadius: '50%',
-              background: '#4f46e5',
+              background: '#C8956C',
               animation: `pulse-ring 0.8s ${i * 0.2}s ease-out infinite`,
             }} />
           ))}

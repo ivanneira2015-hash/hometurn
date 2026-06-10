@@ -204,7 +204,7 @@ export default function ImportExcelModal({ householdId, profileId, members, cate
       <div className="ht-overlay" onClick={onClose} />
       <div className="ht-modal">
         <div style={{ padding: '20px 16px 0' }}>
-          <div style={{ width: 36, height: 4, background: 'rgba(124,58,237,0.2)', borderRadius: 9999, margin: '0 auto 16px' }} />
+          <div style={{ width: 36, height: 4, background: 'rgba(200,149,108,0.2)', borderRadius: 9999, margin: '0 auto 16px' }} />
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <FileSpreadsheet size={18} color="var(--ht-mint)" />
@@ -221,7 +221,7 @@ export default function ImportExcelModal({ householdId, profileId, members, cate
               <div key={s} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                 <div style={{
                   width: 24, height: 24, borderRadius: 9999,
-                  background: step === s ? 'var(--ht-purple)' : parsed.length > 0 && i < ['upload','map','preview'].indexOf(step) ? 'var(--ht-mint)' : 'rgba(124,58,237,0.1)',
+                  background: step === s ? 'var(--ht-purple)' : parsed.length > 0 && i < ['upload','map','preview'].indexOf(step) ? 'var(--ht-mint)' : 'rgba(200,149,108,0.1)',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   fontSize: 11, fontWeight: 800,
                   color: step === s || (parsed.length > 0 && i < ['upload','map','preview'].indexOf(step)) ? 'white' : 'var(--ht-text-4)',
@@ -247,14 +247,14 @@ export default function ImportExcelModal({ householdId, profileId, members, cate
                 onClick={() => fileRef.current?.click()}
                 style={{
                   width: '100%', padding: '32px 20px',
-                  border: '2px dashed rgba(124,58,237,0.3)',
+                  border: '2px dashed rgba(200,149,108,0.3)',
                   borderRadius: 20, background: 'rgba(124,58,237,0.04)',
                   cursor: 'pointer', display: 'flex', flexDirection: 'column',
                   alignItems: 'center', gap: 12,
                   transition: 'all 0.15s',
                 }}
               >
-                <div style={{ width: 56, height: 56, borderRadius: 9999, background: 'rgba(124,58,237,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ width: 56, height: 56, borderRadius: 9999, background: 'rgba(200,149,108,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <Upload size={24} color="var(--ht-purple)" strokeWidth={2} />
                 </div>
                 <div style={{ textAlign: 'center' }}>
@@ -263,11 +263,11 @@ export default function ImportExcelModal({ householdId, profileId, members, cate
                 </div>
               </button>
 
-              <div style={{ marginTop: 20, padding: 14, background: 'rgba(124,58,237,0.05)', borderRadius: 14, border: '1px solid rgba(124,58,237,0.1)' }}>
+              <div style={{ marginTop: 20, padding: 14, background: 'rgba(124,58,237,0.05)', borderRadius: 14, border: '1px solid rgba(200,149,108,0.1)' }}>
                 <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--ht-purple)', marginBottom: 8 }}>Formato recomendado</p>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 4, background: 'rgba(255,255,255,0.7)', borderRadius: 8, padding: 8 }}>
                   {['Fecha','Monto','Descripción','Tipo'].map(h => (
-                    <div key={h} style={{ textAlign: 'center', fontSize: 10, fontWeight: 700, color: 'var(--ht-purple)', padding: '4px 2px', background: 'rgba(124,58,237,0.1)', borderRadius: 6 }}>{h}</div>
+                    <div key={h} style={{ textAlign: 'center', fontSize: 10, fontWeight: 700, color: 'var(--ht-purple)', padding: '4px 2px', background: 'rgba(200,149,108,0.1)', borderRadius: 6 }}>{h}</div>
                   ))}
                   {['01/06/2026','1500','Supermercado','Gasto'].map(v => (
                     <div key={v} style={{ textAlign: 'center', fontSize: 10, color: 'var(--ht-text-3)', padding: '4px 2px' }}>{v}</div>
@@ -300,7 +300,7 @@ export default function ImportExcelModal({ householdId, profileId, members, cate
                     <select
                       value={val}
                       onChange={e => set(e.target.value)}
-                      style={{ width: '100%', padding: '10px 36px 10px 14px', border: `1.5px solid ${val ? 'var(--ht-purple)' : required ? 'rgba(190,24,93,0.25)' : 'var(--ht-glass-border)'}`, borderRadius: 9999, fontSize: 13, fontWeight: 600, background: 'rgba(255,255,255,0.8)', color: val ? 'var(--ht-text)' : 'var(--ht-text-4)', outline: 'none', appearance: 'none', cursor: 'pointer' }}
+                      style={{ width: '100%', padding: '10px 36px 10px 14px', border: `1.5px solid ${val ? 'var(--ht-purple)' : required ? 'rgba(139,32,32,0.25)' : 'var(--ht-glass-border)'}`, borderRadius: 9999, fontSize: 13, fontWeight: 600, background: 'rgba(255,255,255,0.8)', color: val ? 'var(--ht-text)' : 'var(--ht-text-4)', outline: 'none', appearance: 'none', cursor: 'pointer' }}
                     >
                       <option value="">— No usar</option>
                       {headers.map(h => <option key={h} value={h}>{h}</option>)}
@@ -340,12 +340,12 @@ export default function ImportExcelModal({ householdId, profileId, members, cate
               {/* Summary */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 16 }}>
                 <div style={{ background: 'rgba(4,120,87,0.07)', border: '1px solid rgba(16,185,129,0.2)', borderRadius: 14, padding: '12px 14px' }}>
-                  <p style={{ fontSize: 22, fontWeight: 900, color: '#047857' }}>{validCount}</p>
+                  <p style={{ fontSize: 22, fontWeight: 900, color: '#3D6B42' }}>{validCount}</p>
                   <p style={{ fontSize: 12, color: 'var(--ht-text-3)', fontWeight: 600 }}>Listas para importar</p>
                 </div>
                 {invalidCount > 0 && (
-                  <div style={{ background: 'rgba(190,24,93,0.07)', border: '1px solid rgba(190,24,93,0.15)', borderRadius: 14, padding: '12px 14px' }}>
-                    <p style={{ fontSize: 22, fontWeight: 900, color: '#be185d' }}>{invalidCount}</p>
+                  <div style={{ background: 'rgba(190,24,93,0.07)', border: '1px solid rgba(139,32,32,0.15)', borderRadius: 14, padding: '12px 14px' }}>
+                    <p style={{ fontSize: 22, fontWeight: 900, color: '#8B2020' }}>{invalidCount}</p>
                     <p style={{ fontSize: 12, color: 'var(--ht-text-3)', fontWeight: 600 }}>Con errores (se omiten)</p>
                   </div>
                 )}
@@ -358,7 +358,7 @@ export default function ImportExcelModal({ householdId, profileId, members, cate
                     display: 'flex', alignItems: 'center', gap: 10,
                     padding: '10px 12px', borderRadius: 12,
                     background: row.valid ? 'var(--ht-glass-warm)' : 'rgba(244,63,94,0.05)',
-                    border: `1px solid ${row.valid ? 'var(--ht-glass-border)' : 'rgba(190,24,93,0.15)'}`,
+                    border: `1px solid ${row.valid ? 'var(--ht-glass-border)' : 'rgba(139,32,32,0.15)'}`,
                     marginBottom: 6, opacity: row.valid ? 1 : 0.7,
                   }}>
                     {row.valid
@@ -369,7 +369,7 @@ export default function ImportExcelModal({ householdId, profileId, members, cate
                       {row.valid ? (
                         <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
                           <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--ht-text-3)' }}>{row.date}</span>
-                          <span style={{ fontSize: 13, fontWeight: 800, color: row.type==='income'?'#047857':'#be185d' }}>
+                          <span style={{ fontSize: 13, fontWeight: 800, color: row.type==='income'?'#3D6B42':'#8B2020' }}>
                             {row.type==='income'?'+':'-'}${row.amount.toFixed(0)}
                           </span>
                           {row.description && <span style={{ fontSize: 12, color: 'var(--ht-text-3)' }}>{row.description.slice(0,30)}{row.description.length>30?'…':''}</span>}
@@ -396,7 +396,7 @@ export default function ImportExcelModal({ householdId, profileId, members, cate
                       <div style={{ width: 32, height: 32, borderRadius: 9999, background: importVisib === 'shared' ? 'var(--ht-mint)' : 'rgba(0,0,0,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: 16 }}>👥</div>
                       <div><p style={{ fontSize: 13, fontWeight: 700, color: importVisib === 'shared' ? 'var(--ht-mint)' : 'var(--ht-text)' }}>Todos del hogar</p><p style={{ fontSize: 11, color: 'var(--ht-text-3)' }}>Todos los integrantes los ven</p></div>
                     </button>
-                    <button onClick={() => setImportVisib('private')} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', borderRadius: 14, border: '1.5px solid', borderColor: importVisib === 'private' ? 'var(--ht-purple)' : 'var(--ht-glass-border)', background: importVisib === 'private' ? 'rgba(124,58,237,0.08)' : 'var(--ht-glass-warm)', cursor: 'pointer', textAlign: 'left', transition: 'all 0.15s' }}>
+                    <button onClick={() => setImportVisib('private')} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', borderRadius: 14, border: '1.5px solid', borderColor: importVisib === 'private' ? 'var(--ht-purple)' : 'var(--ht-glass-border)', background: importVisib === 'private' ? 'rgba(200,149,108,0.08)' : 'var(--ht-glass-warm)', cursor: 'pointer', textAlign: 'left', transition: 'all 0.15s' }}>
                       <div style={{ width: 32, height: 32, borderRadius: 9999, background: importVisib === 'private' ? 'var(--ht-purple)' : 'rgba(0,0,0,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: 16 }}>🔒</div>
                       <div><p style={{ fontSize: 13, fontWeight: 700, color: importVisib === 'private' ? 'var(--ht-purple)' : 'var(--ht-text)' }}>Solo yo</p><p style={{ fontSize: 11, color: 'var(--ht-text-3)' }}>Solo vos los podés ver</p></div>
                     </button>

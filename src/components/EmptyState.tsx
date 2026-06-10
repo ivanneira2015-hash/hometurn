@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 type EmptyType = 'schedule' | 'tasks' | 'finances' | 'agenda' | 'notifications' | 'search' | 'list'
 
@@ -7,17 +7,17 @@ const ILLUSTRATIONS: Record<EmptyType, { svg: string; title: string; desc: strin
     title: 'Semana vacía',
     desc: 'Rotá desde la semana anterior o elegí una plantilla',
     svg: `<svg viewBox="0 0 160 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect x="20" y="20" width="120" height="80" rx="12" fill="rgba(124,58,237,0.08)" stroke="rgba(124,58,237,0.2)" stroke-width="1.5"/>
-      <rect x="36" y="14" width="16" height="14" rx="4" fill="rgba(124,58,237,0.3)"/>
-      <rect x="108" y="14" width="16" height="14" rx="4" fill="rgba(124,58,237,0.3)"/>
-      <line x1="20" y1="46" x2="140" y2="46" stroke="rgba(124,58,237,0.15)" stroke-width="1.5"/>
-      <rect x="32" y="56" width="20" height="16" rx="4" fill="rgba(124,58,237,0.12)"/>
+      <rect x="20" y="20" width="120" height="80" rx="12" fill="rgba(200,149,108,0.08)" stroke="rgba(200,149,108,0.2)" stroke-width="1.5"/>
+      <rect x="36" y="14" width="16" height="14" rx="4" fill="rgba(200,149,108,0.3)"/>
+      <rect x="108" y="14" width="16" height="14" rx="4" fill="rgba(200,149,108,0.3)"/>
+      <line x1="20" y1="46" x2="140" y2="46" stroke="rgba(200,149,108,0.15)" stroke-width="1.5"/>
+      <rect x="32" y="56" width="20" height="16" rx="4" fill="rgba(200,149,108,0.12)"/>
       <rect x="60" y="56" width="20" height="16" rx="4" fill="rgba(190,24,93,0.12)"/>
       <rect x="88" y="56" width="20" height="16" rx="4" fill="rgba(180,83,9,0.12)"/>
-      <rect x="116" y="56" width="20" height="16" rx="4" fill="rgba(124,58,237,0.12)"/>
-      <rect x="32" y="80" width="20" height="8" rx="3" fill="rgba(124,58,237,0.08)"/>
-      <rect x="60" y="80" width="20" height="8" rx="3" fill="rgba(124,58,237,0.08)"/>
-      <circle cx="126" cy="88" r="14" fill="rgba(124,58,237,0.15)"/>
+      <rect x="116" y="56" width="20" height="16" rx="4" fill="rgba(200,149,108,0.12)"/>
+      <rect x="32" y="80" width="20" height="8" rx="3" fill="rgba(200,149,108,0.08)"/>
+      <rect x="60" y="80" width="20" height="8" rx="3" fill="rgba(200,149,108,0.08)"/>
+      <circle cx="126" cy="88" r="14" fill="rgba(200,149,108,0.15)"/>
       <path d="M121 88h10M126 83v10" stroke="rgba(124,58,237,0.6)" stroke-width="2" stroke-linecap="round"/>
     </svg>`
   },
@@ -59,15 +59,15 @@ const ILLUSTRATIONS: Record<EmptyType, { svg: string; title: string; desc: strin
     desc: 'Tocá un día del calendario para agregar eventos',
     svg: `<svg viewBox="0 0 160 120" fill="none" xmlns="http://www.w3.org/2000/svg">
       <rect x="20" y="24" width="120" height="80" rx="12" fill="rgba(124,58,237,0.06)" stroke="rgba(124,58,237,0.18)" stroke-width="1.5"/>
-      <rect x="20" y="24" width="120" height="28" rx="12" fill="rgba(124,58,237,0.12)"/>
-      <rect x="20" y="38" width="120" height="14" fill="rgba(124,58,237,0.12)"/>
+      <rect x="20" y="24" width="120" height="28" rx="12" fill="rgba(200,149,108,0.12)"/>
+      <rect x="20" y="38" width="120" height="14" fill="rgba(200,149,108,0.12)"/>
       <rect x="44" y="16" width="12" height="18" rx="4" fill="rgba(190,24,93,0.4)"/>
       <rect x="104" y="16" width="12" height="18" rx="4" fill="rgba(190,24,93,0.4)"/>
       <text x="80" y="43" text-anchor="middle" font-size="11" font-weight="700" fill="rgba(255,255,255,0.8)">JUNIO 2026</text>
-      <circle cx="44" cy="70" r="8" fill="rgba(190,24,93,0.15)"/>
-      <circle cx="68" cy="70" r="8" fill="rgba(124,58,237,0.15)"/>
+      <circle cx="44" cy="70" r="8" fill="rgba(139,32,32,0.15)"/>
+      <circle cx="68" cy="70" r="8" fill="rgba(200,149,108,0.15)"/>
       <circle cx="92" cy="70" r="8" fill="rgba(180,83,9,0.15)"/>
-      <circle cx="116" cy="70" r="8" fill="rgba(124,58,237,0.15)"/>
+      <circle cx="116" cy="70" r="8" fill="rgba(200,149,108,0.15)"/>
       <text x="44" y="74" text-anchor="middle" font-size="9" font-weight="700" fill="rgba(190,24,93,0.5)">15</text>
       <text x="68" y="74" text-anchor="middle" font-size="9" font-weight="700" fill="rgba(124,58,237,0.5)">16</text>
       <text x="92" y="74" text-anchor="middle" font-size="9" font-weight="700" fill="rgba(180,83,9,0.5)">17</text>
@@ -79,25 +79,25 @@ const ILLUSTRATIONS: Record<EmptyType, { svg: string; title: string; desc: strin
     title: 'Sin notificaciones',
     desc: 'Cuando alguien del hogar agregue algo, aparecerá acá',
     svg: `<svg viewBox="0 0 160 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M80 24 C60 24 50 40 50 56 L46 76 H114 L110 56 C110 40 100 24 80 24Z" fill="rgba(124,58,237,0.1)" stroke="rgba(124,58,237,0.25)" stroke-width="1.5"/>
-      <rect x="70" y="76" width="20" height="8" rx="4" fill="rgba(124,58,237,0.2)"/>
-      <circle cx="80" cy="22" r="5" fill="rgba(124,58,237,0.3)"/>
-      <circle cx="108" cy="36" r="10" fill="rgba(190,24,93,0.2)" stroke="rgba(190,24,93,0.3)" stroke-width="1.5"/>
+      <path d="M80 24 C60 24 50 40 50 56 L46 76 H114 L110 56 C110 40 100 24 80 24Z" fill="rgba(200,149,108,0.1)" stroke="rgba(200,149,108,0.25)" stroke-width="1.5"/>
+      <rect x="70" y="76" width="20" height="8" rx="4" fill="rgba(200,149,108,0.2)"/>
+      <circle cx="80" cy="22" r="5" fill="rgba(200,149,108,0.3)"/>
+      <circle cx="108" cy="36" r="10" fill="rgba(139,32,32,0.2)" stroke="rgba(190,24,93,0.3)" stroke-width="1.5"/>
       <path d="M105 36h6M108 33v6" stroke="rgba(190,24,93,0.6)" stroke-width="1.5" stroke-linecap="round"/>
-      <line x1="60" y1="56" x2="78" y2="56" stroke="rgba(124,58,237,0.15)" stroke-width="1.5" stroke-linecap="round"/>
-      <line x1="60" y1="64" x2="100" y2="64" stroke="rgba(124,58,237,0.1)" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="60" y1="56" x2="78" y2="56" stroke="rgba(200,149,108,0.15)" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="60" y1="64" x2="100" y2="64" stroke="rgba(200,149,108,0.1)" stroke-width="1.5" stroke-linecap="round"/>
     </svg>`
   },
   search: {
     title: 'Buscar en el hogar',
     desc: 'Eventos, gastos, listas y más',
     svg: `<svg viewBox="0 0 160 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="72" cy="56" r="32" fill="rgba(124,58,237,0.08)" stroke="rgba(124,58,237,0.2)" stroke-width="2"/>
-      <line x1="96" y1="80" x2="116" y2="100" stroke="rgba(124,58,237,0.3)" stroke-width="3" stroke-linecap="round"/>
-      <circle cx="72" cy="56" r="20" fill="rgba(124,58,237,0.06)" stroke="rgba(124,58,237,0.15)" stroke-width="1.5"/>
-      <line x1="62" y1="52" x2="82" y2="52" stroke="rgba(124,58,237,0.25)" stroke-width="1.5" stroke-linecap="round"/>
-      <line x1="62" y1="58" x2="78" y2="58" stroke="rgba(124,58,237,0.2)" stroke-width="1.5" stroke-linecap="round"/>
-      <line x1="62" y1="64" x2="74" y2="64" stroke="rgba(124,58,237,0.15)" stroke-width="1.5" stroke-linecap="round"/>
+      <circle cx="72" cy="56" r="32" fill="rgba(200,149,108,0.08)" stroke="rgba(200,149,108,0.2)" stroke-width="2"/>
+      <line x1="96" y1="80" x2="116" y2="100" stroke="rgba(200,149,108,0.3)" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="72" cy="56" r="20" fill="rgba(124,58,237,0.06)" stroke="rgba(200,149,108,0.15)" stroke-width="1.5"/>
+      <line x1="62" y1="52" x2="82" y2="52" stroke="rgba(200,149,108,0.25)" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="62" y1="58" x2="78" y2="58" stroke="rgba(200,149,108,0.2)" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="62" y1="64" x2="74" y2="64" stroke="rgba(200,149,108,0.15)" stroke-width="1.5" stroke-linecap="round"/>
     </svg>`
   },
   list: {

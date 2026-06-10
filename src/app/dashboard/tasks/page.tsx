@@ -8,8 +8,8 @@ import { Plus, X, Check, ShoppingCart, ClipboardList, Sparkles, Trash2, ChevronR
 import EmptyState from '@/components/EmptyState'
 
 const LIST_TYPES = [
-  { type: 'shopping' as const, icon: ShoppingCart, label: 'Compras',       color: '#047857', light: 'rgba(4,120,87,0.08)'  },
-  { type: 'todo'     as const, icon: ClipboardList, label: 'Pendientes',    color: '#7c3aed', light: 'rgba(124,58,237,0.1)'  },
+  { type: 'shopping' as const, icon: ShoppingCart, label: 'Compras',       color: '#3D6B42', light: 'rgba(4,120,87,0.08)'  },
+  { type: 'todo'     as const, icon: ClipboardList, label: 'Pendientes',    color: '#C8956C', light: 'rgba(200,149,108,0.1)'  },
   { type: 'custom'   as const, icon: Sparkles,      label: 'Personalizada', color: '#f59e0b', light: 'rgba(245,158,11,0.1)'  },
 ]
 
@@ -109,7 +109,7 @@ export default function TasksPage() {
 
   return (
     <div>
-      <div className="ht-page-header">
+      <div className="ht-page-header" style={{ paddingRight: 52 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: selected ? 0 : 12 }}>
           <div>
             {selected ? (
@@ -146,7 +146,7 @@ export default function TasksPage() {
               <button key={f} onClick={() => setFilter(f)} style={{
                 padding: '5px 12px', borderRadius: 9999, border: 'none', cursor: 'pointer',
                 fontSize: 12, fontWeight: 700,
-                background: filter === f ? 'var(--ht-purple)' : 'rgba(124,58,237,0.08)',
+                background: filter === f ? 'var(--ht-purple)' : 'rgba(200,149,108,0.08)',
                 color: filter === f ? 'white' : 'var(--ht-purple)',
                 transition: 'all 0.15s',
               }}>
@@ -180,7 +180,7 @@ export default function TasksPage() {
                   padding: '14px 16px', borderRadius: 20, marginBottom: 8,
                   background: 'var(--ht-glass-warm)',
                   backdropFilter: 'blur(12px)',
-                  border: `1px solid ${isPrivate ? 'rgba(124,58,237,0.15)' : 'var(--ht-glass-border)'}`,
+                  border: `1px solid ${isPrivate ? 'rgba(200,149,108,0.15)' : 'var(--ht-glass-border)'}`,
                   cursor: 'pointer', textAlign: 'left',
                   boxShadow: 'var(--ht-shadow-card)',
                 }}>
@@ -271,7 +271,7 @@ export default function TasksPage() {
           <div className="ht-overlay" onClick={() => setShowNewList(false)} />
           <div className="ht-modal">
             <div style={{ padding: '20px 16px 0' }}>
-              <div style={{ width: 36, height: 4, background: 'rgba(124,58,237,0.2)', borderRadius: 9999, margin: '0 auto 16px' }} />
+              <div style={{ width: 36, height: 4, background: 'rgba(200,149,108,0.2)', borderRadius: 9999, margin: '0 auto 16px' }} />
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
                 <h2 style={{ fontSize: 17, fontWeight: 800 }}>Nueva lista</h2>
                 <button onClick={() => setShowNewList(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--ht-text-3)', padding: 4 }}>

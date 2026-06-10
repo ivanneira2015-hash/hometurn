@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
@@ -25,7 +25,7 @@ export default function OnboardingPage() {
       nombre: displayName,
       name: displayName,
       avatar_url: user.user_metadata?.avatar_url ?? null,
-      color: '#4f46e5',
+      color: '#C8956C',
     }, { onConflict: 'id', ignoreDuplicates: true })
   }
 

@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState, useCallback, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
@@ -13,11 +13,11 @@ import {
 } from 'lucide-react'
 
 const EVENT_TYPES = [
-  { type: 'event'     as const, icon: CalendarRange, label: 'Evento',       color: '#7c3aed' },
-  { type: 'birthday'  as const, icon: Gift,          label: 'Cumpleaños',   color: '#be185d' },
+  { type: 'event'     as const, icon: CalendarRange, label: 'Evento',       color: '#C8956C' },
+  { type: 'birthday'  as const, icon: Gift,          label: 'Cumpleaños',   color: '#8B2020' },
   { type: 'exam'      as const, icon: GraduationCap, label: 'Examen',       color: '#b45309' },
-  { type: 'reminder'  as const, icon: Clock,         label: 'Recordatorio', color: '#047857' },
-  { type: 'note'      as const, icon: StickyNote,    label: 'Nota',         color: '#4338ca' },
+  { type: 'reminder'  as const, icon: Clock,         label: 'Recordatorio', color: '#3D6B42' },
+  { type: 'note'      as const, icon: StickyNote,    label: 'Nota',         color: '#7A8A5E' },
 ]
 
 const DAYS_SHORT  = ['D','L','M','M','J','V','S']
@@ -206,10 +206,10 @@ function AgendaInner() {
   return (
     <div>
       {/* Header */}
-      <div className="ht-page-header">
+      <div className="ht-page-header" style={{ paddingRight: 52 }}>
         <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:14 }}>
           <div style={{ display:'flex', alignItems:'center', gap:10 }}>
-            <div style={{ width:34, height:34, borderRadius:9999, background:'linear-gradient(135deg,#7c3aed,#be185d)', display:'flex', alignItems:'center', justifyContent:'center', boxShadow:'0 3px 10px rgba(124,58,237,0.3)' }}>
+            <div style={{ width:34, height:34, borderRadius:9999, background:'linear-gradient(135deg,#7c3aed,#be185d)', display:'flex', alignItems:'center', justifyContent:'center', boxShadow:'0 3px 10px rgba(200,149,108,0.3)' }}>
               <CalendarRange size={16} color="white" strokeWidth={2.5} />
             </div>
             <h1 style={{ fontSize:20, fontWeight:800 }}>Agenda</h1>
@@ -222,7 +222,7 @@ function AgendaInner() {
         {/* Tab selector */}
         <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:6, background:'rgba(124,58,237,0.06)', padding:4, borderRadius:9999 }}>
           {([['hoy', Sun, 'Hoy'], ['semana', CalendarDays, 'Semana'], ['mes', Calendar, 'Mes']] as const).map(([t, Icon, label]) => (
-            <button key={t} onClick={() => setAgendaTab(t)} style={{ padding:'8px 4px', borderRadius:9999, border:'none', cursor:'pointer', fontSize:11, fontWeight:700, display:'flex', alignItems:'center', justifyContent:'center', gap:4, background:agendaTab===t?'white':'transparent', color:agendaTab===t?'var(--ht-purple)':'var(--ht-text-3)', boxShadow:agendaTab===t?'0 2px 8px rgba(124,58,237,0.1)':'none', transition:'all 0.15s' }}>
+            <button key={t} onClick={() => setAgendaTab(t)} style={{ padding:'8px 4px', borderRadius:9999, border:'none', cursor:'pointer', fontSize:11, fontWeight:700, display:'flex', alignItems:'center', justifyContent:'center', gap:4, background:agendaTab===t?'white':'transparent', color:agendaTab===t?'var(--ht-purple)':'var(--ht-text-3)', boxShadow:agendaTab===t?'0 2px 8px rgba(200,149,108,0.1)':'none', transition:'all 0.15s' }}>
               <Icon size={12} /> {label}
             </button>
           ))}
@@ -235,7 +235,7 @@ function AgendaInner() {
         {agendaTab === 'hoy' && (
           <>
             {/* Today hero */}
-            <div className="ht-card" style={{ marginBottom:12, padding:'18px 16px', background:'linear-gradient(135deg,rgba(124,58,237,0.1),rgba(190,24,93,0.06))', border:'1px solid rgba(124,58,237,0.15)' }}>
+            <div className="ht-card" style={{ marginBottom:12, padding:'18px 16px', background:'linear-gradient(135deg,rgba(200,149,108,0.1),rgba(190,24,93,0.06))', border:'1px solid rgba(200,149,108,0.15)' }}>
               <p style={{ fontSize:12, fontWeight:700, color:'var(--ht-purple)', textTransform:'uppercase', letterSpacing:'0.07em', marginBottom:4 }}>Hoy</p>
               <p style={{ fontSize:22, fontWeight:900, color:'var(--ht-text)', letterSpacing:'-0.02em' }}>
                 {now.toLocaleDateString('es-AR', { weekday:'long', day:'numeric', month:'long' })}
@@ -267,13 +267,13 @@ function AgendaInner() {
                       <div key={b.id} style={{
                         display: 'flex', alignItems: 'center', gap: 12, padding: '12px 16px',
                         borderRadius: 16, marginBottom: 8,
-                        background: isToday ? 'rgba(190,24,93,0.08)' : 'rgba(180,83,9,0.06)',
-                        border: `1px solid ${isToday ? 'rgba(190,24,93,0.2)' : 'rgba(180,83,9,0.15)'}`,
+                        background: isToday ? 'rgba(139,32,32,0.08)' : 'rgba(180,83,9,0.06)',
+                        border: `1px solid ${isToday ? 'rgba(139,32,32,0.2)' : 'rgba(180,83,9,0.15)'}`,
                       }}>
                         <span style={{ fontSize: 28 }}>🎂</span>
                         <div style={{ flex: 1 }}>
                           <p style={{ fontWeight: 800, fontSize: 14, color: 'var(--ht-text)' }}>{b.title}</p>
-                          <p style={{ fontSize: 12, color: isToday ? '#be185d' : '#b45309', fontWeight: 600 }}>
+                          <p style={{ fontSize: 12, color: isToday ? '#8B2020' : '#b45309', fontWeight: 600 }}>
                             {isToday ? '¡Hoy es su cumpleaños!' : `En ${daysUntil} día${daysUntil > 1 ? 's' : ''}`}
                           </p>
                         </div>
@@ -289,7 +289,7 @@ function AgendaInner() {
             <p className="ht-section-label">Eventos de hoy</p>
             {todayEvents.length === 0 ? (
               <div className="ht-card" style={{ textAlign:'center', padding:'20px 16px', marginBottom:16 }}>
-                <Sun size={22} color="rgba(124,58,237,0.3)" style={{ margin:'0 auto 8px', display:'block' }} />
+                <Sun size={22} color="rgba(200,149,108,0.3)" style={{ margin:'0 auto 8px', display:'block' }} />
                 <p style={{ fontSize:14, color:'var(--ht-text-3)', fontWeight:600 }}>Sin eventos hoy</p>
                 <button onClick={() => openNew(todayStr)} className="ht-btn ht-btn-ghost" style={{ marginTop:10, fontSize:12 }}>
                   <Plus size={12} /> Agregar para hoy
@@ -318,7 +318,7 @@ function AgendaInner() {
 
             {todayEvents.length === 0 && upcomingWeek.length === 0 && (
               <div className="ht-card" style={{ textAlign:'center', padding:'28px 16px' }}>
-                <Star size={24} color="rgba(124,58,237,0.3)" style={{ margin:'0 auto 10px', display:'block' }} />
+                <Star size={24} color="rgba(200,149,108,0.3)" style={{ margin:'0 auto 10px', display:'block' }} />
                 <p style={{ fontWeight:700, fontSize:15, marginBottom:6 }}>Semana libre</p>
                 <p style={{ fontSize:13, color:'var(--ht-text-3)', marginBottom:16 }}>No hay eventos próximos</p>
                 <button onClick={() => openNew()} className="ht-btn ht-btn-primary"><Plus size={14} /> Agregar evento</button>
@@ -332,7 +332,7 @@ function AgendaInner() {
           <>
             {/* Week navigation */}
             <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:12 }}>
-              <button onClick={() => setWeekOffset(w => w - 1)} style={{ background:'rgba(124,58,237,0.08)', border:'none', borderRadius:9999, width:32, height:32, cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center' }}>
+              <button onClick={() => setWeekOffset(w => w - 1)} style={{ background:'rgba(200,149,108,0.08)', border:'none', borderRadius:9999, width:32, height:32, cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center' }}>
                 <ChevronLeft size={16} color="var(--ht-purple)" />
               </button>
               <div style={{ textAlign:'center' }}>
@@ -341,7 +341,7 @@ function AgendaInner() {
                 </p>
                 {weekOffset === 0 && <p style={{ fontSize:11, color:'var(--ht-purple)', fontWeight:600 }}>Semana actual</p>}
               </div>
-              <button onClick={() => setWeekOffset(w => w + 1)} style={{ background:'rgba(124,58,237,0.08)', border:'none', borderRadius:9999, width:32, height:32, cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center' }}>
+              <button onClick={() => setWeekOffset(w => w + 1)} style={{ background:'rgba(200,149,108,0.08)', border:'none', borderRadius:9999, width:32, height:32, cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center' }}>
                 <ChevronRight size={16} color="var(--ht-purple)" />
               </button>
             </div>
@@ -388,7 +388,7 @@ function AgendaInner() {
                         <p style={{ fontSize:8, color:'var(--ht-text-4)', textAlign:'center' }}>+{dayEvs.length-3}</p>
                       )}
                       {dayEvs.length === 0 && (
-                        <button onClick={() => openNew(ds)} style={{ width:'100%', height:20, borderRadius:6, border:'1.5px dashed rgba(124,58,237,0.15)', background:'transparent', cursor:'pointer' }} />
+                        <button onClick={() => openNew(ds)} style={{ width:'100%', height:20, borderRadius:6, border:'1.5px dashed rgba(200,149,108,0.15)', background:'transparent', cursor:'pointer' }} />
                       )}
                     </div>
                   </div>
@@ -411,11 +411,11 @@ function AgendaInner() {
           <>
             {/* Month navigation */}
             <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:12 }}>
-              <button onClick={prevMonth} style={{ background:'rgba(124,58,237,0.08)', border:'none', borderRadius:9999, width:32, height:32, cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center' }}>
+              <button onClick={prevMonth} style={{ background:'rgba(200,149,108,0.08)', border:'none', borderRadius:9999, width:32, height:32, cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center' }}>
                 <ChevronLeft size={16} color="var(--ht-purple)" />
               </button>
               <span style={{ fontWeight:800, fontSize:15 }}>{MONTHS_FULL[month]} {year}</span>
-              <button onClick={nextMonth} style={{ background:'rgba(124,58,237,0.08)', border:'none', borderRadius:9999, width:32, height:32, cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center' }}>
+              <button onClick={nextMonth} style={{ background:'rgba(200,149,108,0.08)', border:'none', borderRadius:9999, width:32, height:32, cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center' }}>
                 <ChevronRight size={16} color="var(--ht-purple)" />
               </button>
             </div>
@@ -439,7 +439,7 @@ function AgendaInner() {
                     <button key={i} onClick={() => setSelectedDay(day === selectedDay ? null : day)} style={{
                       display:'flex', flexDirection:'column', alignItems:'center', padding:'6px 2px',
                       borderRadius:10, border:'none', cursor:'pointer',
-                      background:isSelected?'var(--ht-grad)':isToday?'rgba(124,58,237,0.1)':'transparent',
+                      background:isSelected?'var(--ht-grad)':isToday?'rgba(200,149,108,0.1)':'transparent',
                       transition:'all 0.15s',
                     }}>
                       <span style={{ fontSize:13, fontWeight:isToday||isSelected?800:500, color:isSelected?'white':isToday?'var(--ht-purple)':'var(--ht-text)', lineHeight:1.4 }}>{day}</span>
@@ -461,7 +461,7 @@ function AgendaInner() {
                   <p className="ht-section-label" style={{ marginBottom:0 }}>
                     {selectedDay} de {MONTHS_FULL[month]}
                   </p>
-                  <button onClick={() => openNew(selectedDayStr!)} style={{ background:'rgba(124,58,237,0.08)', border:'none', borderRadius:9999, padding:'5px 10px', cursor:'pointer', fontSize:12, fontWeight:700, color:'var(--ht-purple)', display:'flex', alignItems:'center', gap:4 }}>
+                  <button onClick={() => openNew(selectedDayStr!)} style={{ background:'rgba(200,149,108,0.08)', border:'none', borderRadius:9999, padding:'5px 10px', cursor:'pointer', fontSize:12, fontWeight:700, color:'var(--ht-purple)', display:'flex', alignItems:'center', gap:4 }}>
                     <Plus size={12} /> Agregar
                   </button>
                 </div>
@@ -489,7 +489,7 @@ function AgendaInner() {
                   return (d.getTime() - now.getTime()) / (1000*60*60*24) >= 0
                 }).length === 0 && (
                   <div className="ht-card" style={{ textAlign:'center', padding:'28px 16px' }}>
-                    <Star size={24} color="rgba(124,58,237,0.3)" style={{ margin:'0 auto 10px', display:'block' }} />
+                    <Star size={24} color="rgba(200,149,108,0.3)" style={{ margin:'0 auto 10px', display:'block' }} />
                     <p style={{ fontWeight:700, fontSize:15, marginBottom:6 }}>Sin eventos próximos</p>
                     <button onClick={() => openNew()} className="ht-btn ht-btn-primary"><Plus size={14} /> Agregar</button>
                   </div>
@@ -506,7 +506,7 @@ function AgendaInner() {
           <div className="ht-overlay" onClick={() => { setShowAdd(false); setEditEvent(null) }} />
           <div className="ht-modal">
             <div style={{ padding:'20px 16px 0' }}>
-              <div style={{ width:36, height:4, background:'rgba(124,58,237,0.2)', borderRadius:9999, margin:'0 auto 16px' }} />
+              <div style={{ width:36, height:4, background:'rgba(200,149,108,0.2)', borderRadius:9999, margin:'0 auto 16px' }} />
               <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:20 }}>
                 <h2 style={{ fontSize:17, fontWeight:800 }}>{editEvent?'Editar evento':'Nuevo evento'}</h2>
                 <button onClick={() => { setShowAdd(false); setEditEvent(null) }} style={{ background:'none', border:'none', cursor:'pointer', color:'var(--ht-text-3)', padding:4 }}><X size={20} /></button>

@@ -141,7 +141,7 @@ export default function SchedulePage() {
 
   return (
     <div>
-      <div className="ht-page-header">
+      <div className="ht-page-header" style={{ paddingRight: 52 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
           <h1 style={{ fontSize: 20, fontWeight: 800 }}>Calendario</h1>
           <div style={{ display: 'flex', gap: 6 }}>
@@ -190,7 +190,7 @@ export default function SchedulePage() {
             {/* Empty week CTA */}
             {assignments.length === 0 && isCurrentWeek && !loading && (
               <div style={{
-                background: 'rgba(124,58,237,0.06)', border: '1.5px dashed rgba(124,58,237,0.25)',
+                background: 'rgba(124,58,237,0.06)', border: '1.5px dashed rgba(200,149,108,0.25)',
                 borderRadius: 20, padding: '20px 16px', marginBottom: 14, textAlign: 'center',
               }}>
                 <p style={{ fontWeight: 800, fontSize: 15, color: 'var(--ht-purple)', marginBottom: 4 }}>Semana nueva, sin tareas aún</p>

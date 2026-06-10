@@ -68,7 +68,7 @@ export default function ProfilePage() {
     setCreating(true)
     const displayName = user?.user_metadata?.full_name ?? user?.email?.split('@')[0] ?? 'Usuario'
     await supabase.from('profiles').upsert({
-      id: user!.id, email: user!.email!, nombre: displayName, name: displayName, color: '#7c3aed',
+      id: user!.id, email: user!.email!, nombre: displayName, name: displayName, color: '#C8956C',
     }, { onConflict: 'id', ignoreDuplicates: true })
     const { data: hh } = await supabase.from('households').insert({ name: newHouseholdName.trim() }).select().single()
     if (hh) {
@@ -120,7 +120,7 @@ export default function ProfilePage() {
 
   return (
     <div>
-      <div className="ht-page-header">
+      <div className="ht-page-header" style={{ paddingRight: 52 }}>
         <h1 style={{ fontSize: 20, fontWeight: 800 }}>Perfil</h1>
       </div>
 
@@ -133,7 +133,7 @@ export default function ProfilePage() {
             background: MEMBER_GRAD[0], flexShrink: 0,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             fontSize: 22, fontWeight: 800, color: 'white',
-            boxShadow: '0 4px 12px rgba(124,58,237,0.35)',
+            boxShadow: '0 4px 12px rgba(200,149,108,0.35)',
           }}>
             {profile.avatar_url
               ? <img src={profile.avatar_url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
@@ -196,7 +196,7 @@ export default function ProfilePage() {
             ))}
 
             {/* Invite code */}
-            <div style={{ marginTop: 16, background: 'rgba(124,58,237,0.06)', border: '1px solid rgba(124,58,237,0.15)', borderRadius: 16, padding: '14px 16px' }}>
+            <div style={{ marginTop: 16, background: 'rgba(124,58,237,0.06)', border: '1px solid rgba(200,149,108,0.15)', borderRadius: 16, padding: '14px 16px' }}>
               <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ht-text-3)', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 6 }}>
                 Código de invitación
               </p>
@@ -255,7 +255,7 @@ export default function ProfilePage() {
           <div className="ht-overlay" onClick={() => setShowCreate(false)} />
           <div className="ht-modal">
             <div style={{ padding: '20px 16px 0' }}>
-              <div style={{ width: 36, height: 4, background: 'rgba(124,58,237,0.2)', borderRadius: 9999, margin: '0 auto 20px' }} />
+              <div style={{ width: 36, height: 4, background: 'rgba(200,149,108,0.2)', borderRadius: 9999, margin: '0 auto 20px' }} />
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
                 <h2 style={{ fontSize: 17, fontWeight: 800 }}>Crear hogar</h2>
                 <button onClick={() => setShowCreate(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--ht-text-3)', padding: 4 }}><X size={20} /></button>
@@ -280,7 +280,7 @@ export default function ProfilePage() {
           <div className="ht-overlay" onClick={() => !actionLoading && setConfirm(null)} />
           <div className="ht-modal">
             <div style={{ padding: '28px 20px 32px', textAlign: 'center' }}>
-              <div style={{ width: 52, height: 52, borderRadius: 9999, background: 'rgba(190,24,93,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
+              <div style={{ width: 52, height: 52, borderRadius: 9999, background: 'rgba(139,32,32,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
                 <AlertTriangle size={24} color="var(--ht-rose)" />
               </div>
               <h2 style={{ fontSize: 18, fontWeight: 800, marginBottom: 8 }}>

@@ -1,8 +1,8 @@
-﻿'use client'
+'use client'
 
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { Calendar, CheckSquare, RefreshCw, ArrowRight } from 'lucide-react'
+import { Calendar, CheckSquare, RefreshCw, ArrowRight, Home } from 'lucide-react'
 
 export default function LoginPage() {
   const [loading, setLoading] = useState(false)
@@ -17,77 +17,71 @@ export default function LoginPage() {
   }
 
   return (
-    <div style={{ minHeight: '100dvh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '24px', position: 'relative' }}>
+    <div style={{ minHeight: '100dvh', background: '#FBF8F2', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
 
-      {/* Floating blobs */}
-      <div style={{ position: 'absolute', top: '8%', left: '10%', width: 180, height: 180, borderRadius: '50%', background: 'rgba(167,139,250,0.35)', filter: 'blur(48px)', pointerEvents: 'none' }} />
-      <div style={{ position: 'absolute', bottom: '12%', right: '8%', width: 220, height: 220, borderRadius: '50%', background: 'rgba(251,207,232,0.4)', filter: 'blur(56px)', pointerEvents: 'none' }} />
+      <div style={{ width: '100%', maxWidth: 360 }}>
 
-      <div style={{ width: '100%', maxWidth: 360, position: 'relative', zIndex: 1 }}>
-
-        {/* Logo pill */}
-        <div style={{ textAlign: 'center', marginBottom: 32 }}>
+        {/* Logo mark */}
+        <div style={{ textAlign: 'center', marginBottom: 40 }}>
           <div style={{
-            display: 'inline-flex', alignItems: 'center', gap: 12,
-            background: 'rgba(255,255,255,0.78)', backdropFilter: 'blur(20px)',
-            border: '1px solid rgba(255,255,255,0.6)', borderRadius: 9999,
-            padding: '10px 20px 10px 10px',
-            boxShadow: '0 8px 32px rgba(99,102,241,0.12)',
-            marginBottom: 16,
+            width: 64, height: 64, borderRadius: 16,
+            background: 'linear-gradient(135deg, #C8956C, #7A8A5E)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            margin: '0 auto 20px',
+            boxShadow: '0 4px 20px rgba(200,149,108,0.3)',
           }}>
-            <div style={{
-              width: 44, height: 44, borderRadius: 9999,
-              background: 'linear-gradient(135deg, #4f46e5, #a78bfa)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              boxShadow: '0 4px 12px rgba(79,70,229,0.4)',
-            }}>
-              <svg width="22" height="22" viewBox="0 0 32 32" fill="none">
-                <path d="M6 28V15L16 6l10 9v13H22v-8H10v8H6Z" fill="white"/>
-              </svg>
-            </div>
-            <span style={{ fontSize: 22, fontWeight: 800, color: '#1e1b4b', letterSpacing: '-0.02em' }}>HomeTurn</span>
+            <Home size={30} color="white" strokeWidth={2} />
           </div>
-          <p style={{ fontSize: 15, color: 'rgba(79,70,229,0.75)', fontWeight: 600 }}>
-            Las tareas del hogar, organizadas
+          <h1 style={{ fontSize: 32, fontWeight: 900, color: '#1F1A0E', letterSpacing: '-0.03em', marginBottom: 6 }}>
+            HomeTurn
+          </h1>
+          <p style={{ fontSize: 15, color: '#6B5E4A', fontWeight: 500 }}>
+            El hogar organizado, sin discusiones
           </p>
         </div>
 
-        {/* Glass card */}
+        {/* Feature card */}
         <div style={{
-          background: 'rgba(255,255,255,0.72)', backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)',
-          border: '1px solid rgba(255,255,255,0.55)', borderRadius: 28, padding: '28px 24px',
-          boxShadow: '0 8px 32px rgba(99,102,241,0.1), inset 0 1px 0 rgba(255,255,255,0.7)',
+          background: '#FFFFFF',
+          border: '1px solid #DDD5C8',
+          borderRadius: 16,
+          padding: '24px 20px',
           marginBottom: 16,
+          boxShadow: '0 2px 8px rgba(31,26,14,0.06)',
         }}>
           <div style={{ marginBottom: 24 }}>
             {[
-              { icon: Calendar, text: 'Calendario Lun–Vie con tareas por persona', color: '#4f46e5', bg: '#ede9fe' },
-              { icon: CheckSquare, text: 'Listas de compras y pendientes compartidas', color: '#047857', bg: '#d1fae5' },
-              { icon: RefreshCw, text: 'Rotación automática semanal de tareas', color: '#f59e0b', bg: '#fef3c7' },
+              { icon: Calendar,    text: 'Calendario semanal con tareas por persona',  color: '#C8956C', bg: '#F5E6D8' },
+              { icon: CheckSquare, text: 'Listas de compras y pendientes compartidas', color: '#7A8A5E', bg: '#DDE5D0' },
+              { icon: RefreshCw,   text: 'Rotación automática con plantillas',          color: '#A67552', bg: '#EDD5BB' },
             ].map(({ icon: Icon, text, color, bg }) => (
-              <div key={text} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 0', borderBottom: '1px solid rgba(99,102,241,0.07)' }}>
-                <div style={{ width: 36, height: 36, borderRadius: 9999, background: bg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  <Icon size={16} color={color} strokeWidth={2.2} />
+              <div key={text} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 0', borderBottom: '1px solid #EDE8DF' }}>
+                <div style={{ width: 36, height: 36, borderRadius: 8, background: bg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <Icon size={17} color={color} strokeWidth={2} />
                 </div>
-                <span style={{ fontSize: 13, color: '#374151', fontWeight: 500, lineHeight: 1.4 }}>{text}</span>
+                <span style={{ fontSize: 14, color: '#3D3018', fontWeight: 500, lineHeight: 1.4 }}>{text}</span>
               </div>
             ))}
           </div>
 
+          {/* Google button */}
           <button
             onClick={handleGoogleLogin}
             disabled={loading}
             style={{
               width: '100%', padding: '13px 20px',
-              background: loading ? 'rgba(79,70,229,0.7)' : '#4f46e5',
-              border: 'none', borderRadius: 9999, cursor: loading ? 'not-allowed' : 'pointer',
+              background: loading ? '#DDD5C8' : '#1F1A0E',
+              border: 'none', borderRadius: 8,
+              cursor: loading ? 'not-allowed' : 'pointer',
               display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
               fontSize: 15, fontWeight: 700, color: 'white',
-              boxShadow: loading ? 'none' : '0 4px 14px rgba(79,70,229,0.4)',
-              transition: 'all 0.15s ease-out',
+              transition: 'all 0.15s',
+              boxShadow: loading ? 'none' : '0 2px 8px rgba(31,26,14,0.2)',
             }}
           >
-            {loading ? <div className="ht-spinner" /> : (
+            {loading ? (
+              <div className="ht-spinner" />
+            ) : (
               <svg width="18" height="18" viewBox="0 0 24 24">
                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                 <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
@@ -100,7 +94,7 @@ export default function LoginPage() {
           </button>
         </div>
 
-        <p style={{ fontSize: 12, color: 'rgba(99,102,241,0.5)', textAlign: 'center', fontWeight: 500 }}>
+        <p style={{ fontSize: 12, color: '#9A8A76', textAlign: 'center', fontWeight: 500 }}>
           Solo para uso familiar · Sábado y domingo libres
         </p>
       </div>

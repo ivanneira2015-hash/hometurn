@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
@@ -122,7 +122,7 @@ export default function BottomNav() {
             {MORE_ITEMS.map(({ href, icon: Icon, label, desc }) => {
               const active = pathname.startsWith(href)
               return (
-                <Link key={href} href={href} onClick={() => setShowMore(false)} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 16px', borderRadius: 16, textDecoration: 'none', background: active ? 'rgba(124,58,237,0.3)' : 'transparent', transition: 'background 0.15s' }}>
+                <Link key={href} href={href} onClick={() => setShowMore(false)} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 16px', borderRadius: 16, textDecoration: 'none', background: active ? 'rgba(200,149,108,0.3)' : 'transparent', transition: 'background 0.15s' }}>
                   <div style={{ width: 40, height: 40, borderRadius: 9999, background: active ? 'linear-gradient(135deg,#7c3aed,#be185d)' : 'rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                     <Icon size={18} color={active ? 'white' : 'rgba(255,255,255,0.6)'} strokeWidth={2} />
                   </div>

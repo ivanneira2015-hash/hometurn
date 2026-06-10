@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
 import { User } from '@supabase/supabase-js'
@@ -37,7 +37,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       nombre: displayName,
       name: displayName,
       avatar_url: u.user_metadata?.avatar_url ?? null,
-      color: '#7c3aed',
+      color: '#C8956C',
     }, { onConflict: 'id', ignoreDuplicates: true })
 
     // 2. Siempre fetchear por separado (sin encadenar al upsert)

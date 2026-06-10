@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState, useCallback } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
@@ -43,14 +43,14 @@ export default function SearchPage() {
         title: e.title,
         subtitle: new Date(e.date+'T12:00:00').toLocaleDateString('es-AR',{weekday:'short',day:'numeric',month:'short'}),
         href: '/dashboard/agenda',
-        color: '#7c3aed',
+        color: '#C8956C',
       })),
       ...(txs ?? []).map(t => ({
         id: t.id, type: 'transaction' as const,
         title: t.description ?? (t.category as any)?.name ?? 'Movimiento',
         subtitle: `${t.type==='income'?'+':'-'}$${Math.round(Number(t.amount)).toLocaleString()} · ${t.date}`,
         href: '/dashboard/finances',
-        color: t.type === 'income' ? '#047857' : '#be185d',
+        color: t.type === 'income' ? '#3D6B42' : '#8B2020',
       })),
       ...(lists ?? []).map(l => ({
         id: l.id, type: 'list' as const,
@@ -68,7 +68,7 @@ export default function SearchPage() {
 
   return (
     <div>
-      <div className="ht-page-header">
+      <div className="ht-page-header" style={{ paddingRight: 52 }}>
         <h1 style={{ fontSize: 20, fontWeight: 800, marginBottom: 12 }}>Buscar</h1>
         <div style={{ position: 'relative' }}>
           <Search size={16} color="var(--ht-text-4)" style={{ position:'absolute', left:14, top:'50%', transform:'translateY(-50%)', pointerEvents:'none' }} />
@@ -97,7 +97,7 @@ export default function SearchPage() {
 
         {!loading && query && results.length === 0 && (
           <div className="ht-empty">
-            <Search size={28} color="rgba(124,58,237,0.2)" style={{ margin:'0 auto 12px', display:'block' }} />
+            <Search size={28} color="rgba(200,149,108,0.2)" style={{ margin:'0 auto 12px', display:'block' }} />
             <p style={{ fontWeight:700, marginBottom:4 }}>Sin resultados</p>
             <p style={{ fontSize:13 }}>Probá con otro término de búsqueda</p>
           </div>
@@ -105,7 +105,7 @@ export default function SearchPage() {
 
         {!loading && !query && (
           <div className="ht-empty">
-            <Search size={32} color="rgba(124,58,237,0.2)" style={{ margin:'0 auto 12px', display:'block' }} />
+            <Search size={32} color="rgba(200,149,108,0.2)" style={{ margin:'0 auto 12px', display:'block' }} />
             <p style={{ fontWeight:700, marginBottom:4 }}>Buscar en el hogar</p>
             <p style={{ fontSize:13 }}>Eventos, gastos, listas y más</p>
           </div>

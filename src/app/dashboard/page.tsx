@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
@@ -40,10 +40,10 @@ const fmtShort = (n: number) => {
 }
 
 const HUB_MODULES = [
-  { href:'/dashboard/schedule',  icon:CalendarDays,  label:'Semana',    desc:'Tareas del hogar',        grad:'linear-gradient(135deg,#7c3aed,#9333ea)',  glow:'rgba(124,58,237,0.25)', light:'rgba(124,58,237,0.08)', border:'rgba(124,58,237,0.2)' },
-  { href:'/dashboard/finances',  icon:TrendingUp,    label:'Finanzas',  desc:'Gastos e ingresos',        grad:'linear-gradient(135deg,#047857,#059669)',  glow:'rgba(4,120,87,0.25)',   light:'rgba(4,120,87,0.08)',   border:'rgba(4,120,87,0.2)'  },
-  { href:'/dashboard/agenda',    icon:CalendarRange, label:'Agenda',    desc:'Eventos y recordatorios',  grad:'linear-gradient(135deg,#be185d,#e11d48)',  glow:'rgba(190,24,93,0.25)',  light:'rgba(190,24,93,0.08)',  border:'rgba(190,24,93,0.2)' },
-  { href:'/dashboard/tasks',     icon:CheckSquare,   label:'Listas',    desc:'Compras y pendientes',     grad:'linear-gradient(135deg,#b45309,#d97706)',  glow:'rgba(180,83,9,0.25)',   light:'rgba(180,83,9,0.08)',   border:'rgba(180,83,9,0.2)'  },
+  { href:'/dashboard/schedule', icon:CalendarDays,  label:'Semana',   desc:'Tareas del hogar',       grad:'linear-gradient(135deg,#C8956C,#A67552)', glow:'rgba(200,149,108,0.3)', light:'#F5E6D8', border:'#EDD5BB' },
+  { href:'/dashboard/finances', icon:TrendingUp,   label:'Finanzas', desc:'Gastos e ingresos',       grad:'linear-gradient(135deg,#7A8A5E,#5D6B45)', glow:'rgba(122,138,94,0.3)',  light:'#DDE5D0', border:'#CDD9BC' },
+  { href:'/dashboard/agenda',   icon:CalendarRange, label:'Agenda',   desc:'Eventos y recordatorios', grad:'linear-gradient(135deg,#A67552,#8B5E3C)', glow:'rgba(166,117,82,0.3)',  light:'#EDD5BB', border:'#E0C9AC' },
+  { href:'/dashboard/tasks',    icon:CheckSquare,   label:'Listas',   desc:'Compras y pendientes',    grad:'linear-gradient(135deg,#5D6B45,#3D4D2A)', glow:'rgba(93,107,69,0.3)',   light:'#CDD9BC', border:'#B8D0A8' },
 ]
 
 export default function DashboardPage() {
@@ -155,7 +155,7 @@ export default function DashboardPage() {
   return (
     <div>
       {/* Header */}
-      <div style={{ padding:'28px 60px 16px 16px', background:'rgba(253,244,255,0.75)', backdropFilter:'blur(20px)', borderBottom:'1px solid rgba(255,255,255,0.5)', position:'sticky', top:0, zIndex:10 }}>
+      <div style={{ padding:'28px 60px 16px 16px', background:'var(--ht-surface)', borderBottom:'1px solid var(--ht-outline-variant)', position:'sticky', top:0, zIndex:10 }}>
         <p style={{ fontSize:12, color:'var(--ht-text-3)', fontWeight:600, marginBottom:2 }}>{greetingEmoji} {greeting}</p>
         <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center' }}>
           <h1 style={{ fontSize:28, fontWeight:900, letterSpacing:'-0.03em' }}>
@@ -196,14 +196,14 @@ export default function DashboardPage() {
               </div>
               <span style={{ fontWeight:800, fontSize:12, color:'var(--ht-purple)' }}>Semana actual</span>
             </div>
-            <div style={{ height:10, background:'rgba(124,58,237,0.12)', borderRadius:9999, overflow:'hidden', marginBottom:8 }}>
+            <div style={{ height:10, background:'rgba(200,149,108,0.12)', borderRadius:9999, overflow:'hidden', marginBottom:8 }}>
               <div style={{ height:'100%', width:`${percent}%`, background:percent===100?'linear-gradient(90deg,#047857,#059669)':'var(--ht-grad)', borderRadius:9999, transition:'width 0.6s cubic-bezier(0.16,1,0.3,1)' }} />
             </div>
             <p style={{ fontSize:12, color:'var(--ht-purple)', fontWeight:600, opacity:0.7 }}>
               {percent===100?'¡Semana completada!':`${completed} de ${total} tareas`}
             </p>
           </div>
-          <div className="ht-card" style={{ display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', background:percent===100?'rgba(4,120,87,0.1)':'linear-gradient(135deg,rgba(124,58,237,0.1),rgba(190,24,93,0.06))', border:`1px solid ${percent===100?'rgba(4,120,87,0.2)':'rgba(124,58,237,0.15)'}`, padding:0, minHeight:84 }}>
+          <div className="ht-card" style={{ display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', background:percent===100?'rgba(4,120,87,0.1)':'linear-gradient(135deg,rgba(200,149,108,0.1),rgba(190,24,93,0.06))', border:`1px solid ${percent===100?'rgba(4,120,87,0.2)':'rgba(200,149,108,0.15)'}`, padding:0, minHeight:84 }}>
             <span style={{ fontSize:30, fontWeight:900, letterSpacing:'-0.04em', lineHeight:1, background:percent===100?'linear-gradient(135deg,#047857,#059669)':'var(--ht-grad)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text' }}>
               {animPercent}
             </span>
@@ -214,12 +214,12 @@ export default function DashboardPage() {
         {/* ── Bento: Balance mes + Próximo evento ── */}
         <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:10, marginBottom:10 }}>
           <Link href="/dashboard/finances" style={{ textDecoration:'none' }}>
-            <div className="ht-card" style={{ padding:14, height:'100%', background:balance>=0?'rgba(4,120,87,0.07)':'rgba(190,24,93,0.07)', border:`1px solid ${balance>=0?'rgba(4,120,87,0.15)':'rgba(190,24,93,0.15)'}` }}>
+            <div className="ht-card" style={{ padding:14, height:'100%', background:balance>=0?'rgba(4,120,87,0.07)':'rgba(190,24,93,0.07)', border:`1px solid ${balance>=0?'rgba(4,120,87,0.15)':'rgba(139,32,32,0.15)'}` }}>
               <div style={{ display:'flex', alignItems:'center', gap:5, marginBottom:6 }}>
-                <TrendingUp size={12} color={balance>=0?'#047857':'#be185d'} />
+                <TrendingUp size={12} color={balance>=0?'#3D6B42':'#8B2020'} />
                 <span style={{ fontSize:10, fontWeight:700, color:'var(--ht-text-3)', textTransform:'uppercase', letterSpacing:'0.05em' }}>Este mes</span>
               </div>
-              <p style={{ fontSize:18, fontWeight:900, color:balance>=0?'#047857':'#be185d', letterSpacing:'-0.02em' }}>{balance>=0?'+':''}{fmtShort(balance)}</p>
+              <p style={{ fontSize:18, fontWeight:900, color:balance>=0?'#3D6B42':'#8B2020', letterSpacing:'-0.02em' }}>{balance>=0?'+':''}{fmtShort(balance)}</p>
               <p style={{ fontSize:10, color:'var(--ht-text-4)', marginTop:3, fontWeight:500 }}>
                 ↑ {fmtShort(monthBalance.income)} · ↓ {fmtShort(monthBalance.expense)}
               </p>
@@ -227,7 +227,7 @@ export default function DashboardPage() {
           </Link>
 
           <Link href="/dashboard/agenda" style={{ textDecoration:'none' }}>
-            <div className="ht-card" style={{ padding:14, height:'100%', background:'rgba(124,58,237,0.06)', border:'1px solid rgba(124,58,237,0.12)' }}>
+            <div className="ht-card" style={{ padding:14, height:'100%', background:'rgba(124,58,237,0.06)', border:'1px solid rgba(200,149,108,0.12)' }}>
               <div style={{ display:'flex', alignItems:'center', gap:5, marginBottom:6 }}>
                 <CalendarRange size={12} color="var(--ht-purple)" />
                 <span style={{ fontSize:10, fontWeight:700, color:'var(--ht-text-3)', textTransform:'uppercase', letterSpacing:'0.05em' }}>Próximo evento</span>
@@ -284,13 +284,13 @@ export default function DashboardPage() {
             </div>
           ) : todayTasks.length===0 ? (
             <div className="ht-card" style={{ textAlign:'center', padding:'18px 16px' }}>
-              <Sparkles size={18} color="rgba(124,58,237,0.3)" style={{ margin:'0 auto 6px', display:'block' }} />
+              <Sparkles size={18} color="rgba(200,149,108,0.3)" style={{ margin:'0 auto 6px', display:'block' }} />
               <p style={{ fontSize:14, color:'var(--ht-text-3)', fontWeight:600 }}>Sin tareas asignadas hoy</p>
             </div>
           ) : todayTasks.slice(0,3).map(task => (
             <button key={task.id} onClick={() => toggleComplete(task.id,task.completed)} className="ht-list-item"
               style={{ width:'100%', cursor:'pointer', textAlign:'left', background:task.completed?'rgba(4,120,87,0.07)':'var(--ht-glass-warm)', border:`1px solid ${task.completed?'rgba(4,120,87,0.18)':'var(--ht-glass-border)'}` }}>
-              {task.completed ? <CheckCircle2 size={22} color="#047857" /> : <Circle size={22} color="rgba(124,58,237,0.2)" />}
+              {task.completed ? <CheckCircle2 size={22} color="#047857" /> : <Circle size={22} color="rgba(200,149,108,0.2)" />}
               <div style={{ flex:1 }}>
                 <p style={{ fontWeight:800, fontSize:14, color:task.completed?'var(--ht-text-3)':'var(--ht-text)', textDecoration:task.completed?'line-through':'none' }}>{task.chore?.name}</p>
                 <p style={{ fontSize:12, color:'var(--ht-text-3)', textTransform:'capitalize', fontWeight:500 }}>{task.chore?.category}</p>

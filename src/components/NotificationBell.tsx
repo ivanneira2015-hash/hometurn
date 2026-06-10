@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState } from 'react'
 import { Bell, X, CheckCheck, CalendarRange, TrendingUp, CheckSquare, Users } from 'lucide-react'
@@ -7,10 +7,10 @@ import { Notification } from '@/lib/types'
 import EmptyState from '@/components/EmptyState'
 
 const TYPE_CONFIG = {
-  transaction:    { icon: TrendingUp,    color: '#047857', bg: 'rgba(4,120,87,0.1)' },
-  task_completed: { icon: CheckSquare,   color: '#7c3aed', bg: 'rgba(124,58,237,0.1)' },
+  transaction:    { icon: TrendingUp,    color: '#3D6B42', bg: 'rgba(4,120,87,0.1)' },
+  task_completed: { icon: CheckSquare,   color: '#C8956C', bg: 'rgba(200,149,108,0.1)' },
   event:          { icon: CalendarRange, color: '#b45309', bg: 'rgba(180,83,9,0.1)' },
-  assignment:     { icon: Users,         color: '#4338ca', bg: 'rgba(67,56,202,0.1)' },
+  assignment:     { icon: Users,         color: '#7A8A5E', bg: 'rgba(67,56,202,0.1)' },
 }
 
 function timeAgo(dateStr: string) {
@@ -25,7 +25,7 @@ function NotifItem({ n, onRead }: { n: Notification; onRead: () => void }) {
   const cfg = TYPE_CONFIG[n.type] ?? TYPE_CONFIG.transaction
   const Icon = cfg.icon
   return (
-    <div onClick={onRead} style={{ display:'flex', gap:12, padding:'12px 14px', borderRadius:16, background:n.read?'transparent':'rgba(124,58,237,0.05)', border:n.read?'1px solid transparent':'1px solid rgba(124,58,237,0.1)', marginBottom:8, cursor:'pointer', transition:'all 0.15s', alignItems:'flex-start' }}>
+    <div onClick={onRead} style={{ display:'flex', gap:12, padding:'12px 14px', borderRadius:16, background:n.read?'transparent':'rgba(124,58,237,0.05)', border:n.read?'1px solid transparent':'1px solid rgba(200,149,108,0.1)', marginBottom:8, cursor:'pointer', transition:'all 0.15s', alignItems:'flex-start' }}>
       <div style={{ width:36, height:36, borderRadius:9999, background:cfg.bg, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
         <Icon size={16} color={cfg.color} strokeWidth={2} />
       </div>
@@ -53,7 +53,7 @@ function NotifSheet({ notifications, unreadCount, markAllRead, markRead, onClose
       <div className="ht-overlay" onClick={onClose} />
       <div className="ht-modal">
         <div style={{ padding:'20px 16px 0' }}>
-          <div style={{ width:36, height:4, background:'rgba(124,58,237,0.2)', borderRadius:9999, margin:'0 auto 16px' }} />
+          <div style={{ width:36, height:4, background:'rgba(200,149,108,0.2)', borderRadius:9999, margin:'0 auto 16px' }} />
           <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:16 }}>
             <div style={{ display:'flex', alignItems:'center', gap:8 }}>
               <Bell size={18} color="var(--ht-purple)" />
@@ -63,7 +63,7 @@ function NotifSheet({ notifications, unreadCount, markAllRead, markRead, onClose
             </div>
             <div style={{ display:'flex', gap:8 }}>
               {unreadCount > 0 && (
-                <button onClick={markAllRead} style={{ background:'rgba(124,58,237,0.08)', border:'none', borderRadius:9999, padding:'6px 10px', cursor:'pointer', fontSize:12, fontWeight:700, color:'var(--ht-purple)', display:'flex', alignItems:'center', gap:4 }}>
+                <button onClick={markAllRead} style={{ background:'rgba(200,149,108,0.08)', border:'none', borderRadius:9999, padding:'6px 10px', cursor:'pointer', fontSize:12, fontWeight:700, color:'var(--ht-purple)', display:'flex', alignItems:'center', gap:4 }}>
                   <CheckCheck size={13} /> Leer todo
                 </button>
               )}
@@ -119,7 +119,7 @@ export default function NotificationBell({ userId, householdId, forceOpen, onClo
       <button
         onClick={() => setOpen(true)}
         style={{
-          position:'relative', background:'rgba(124,58,237,0.08)',
+          position:'relative', background:'rgba(200,149,108,0.08)',
           border:'none', borderRadius:9999, width:36, height:36,
           display:'flex', alignItems:'center', justifyContent:'center',
           cursor:'pointer', flexShrink:0,
