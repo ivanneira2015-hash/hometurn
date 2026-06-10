@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useRef } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { Notification } from '@/lib/types'
 
@@ -8,6 +8,8 @@ export function useNotifications(userId: string | undefined, householdId: string
   const supabase = createClient()
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [unreadCount, setUnreadCount] = useState(0)
+  // Canal único por instancia del hook para evitar conflicto de suscripciones múltiples
+  const channelId = useRef(`notif-${Math.random().toString(36).slice(2)}`)
 
   const load = useCallback(async () => {
     if (!userId || !householdId) return
@@ -28,7 +30,7 @@ export function useNotifications(userId: string | undefined, householdId: string
   useEffect(() => {
     if (!userId) return
     const channel = supabase
-      .channel('notifications')
+      .channel(channelId.current)
       .on('postgres_changes', {
         event: 'INSERT',
         schema: 'public',
