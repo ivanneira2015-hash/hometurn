@@ -40,10 +40,10 @@ const fmtShort = (n: number) => {
 }
 
 const HUB_MODULES = [
-  { href:'/dashboard/schedule', icon:CalendarDays,  label:'Semana',   desc:'Tareas del hogar',       grad:'linear-gradient(135deg,#C8956C,#A67552)', glow:'rgba(200,149,108,0.3)', light:'#F5E6D8', border:'#EDD5BB' },
-  { href:'/dashboard/finances', icon:TrendingUp,   label:'Finanzas', desc:'Gastos e ingresos',       grad:'linear-gradient(135deg,#7A8A5E,#5D6B45)', glow:'rgba(122,138,94,0.3)',  light:'#DDE5D0', border:'#CDD9BC' },
-  { href:'/dashboard/agenda',   icon:CalendarRange, label:'Agenda',   desc:'Eventos y recordatorios', grad:'linear-gradient(135deg,#A67552,#8B5E3C)', glow:'rgba(166,117,82,0.3)',  light:'#EDD5BB', border:'#E0C9AC' },
-  { href:'/dashboard/tasks',    icon:CheckSquare,   label:'Listas',   desc:'Compras y pendientes',    grad:'linear-gradient(135deg,#5D6B45,#3D4D2A)', glow:'rgba(93,107,69,0.3)',   light:'#CDD9BC', border:'#B8D0A8' },
+  { href:'/dashboard/schedule', icon:CalendarDays,  label:'Semana',   desc:'Tareas del hogar',        color:'#C8956C' },
+  { href:'/dashboard/finances', icon:TrendingUp,    label:'Finanzas', desc:'Gastos e ingresos',        color:'#7A8A5E' },
+  { href:'/dashboard/agenda',   icon:CalendarRange, label:'Agenda',   desc:'Eventos y recordatorios',  color:'#A67552' },
+  { href:'/dashboard/tasks',    icon:CheckSquare,   label:'Listas',   desc:'Compras y pendientes',     color:'#5D6B45' },
 ]
 
 export default function DashboardPage() {
@@ -307,13 +307,21 @@ export default function DashboardPage() {
         {/* ── Hub módulos ── */}
         <p className="ht-section-label">Módulos</p>
         <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:10, marginBottom:12 }}>
-          {HUB_MODULES.map(({ href, icon:Icon, label, desc, grad, glow, light, border }) => (
+          {HUB_MODULES.map(({ href, icon:Icon, label, desc, color }) => (
             <Link key={href} href={href} style={{ textDecoration:'none' }}>
-              <div style={{ padding:'16px', borderRadius:20, background:light, border:`1px solid ${border}`, backdropFilter:'blur(12px)', boxShadow:`0 4px 16px ${glow}`, cursor:'pointer' }}>
-                <div style={{ width:38, height:38, borderRadius:9999, background:grad, display:'flex', alignItems:'center', justifyContent:'center', marginBottom:8, boxShadow:`0 4px 10px ${glow}` }}>
-                  <Icon size={18} color="white" strokeWidth={2.2} />
-                </div>
-                <p style={{ fontWeight:800, fontSize:14, color:'var(--ht-text)', marginBottom:2 }}>{label}</p>
+              <div style={{
+                padding:'20px 16px 16px',
+                background:'var(--ht-surface)',
+                border:'1px solid var(--ht-outline-variant)',
+                borderRadius:'var(--ht-r-lg)',
+                boxShadow:'var(--ht-shadow-sm)',
+                cursor:'pointer',
+                transition:'box-shadow 0.15s, transform 0.15s',
+                /* Acento sutil: línea izquierda del color del módulo */
+                borderLeft:`3px solid ${color}`,
+              }}>
+                <Icon size={24} color={color} strokeWidth={1.8} style={{ marginBottom:12, display:'block' }} />
+                <p style={{ fontWeight:800, fontSize:14, color:'var(--ht-text)', marginBottom:3, letterSpacing:'-0.01em' }}>{label}</p>
                 <p style={{ fontSize:11, color:'var(--ht-text-3)', fontWeight:500 }}>{desc}</p>
               </div>
             </Link>
