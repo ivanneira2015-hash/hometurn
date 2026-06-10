@@ -168,7 +168,6 @@ export default function TasksPage() {
                 desc={filter==='all'?'Creá tu primera lista de compras o pendientes':undefined}
                 action={filter==='all'?{ label:'Nueva lista', onClick:()=>setShowNewList(true) }:undefined}
               />
-              </div>
             )}
 
             {filteredLists.map(list => {
