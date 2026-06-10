@@ -32,7 +32,7 @@ function getTypeConfig(type: CalendarEvent['type']) {
 }
 
 function AgendaInner() {
-  const { user, profile, household } = useAuth()
+  const { user, profile, household, members } = useAuth()
   const supabase = createClient()
   const searchParams = useSearchParams()
 
