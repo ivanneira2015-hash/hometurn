@@ -184,13 +184,7 @@ export default function TasksPage() {
                   cursor: 'pointer', textAlign: 'left',
                   boxShadow: 'var(--ht-shadow-card)',
                 }}>
-                  <div style={{
-                    width: 42, height: 42, borderRadius: 9999,
-                    background: t.light, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-                    border: `1px solid ${t.color}25`,
-                  }}>
-                    <Icon size={18} color={t.color} strokeWidth={2.2} />
-                  </div>
+                  <Icon size={22} color={t.color} strokeWidth={1.8} style={{ flexShrink: 0 }} />
                   <div style={{ flex: 1 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                       <p style={{ fontWeight: 800, fontSize: 15 }}>{list.name}</p>

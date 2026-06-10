@@ -209,9 +209,7 @@ function AgendaInner() {
       <div className="ht-page-header" style={{ paddingRight: 52 }}>
         <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:14 }}>
           <div style={{ display:'flex', alignItems:'center', gap:10 }}>
-            <div style={{ width:34, height:34, borderRadius:9999, background:'linear-gradient(135deg,#7c3aed,#be185d)', display:'flex', alignItems:'center', justifyContent:'center', boxShadow:'0 3px 10px rgba(200,149,108,0.3)' }}>
-              <CalendarRange size={16} color="white" strokeWidth={2.5} />
-            </div>
+            <CalendarRange size={22} color="var(--ht-primary)" strokeWidth={2} />
             <h1 style={{ fontSize:20, fontWeight:800 }}>Agenda</h1>
           </div>
           <button onClick={() => openNew()} className="ht-btn ht-btn-primary" style={{ padding:'7px 14px', fontSize:13 }}>
@@ -592,9 +590,7 @@ function EventCard({ event, userId, onDelete, onEdit, showDate }: {
 
   return (
     <div className="ht-list-item" style={{ marginBottom:8, alignItems:'flex-start' }}>
-      <div style={{ width:36, height:36, borderRadius:9999, flexShrink:0, background:`${event.color}12`, border:`1.5px solid ${event.color}25`, display:'flex', alignItems:'center', justifyContent:'center', marginTop:2 }}>
-        <Icon size={16} color={event.color} strokeWidth={2} />
-      </div>
+      <Icon size={18} color={event.color} strokeWidth={2} style={{ flexShrink:0, marginTop:2 }} />
       <div style={{ flex:1 }}>
         <div style={{ display:'flex', alignItems:'center', gap:6 }}>
           <p style={{ fontWeight:700, fontSize:14, color:'var(--ht-text)' }}>{event.title}</p>

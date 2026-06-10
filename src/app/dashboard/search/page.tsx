@@ -116,9 +116,7 @@ export default function SearchPage() {
           return (
             <a key={r.id} href={r.href} style={{ textDecoration:'none' }}>
               <div className="ht-list-item" style={{ marginBottom:8 }}>
-                <div style={{ width:36, height:36, borderRadius:9999, background:`${r.color}15`, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
-                  <Icon size={16} color={r.color} strokeWidth={2} />
-                </div>
+                <Icon size={20} color={r.color} strokeWidth={1.8} style={{ flexShrink:0 }} />
                 <div style={{ flex:1 }}>
                   <p style={{ fontWeight:700, fontSize:14 }}>{r.title}</p>
                   <p style={{ fontSize:12, color:'var(--ht-text-3)' }}>{r.subtitle}</p>

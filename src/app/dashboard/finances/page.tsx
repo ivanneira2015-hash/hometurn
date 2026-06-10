@@ -312,9 +312,7 @@ function FinancesInner() {
       <div className="ht-page-header" style={{ paddingRight: 52 }}>
         <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:12 }}>
           <div style={{ display:'flex', alignItems:'center', gap:10 }}>
-            <div style={{ width:34, height:34, borderRadius:9999, background:'linear-gradient(135deg,#7c3aed,#be185d)', display:'flex', alignItems:'center', justifyContent:'center', boxShadow:'0 3px 10px rgba(200,149,108,0.3)' }}>
-              <TrendingUp size={16} color="white" strokeWidth={2.5} />
-            </div>
+            <TrendingUp size={20} color="var(--ht-primary)" strokeWidth={2} />
             <h1 style={{ fontSize:20, fontWeight:800 }}>Finanzas</h1>
           </div>
           <div style={{ display:'flex', gap:8 }}>

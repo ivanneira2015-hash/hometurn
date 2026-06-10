@@ -26,9 +26,7 @@ function NotifItem({ n, onRead }: { n: Notification; onRead: () => void }) {
   const Icon = cfg.icon
   return (
     <div onClick={onRead} style={{ display:'flex', gap:12, padding:'12px 14px', borderRadius:16, background:n.read?'transparent':'rgba(124,58,237,0.05)', border:n.read?'1px solid transparent':'1px solid rgba(200,149,108,0.1)', marginBottom:8, cursor:'pointer', transition:'all 0.15s', alignItems:'flex-start' }}>
-      <div style={{ width:36, height:36, borderRadius:9999, background:cfg.bg, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
-        <Icon size={16} color={cfg.color} strokeWidth={2} />
-      </div>
+      <Icon size={18} color={cfg.color} strokeWidth={1.8} style={{ flexShrink:0 }} />
       <div style={{ flex:1 }}>
         <p style={{ fontWeight:n.read?600:800, fontSize:14, color:'var(--ht-text)', marginBottom:2 }}>{n.title}</p>
         {n.body && <p style={{ fontSize:12, color:'var(--ht-text-3)' }}>{n.body}</p>}

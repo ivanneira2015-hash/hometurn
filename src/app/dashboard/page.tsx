@@ -191,9 +191,7 @@ export default function DashboardPage() {
         <div style={{ display:'grid', gridTemplateColumns:'1fr 80px', gap:10, marginBottom:10 }}>
           <div className="ht-card ht-card-purple" style={{ padding:16 }}>
             <div style={{ display:'flex', alignItems:'center', gap:7, marginBottom:12 }}>
-              <div style={{ width:26, height:26, borderRadius:9999, background:'var(--ht-grad)', display:'flex', alignItems:'center', justifyContent:'center' }}>
-                <CalendarDays size={13} color="white" strokeWidth={2.5} />
-              </div>
+              <CalendarDays size={15} color="var(--ht-primary)" strokeWidth={2} />
               <span style={{ fontWeight:800, fontSize:12, color:'var(--ht-purple)' }}>Semana actual</span>
             </div>
             <div style={{ height:10, background:'rgba(200,149,108,0.12)', borderRadius:9999, overflow:'hidden', marginBottom:8 }}>
