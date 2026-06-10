@@ -209,6 +209,29 @@ function FinancesInner() {
         }
       }
     }
+    // Alerta de presupuesto si supera el 80%
+    if (!editTx && addType === 'expense' && addCat) {
+      const budget = budgets.find(b => b.category_id === addCat)
+      if (budget) {
+        const spent = transactions.filter(t => t.type==='expense' && t.category_id===addCat).reduce((s,t)=>s+Number(t.amount),0) + parseFloat(addAmount)
+        const pct = (spent / Number(budget.amount)) * 100
+        if (pct >= 80) {
+          const cat = categories.find(c => c.id === addCat)
+          const otherMembers = members.filter(m => m.profile_id !== profile.id)
+          if (otherMembers.length > 0) {
+            await supabase.from('notifications').insert(
+              otherMembers.map(m => ({
+                household_id: household.id, for_profile_id: m.profile_id,
+                from_profile_id: profile.id, type: 'transaction',
+                title: `${pct >= 100 ? '⚠️ Presupuesto superado' : '🔶 Presupuesto al ' + Math.round(pct) + '%'}`,
+                body: `${cat?.icon ?? ''} ${cat?.name}: ${fmtShort(spent)} de ${fmtShort(Number(budget.amount))}`,
+              }))
+            )
+          }
+        }
+      }
+    }
+
     setSaving(false); setShowAdd(false); setEditTx(null); setAddSharedWith('')
     setRefreshKey(k => k + 1)
   }

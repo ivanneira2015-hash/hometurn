@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { Bell, X, CheckCheck, CalendarRange, TrendingUp, CheckSquare, Users } from 'lucide-react'
+import EmptyState from '@/components/EmptyState'
 import { useNotifications } from '@/hooks/useNotifications'
 import { Notification } from '@/lib/types'
 
@@ -90,11 +91,7 @@ export default function NotificationBell({ userId, householdId }: Props) {
             {/* List */}
             <div style={{ padding: '0 16px 32px', maxHeight: '65vh', overflowY: 'auto' }}>
               {notifications.length === 0 ? (
-                <div style={{ textAlign: 'center', padding: '40px 20px', color: 'var(--ht-text-3)' }}>
-                  <Bell size={32} color="rgba(124,58,237,0.2)" style={{ margin: '0 auto 12px', display: 'block' }} />
-                  <p style={{ fontWeight: 700, marginBottom: 4 }}>Sin notificaciones</p>
-                  <p style={{ fontSize: 13 }}>Cuando alguien del hogar agregue algo, aparecerá acá</p>
-                </div>
+                <EmptyState type="notifications" />
               ) : notifications.map(n => (
                 <NotifItem key={n.id} n={n} onRead={() => markRead(n.id)} />
               ))}

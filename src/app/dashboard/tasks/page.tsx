@@ -5,6 +5,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { createClient } from '@/lib/supabase/client'
 import { TaskList, TaskItem } from '@/lib/types'
 import { Plus, X, Check, ShoppingCart, ClipboardList, Sparkles, Trash2, ChevronRight, Lock, Globe } from 'lucide-react'
+import EmptyState from '@/components/EmptyState'
 
 const LIST_TYPES = [
   { type: 'shopping' as const, icon: ShoppingCart, label: 'Compras',       color: '#047857', light: 'rgba(4,120,87,0.08)'  },
@@ -161,14 +162,12 @@ export default function TasksPage() {
           <>
             {loading && <div style={{ textAlign: 'center', padding: 40, color: 'var(--ht-text-3)', fontSize: 14 }}>Cargando...</div>}
             {!loading && filteredLists.length === 0 && (
-              <div className="ht-empty">
-                <p style={{ fontWeight: 700, marginBottom: 4, fontSize: 16 }}>Sin listas</p>
-                <p style={{ fontSize: 14 }}>{filter === 'private' ? 'No tenés listas privadas' : filter === 'shared' ? 'No hay listas compartidas' : 'Creá tu primera lista'}</p>
-                {filter === 'all' && (
-                  <button onClick={() => setShowNewList(true)} className="ht-btn ht-btn-primary" style={{ marginTop: 16 }}>
-                    <Plus size={14} /> Nueva lista
-                  </button>
-                )}
+              <EmptyState
+                type="tasks"
+                title={filter==='private'?'Sin listas privadas':filter==='shared'?'Sin listas compartidas':'Sin listas'}
+                desc={filter==='all'?'Creá tu primera lista de compras o pendientes':undefined}
+                action={filter==='all'?{ label:'Nueva lista', onClick:()=>setShowNewList(true) }:undefined}
+              />
               </div>
             )}
 
@@ -255,7 +254,7 @@ export default function TasksPage() {
             )}
 
             {items.length === 0 && (
-              <div className="ht-empty"><p style={{ fontSize: 14 }}>Agregá el primer ítem arriba</p></div>
+              <EmptyState type="list" />
             )}
 
             <div style={{ marginTop: 24, textAlign: 'center' }}>

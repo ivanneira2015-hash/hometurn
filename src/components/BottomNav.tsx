@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { CalendarDays, Home, TrendingUp, CalendarRange, MoreHorizontal, CheckSquare, User, X } from 'lucide-react'
+import { CalendarDays, Home, TrendingUp, CalendarRange, MoreHorizontal, CheckSquare, User, X, Search } from 'lucide-react'
 import { useState } from 'react'
 
 const MAIN_NAV = [
@@ -14,6 +14,7 @@ const MAIN_NAV = [
 
 const MORE_ITEMS = [
   { href: '/dashboard/tasks',   icon: CheckSquare, label: 'Listas',  desc: 'Compras, pendientes y notas' },
+  { href: '/dashboard/search',  icon: Search,      label: 'Buscar',  desc: 'Eventos, gastos, listas y más' },
   { href: '/dashboard/profile', icon: User,        label: 'Perfil',  desc: 'Hogar, código de invitación' },
 ]
 

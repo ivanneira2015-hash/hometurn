@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Quicksand } from "next/font/google";
 import "./globals.css";
+import Script from "next/script";
 
 const quicksand = Quicksand({
   subsets: ["latin"],
@@ -13,11 +14,7 @@ export const metadata: Metadata = {
   title: "HomeTurn",
   description: "Organizá las tareas del hogar con tu familia",
   manifest: "/manifest.json",
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: "default",
-    title: "HomeTurn",
-  },
+  appleWebApp: { capable: true, statusBarStyle: "default", title: "HomeTurn" },
 };
 
 export const viewport: Viewport = {
@@ -27,14 +24,19 @@ export const viewport: Viewport = {
   maximumScale: 1,
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="es" className={quicksand.variable}>
-      <body>{children}</body>
+      <body>
+        {children}
+        <Script id="sw-register" strategy="afterInteractive">{`
+          if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+              navigator.serviceWorker.register('/sw.js').catch(() => {})
+            })
+          }
+        `}</Script>
+      </body>
     </html>
   );
 }

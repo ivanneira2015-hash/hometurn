@@ -56,7 +56,8 @@ function AgendaInner() {
   const [fRecur,  setFRecur]  = useState(false)
   const [fRule,   setFRule]   = useState<CalendarEvent['recurrence_rule']>('yearly')
   const [fDesc,   setFDesc]   = useState('')
-  const [fVisib,  setFVisib]  = useState<'shared'|'private'>('shared')
+  const [fVisib,      setFVisib]      = useState<'shared'|'private'>('shared')
+  const [fSharedWith, setFSharedWith] = useState<string>('')
   const [saving,  setSaving]  = useState(false)
 
   // PWA shortcut ?q=add
@@ -140,7 +141,7 @@ function AgendaInner() {
   }).filter(x => x.events.length > 0)
 
   function openEdit(ev: CalendarEvent) {
-    setEditEvent(ev)
+    setEditEvent(ev); setFSharedWith('')
     setFTitle(ev.title); setFType(ev.type); setFDate(ev.date)
     setFTime(ev.time?.slice(0,5) ?? ''); setFAllDay(ev.is_all_day)
     setFRecur(ev.is_recurring); setFRule(ev.recurrence_rule ?? 'yearly')
@@ -163,7 +164,9 @@ function AgendaInner() {
       title: fTitle.trim(), type: fType, color: cfg.color,
       date: fDate, time: fAllDay ? null : fTime || null, is_all_day: fAllDay,
       is_recurring: fRecur, recurrence_rule: fRecur ? fRule : null,
-      description: fDesc.trim() || null, visibility: fVisib,
+      description: fDesc.trim() || null,
+      visibility: fSharedWith ? 'private' : fVisib,
+      shared_with: fSharedWith ? [fSharedWith] : [],
     }
     let error: string | null = null
     if (editEvent) {
@@ -172,10 +175,21 @@ function AgendaInner() {
     } else {
       const { error: e } = await supabase.from('calendar_events').insert({ ...payload, household_id: household.id, profile_id: profile.id })
       if (e) error = e.message
+      // Notificar
+      if (!e && payload.visibility === 'private' && fSharedWith) {
+        await supabase.from('notifications').insert({
+          household_id: household.id, for_profile_id: fSharedWith,
+          from_profile_id: profile.id, type: 'event',
+          title: `${profile.name.split(' ')[0]} compartió un evento`, body: payload.title,
+        })
+      } else if (!e && payload.visibility === 'shared') {
+        const others = (await supabase.from('household_members').select('profile_id').eq('household_id', household.id)).data?.filter(m => m.profile_id !== profile.id) ?? []
+        if (others.length > 0) await supabase.from('notifications').insert(others.map(m => ({ household_id: household.id, for_profile_id: m.profile_id, from_profile_id: profile.id, type: 'event', title: `${profile.name.split(' ')[0]} agregó un evento`, body: payload.title })))
+      }
     }
     setSaving(false)
     if (error) { alert(`Error: ${error}`); return }
-    setShowAdd(false); setEditEvent(null); setFTitle(''); setFDesc(''); setFTime('')
+    setShowAdd(false); setEditEvent(null); setFSharedWith(''); setFTitle(''); setFDesc(''); setFTime('')
     await loadEvents()
   }
 
@@ -533,14 +547,27 @@ function AgendaInner() {
                 </div>
               )}
               <input className="ht-input" placeholder="Descripción (opcional)" value={fDesc} onChange={e => setFDesc(e.target.value)} style={{ marginBottom:12 }} />
-              <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:8, marginBottom:20 }}>
-                {[{v:'shared' as const, emoji:'👥', label:'Compartido', desc:'Todos lo ven'},{v:'private' as const, emoji:'🔒', label:'Privado', desc:'Solo vos'}].map(({ v, emoji, label, desc }) => (
-                  <button key={v} onClick={() => setFVisib(v)} style={{ padding:'10px', borderRadius:14, border:'none', background:fVisib===v?'var(--ht-purple)':'rgba(0,0,0,0.05)', cursor:'pointer', textAlign:'center', transition:'all 0.15s' }}>
+              <div style={{ display:'grid', gridTemplateColumns:`repeat(${2 + (household ? members.filter(m=>m.profile_id!==profile?.id).length : 0)},1fr)`, gap:8, marginBottom:20 }}>
+                {[{v:'shared' as const, emoji:'👥', label:'Todos', desc:'Todos lo ven'},{v:'private' as const, emoji:'🔒', label:'Solo yo', desc:'Solo vos'}].map(({ v, emoji, label, desc }) => {
+                  const active = fVisib===v && !fSharedWith
+                  return (
+                  <button key={v} onClick={() => { setFVisib(v); setFSharedWith('') }} style={{ padding:'10px', borderRadius:14, border:'none', background:active?'var(--ht-purple)':'rgba(0,0,0,0.05)', cursor:'pointer', textAlign:'center', transition:'all 0.15s' }}>
                     <div style={{ fontSize:18, marginBottom:4 }}>{emoji}</div>
-                    <p style={{ fontSize:12, fontWeight:700, color:fVisib===v?'white':'var(--ht-text)' }}>{label}</p>
-                    <p style={{ fontSize:10, color:fVisib===v?'rgba(255,255,255,0.7)':'var(--ht-text-3)' }}>{desc}</p>
+                    <p style={{ fontSize:12, fontWeight:700, color:active?'white':'var(--ht-text)' }}>{label}</p>
+                    <p style={{ fontSize:10, color:active?'rgba(255,255,255,0.7)':'var(--ht-text-3)' }}>{desc}</p>
                   </button>
-                ))}
+                )})}
+                {/* Miembro específico */}
+                {members.filter(m => m.profile_id !== profile?.id).map(m => {
+                  const active = fSharedWith === m.profile_id
+                  return (
+                    <button key={m.profile_id} onClick={() => { setFSharedWith(active?'':m.profile_id); setFVisib('private') }} style={{ padding:'10px', borderRadius:14, border:'none', background:active?'var(--ht-rose)':'rgba(0,0,0,0.05)', cursor:'pointer', textAlign:'center', transition:'all 0.15s' }}>
+                      <div style={{ fontSize:18, marginBottom:4 }}>👤</div>
+                      <p style={{ fontSize:12, fontWeight:700, color:active?'white':'var(--ht-text)' }}>+{m.profile?.name?.split(' ')[0]}</p>
+                      <p style={{ fontSize:10, color:active?'rgba(255,255,255,0.7)':'var(--ht-text-3)' }}>Solo vos dos</p>
+                    </button>
+                  )
+                })}
               </div>
               <button onClick={saveEvent} disabled={saving||!fTitle.trim()} className="ht-btn ht-btn-primary" style={{ width:'100%', padding:'13px' }}>
                 {saving ? <><div className="ht-spinner" /> Guardando...</> : <><Check size={16} /> {editEvent?'Guardar cambios':'Guardar evento'}</>}

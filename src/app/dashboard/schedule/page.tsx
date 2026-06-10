@@ -58,6 +58,25 @@ export default function SchedulePage() {
     await supabase.from('weekly_assignments').update({ completed: !current }).eq('id', id)
     setAssignments(prev => prev.map(a => a.id === id ? { ...a, completed: !current } : a))
     setActionTarget(null)
+
+    // Notificar al hogar cuando se completa una tarea
+    if (!current && household && profile) {
+      const assignment = assignments.find(a => a.id === id)
+      const choreName = assignment?.chore?.name ?? 'una tarea'
+      const otherMembers = members.filter(m => m.profile_id !== profile.id)
+      if (otherMembers.length > 0) {
+        await supabase.from('notifications').insert(
+          otherMembers.map(m => ({
+            household_id: household.id,
+            for_profile_id: m.profile_id,
+            from_profile_id: profile.id,
+            type: 'task_completed',
+            title: `${profile.name.split(' ')[0]} completó una tarea`,
+            body: choreName,
+          }))
+        )
+      }
+    }
   }
 
   async function deleteAssignment(id: string) {
