@@ -28,22 +28,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const supabase = createClient()
 
   async function loadProfile(u: User): Promise<Profile | null> {
-    // Always upsert to guarantee profile exists (handles trigger failures)
     const displayName = u.user_metadata?.full_name ?? u.user_metadata?.name ?? u.email?.split('@')[0] ?? 'Usuario'
-    const { data, error } = await supabase.from('profiles').upsert({
+
+    // 1. Intentar insertar (si ya existe, ignora el error de conflicto)
+    await supabase.from('profiles').upsert({
       id: u.id,
       email: u.email ?? `${u.id}@unknown.com`,
-      nombre: displayName,   // MayoExpress compat (NOT NULL)
-      name: displayName,     // HomeTurn field
+      nombre: displayName,
+      name: displayName,
       avatar_url: u.user_metadata?.avatar_url ?? null,
-      color: '#6366f1',
-    }, { onConflict: 'id', ignoreDuplicates: true }).select().single()
+      color: '#7c3aed',
+    }, { onConflict: 'id', ignoreDuplicates: true })
 
-    if (data) return data
-
-    // ignoreDuplicates returns no data if row existed — fetch it
-    const { data: existing } = await supabase.from('profiles').select('*').eq('id', u.id).single()
-    return existing
+    // 2. Siempre fetchear por separado (sin encadenar al upsert)
+    const { data } = await supabase.from('profiles').select('*').eq('id', u.id).single()
+    return data
   }
 
   async function loadHousehold(userId: string) {

@@ -126,16 +126,18 @@ export default function DashboardPage() {
     setMyTasks(prev => prev.map(t => t.id === id ? { ...t, completed: !current } : t))
   }
 
-  if (loading) return <LoadingSkeleton />
-  if (!user || !profile || !household) return null
-
-  const today    = getTodayDayOfWeek()
-  const todayLabel = today ? DAY_LABELS_FULL[today] : 'Hoy'
-  const todayTasks = today ? myTasks.filter(t => t.day_of_week === today) : []
+  // Hooks ANTES de cualquier early return
   const completed  = myTasks.filter(t => t.completed).length
   const total      = myTasks.length
   const percent    = total > 0 ? Math.round((completed / total) * 100) : 0
   const animPercent = useCountUp(percent)
+
+  if (loading) return <LoadingSkeleton />
+  if (!user || !profile || !household) return null
+
+  const today      = getTodayDayOfWeek()
+  const todayLabel = today ? DAY_LABELS_FULL[today] : 'Hoy'
+  const todayTasks = today ? myTasks.filter(t => t.day_of_week === today) : []
   const balance    = monthBalance.income - monthBalance.expense
 
   const hour = new Date().getHours()
